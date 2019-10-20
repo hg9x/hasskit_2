@@ -23,6 +23,9 @@ class SlidePanel extends StatelessWidget {
       child: Card(
 //        color: Theme.of(context).primaryColorLight,
         child: ListTile(
+          onTap: () {
+            pLoginData.loginDataListUpdateAccessTime(loginData);
+          },
           leading: Icon(
             MdiIcons.serverNetwork,
             color: Theme.of(context).primaryColor,
@@ -31,14 +34,18 @@ class SlidePanel extends StatelessWidget {
               style: Theme.of(context).textTheme.subhead,
               maxLines: 2,
               overflow: TextOverflow.ellipsis),
-//          subtitle: Text(
+          subtitle: Text(
 //              "accessToken ${loginData.accessToken.length} "
 //              "expiresIn ${loginData.expiresIn} "
 //              "refreshToken ${loginData.refreshToken.length} "
-//              "tokenType ${loginData.tokenType}",
-//              style: Theme.of(context).textTheme.body1,
-//              maxLines: 2,
-//              overflow: TextOverflow.ellipsis),
+//              "tokenType ${loginData.tokenType} "
+//              "lastAccess ${loginData.lastAccess} "
+              "Last Access: ${loginData.timeSinceLastAccess}"
+//              " (${DateTime.now().toUtc().millisecondsSinceEpoch - loginData.lastAccess})"
+              ,
+              style: Theme.of(context).textTheme.body1,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis),
         ),
       ),
       secondaryActions: <Widget>[

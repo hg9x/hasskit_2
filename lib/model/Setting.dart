@@ -1,7 +1,9 @@
 import "dart:async";
 import "dart:convert";
 import "package:flutter/material.dart";
+import 'package:hasskit_2/helper/Logger.dart';
 import "package:hasskit_2/model/LoginData.dart";
+import 'package:intl/intl.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "package:http/http.dart" as http;
 import 'ThemeProvider.dart';
@@ -14,7 +16,7 @@ class SettingProvider with ChangeNotifier {
   void saveBool(String key, bool content) async {
     var _preferences = await SharedPreferences.getInstance();
     _preferences.setBool(key, content);
-    print("saveBool: key $key content $content");
+    log.d("saveBool: key $key content $content");
   }
 
   Future<bool> getBool(String key) async {
@@ -26,7 +28,7 @@ class SettingProvider with ChangeNotifier {
   void saveString(String key, String content) async {
     var _preferences = await SharedPreferences.getInstance();
     _preferences.setString(key, content);
-    print("saveString: key $key content $content");
+    log.d("saveString: key $key content $content");
   }
 
   Future<String> getString(String key) async {
@@ -39,6 +41,9 @@ class SettingProvider with ChangeNotifier {
 
   httpPost(String url, String authCode, String clientId,
       BuildContext context) async {
+    log.d("httpPost $url "
+        "\nauthCode $authCode "
+        "\nclientId $clientId");
     Map<String, String> headers = {
       "Content-Type": "application/x-www-form-urlencoded"
     };
@@ -54,7 +59,7 @@ class SettingProvider with ChangeNotifier {
         var bodyDecode = json.decode(response.body);
         var loginData = LoginData.fromJson(bodyDecode);
         loginData.url = url;
-        pLoginData.loginDataListUpdate(loginData);
+        pLoginData.loginDataListUpdateAccessTime(loginData);
         Navigator.pop(context);
       } else {
         connectionStatus =
@@ -107,4 +112,6 @@ class SettingProvider with ChangeNotifier {
     Scaffold.of(context)
         .removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
   }
+
+  DateFormat dateFormat = new DateFormat('yyyy-MM-dd hh:mm');
 }

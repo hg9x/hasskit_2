@@ -63,6 +63,8 @@ class WebViewLoginPage extends StatelessWidget {
               : Container(),
           Expanded(
             child: WebView(
+              debuggingEnabled: true,
+//              userAgent: ,
               initialUrl: initialUrl,
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {

@@ -31,6 +31,7 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     addressController.addListener(addressListener);
     addressFocusNode.addListener(addressFocusNodeListener);
+    addressController.text = 'http://hasskitdemo.duckdns.org:8123';
     super.initState();
   }
 
@@ -118,7 +119,6 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
 //    log.d(
 //        "MediaQuery.of(context).viewInsets.vertical ${MediaQuery.of(context).viewInsets.vertical}");
-
     return Scaffold(
       appBar: AppBar(
         title: Text(title),

@@ -5,6 +5,7 @@ import 'package:hasskit_2/model/LoginData.dart';
 import 'package:hasskit_2/view/HomePage.dart';
 import 'package:hasskit_2/view/RoomPage.dart';
 import 'package:hasskit_2/view/SettingPage.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'helper/Logger.dart';
 import 'model/Setting.dart';
@@ -16,6 +17,7 @@ void main() {
   //   DeviceOrientation.portraitUp,
   //   DeviceOrientation.portraitDown,
   // ]);
+  Logger.level = Level.debug;
 
   runApp(
     MultiProvider(
@@ -129,14 +131,18 @@ class _HomeViewState extends State<HomeView> {
           expiresIn: loginData["expiresIn"],
           refreshToken: loginData["refreshToken"],
           tokenType: loginData["tokenType"],
+          lastAccess: loginData["lastAccess"],
         );
-        pLoginData.loginDataListAdd(newLoginData);
         log.d("pSetting.loginDataList.add url ${newLoginData.url} \n"
             "accessToken  ${newLoginData.accessToken} \n"
             "expiresIn  ${newLoginData.expiresIn} \n"
             "refreshToken  ${newLoginData.refreshToken} \n"
-            "tokenType  ${newLoginData.tokenType} \n");
+            "tokenType  ${newLoginData.tokenType} \n"
+            "lastAccess  ${newLoginData.lastAccess} \n");
+        pLoginData.loginDataListAdd(newLoginData);
       }
+
+      pLoginData.loginDataListSortAndSave();
       log.d("pSetting.loginDataList.length ${pLoginData.loginDataList.length}");
     } else {
       log.d("CAN NOT FIND loginDataList");
