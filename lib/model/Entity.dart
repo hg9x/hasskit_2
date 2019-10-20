@@ -133,7 +133,7 @@ class Entity {
       service = 'lock';
     }
     var outMsg = {
-      "id": pD.socketId,
+      "id": gd.socketId,
       "type": "call_service",
       "domain": domain,
       "service": service,

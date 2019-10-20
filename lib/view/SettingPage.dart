@@ -121,7 +121,7 @@ class _SettingPageState extends State<SettingPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: pD.appBarThemeChanger,
+        actions: gd.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
@@ -140,7 +140,7 @@ class _SettingPageState extends State<SettingPage> {
             makeHeader(
                 Theme.of(context).primaryColorDark,
                 Image.asset('assets/images/home-assistant-512x512.png'),
-                'Connection Setting \n${pD.connectionStatus}',
+                'Connection Setting \n${gd.connectionStatus}',
                 context),
             SliverList(
               delegate: SliverChildListDelegate(
@@ -179,8 +179,8 @@ class _SettingPageState extends State<SettingPage> {
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
                                       }
-                                      pD.url = addressController.text.trim();
-                                      pD.loading = true;
+                                      gd.url = addressController.text.trim();
+                                      gd.loading = true;
                                       showModalBottomSheet(
                                           useRootNavigator: false,
                                           isScrollControlled: true,
@@ -204,8 +204,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => SlidePanel(pD.loginDataList[index]),
-                childCount: pD.loginDataList.length,
+                (context, index) => SlidePanel(gd.loginDataList[index]),
+                childCount: gd.loginDataList.length,
               ),
             ),
             makeHeader(Theme.of(context).primaryColorDark,

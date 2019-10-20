@@ -12,7 +12,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
-        actions: pD.appBarThemeChanger,
+        actions: gd.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(

@@ -48,7 +48,7 @@ class WebSocket {
   /// ----------------------------------------------------------
   initCommunication() async {
     Logger.d(
-        'initCommunication socketUrl ${pD.socketUrl} autoConnect ${pD.autoConnect} connectionStatus ${pD.connectionStatus}');
+        'initCommunication socketUrl ${gd.socketUrl} autoConnect ${gd.autoConnect} connectionStatus ${gd.connectionStatus}');
 
     ///
     /// Just in case, close any previous communication
@@ -59,7 +59,7 @@ class WebSocket {
     /// Open a new WebSocket communication
     ///
     try {
-      _channel = new IOWebSocketChannel.connect(pD.socketUrl,
+      _channel = new IOWebSocketChannel.connect(gd.socketUrl,
           pingInterval: Duration(seconds: 15));
 
 //      providerData.connectionError = '';
@@ -75,7 +75,7 @@ class WebSocket {
       ///
       /// General error handling
       Logger.d('initCommunication catch $e');
-      pD.connectionStatus = 'Error:\n' + e.toString();
+      gd.connectionStatus = 'Error:\n' + e.toString();
       connected = false;
 
       ///
@@ -90,9 +90,9 @@ class WebSocket {
       if (_channel.sink != null) {
         _channel.sink.close();
         connected = false;
-        pD.connectionStatus = "reset";
-        pD.socketId = 0;
-        pD.subscribeEventsId = 0;
+        gd.connectionStatus = "reset";
+        gd.socketId = 0;
+        gd.subscribeEventsId = 0;
 //        providerData.cameraThumbnailsId.clear();
 //        providerData.cameraRequestTime.clear();
 //        providerData.cameraActives.clear();
@@ -112,26 +112,26 @@ class WebSocket {
         String type = decode['type'];
 
         if (type == 'subscribe_events') {
-          if (pD.subscribeEventsId != 0) {
+          if (gd.subscribeEventsId != 0) {
             Logger.d('??? subscribe_events We do not sub twice');
             return;
           }
-          pD.subscribeEventsId = id;
+          gd.subscribeEventsId = id;
         }
 
         if (type == 'get_states') {
-          pD.getStatesId = id;
+          gd.getStatesId = id;
         }
         if (type == 'lovelace/config') {
-          pD.loveLaceConfigId = id;
+          gd.loveLaceConfigId = id;
         }
         if (type == 'camera_thumbnail' && decode['entity_id'] != null) {
-          pD.cameraThumbnailsId[id] = decode['entity_id'];
+          gd.cameraThumbnailsId[id] = decode['entity_id'];
         }
 
         _channel.sink.add(message);
         Logger.d('WebSocket send: id $id type $type $message');
-        pD.socketIdIncrement();
+        gd.socketIdIncrement();
       }
     }
   }
@@ -154,7 +154,7 @@ class WebSocket {
   /// ----------------------------------------------------------
   _onData(message) {
     connected = true;
-    pD.connectionStatus = "Connected";
+    gd.connectionStatus = "Connected";
 
     var decode = json.decode(message);
     Logger.d("_onData decode $decode");
@@ -167,17 +167,17 @@ class WebSocket {
         {
           outMsg = {
             "type": "auth",
-            "access_token": "${pD.loginDataCurrent.accessToken}"
+            "access_token": "${gd.loginDataCurrent.accessToken}"
           };
           send(json.encode(outMsg));
-          pD.connectionStatus = "Sending access_token";
+          gd.connectionStatus = "Sending access_token";
         }
         break;
       case 'auth_ok':
         {
-          outMsg = {"id": pD.socketId, "type": "get_states"};
+          outMsg = {"id": gd.socketId, "type": "get_states"};
           send(json.encode(outMsg));
-          pD.connectionStatus = "Sending get_states";
+          gd.connectionStatus = "Sending get_states";
         }
         break;
       case 'result':
@@ -189,25 +189,25 @@ class WebSocket {
           }
           var id = decode['id'];
 
-          if (id == pD.getStatesId) {
+          if (id == gd.getStatesId) {
             Logger.d('Processing Get States');
-            pD.getStates(decode['result']);
-            outMsg = {"id": pD.socketId, "type": "lovelace/config"};
+            gd.getStates(decode['result']);
+            outMsg = {"id": gd.socketId, "type": "lovelace/config"};
             send(json.encode(outMsg));
-          } else if (id == pD.loveLaceConfigId) {
+          } else if (id == gd.loveLaceConfigId) {
             Logger.d('Processing Lovelace Config');
-            pD.getLovelaceConfig(decode);
+            gd.getLovelaceConfig(decode);
             outMsg = {
-              "id": pD.socketId,
+              "id": gd.socketId,
               "type": "subscribe_events",
               "event_type": "state_changed"
             };
             send(json.encode(outMsg));
-          } else if (pD.cameraThumbnailsId.containsKey(id)) {
+          } else if (gd.cameraThumbnailsId.containsKey(id)) {
             var content = decode['result']['content'];
 //            Logger.d(
 //                'cameraThumbnailsId $id ${providerData.cameraThumbnailsId[id]} content $content');
-            pD.camerasThumbnailUpdate(pD.cameraThumbnailsId[id], content);
+            gd.camerasThumbnailUpdate(gd.cameraThumbnailsId[id], content);
           } else {
 //            Logger.d('providerData.socketIdServices $id == null $decode');
           }
@@ -215,12 +215,12 @@ class WebSocket {
         break;
       case 'auth_invalid':
         {
-          pD.connectionStatus = 'auth_invalid';
+          gd.connectionStatus = 'auth_invalid';
         }
         break;
       case 'event':
         {
-          pD.connectionStatus = 'Connected';
+          gd.connectionStatus = 'Connected';
         }
         break;
       default:
@@ -236,13 +236,13 @@ class WebSocket {
 
   void _onDone() {
 //    providerData.connectionStatus = 'Disconnected';
-    pD.connectionStatus = 'On Done';
+    gd.connectionStatus = 'On Done';
     connected = false;
     Logger.d('_onDone');
   }
 
   _onError(error, StackTrace stackTrace) {
-    pD.connectionStatus = 'On Error\n' + error.toString();
+    gd.connectionStatus = 'On Error\n' + error.toString();
     connected = false;
     Logger.d('_onError error: $error stackTrace: $stackTrace');
   }

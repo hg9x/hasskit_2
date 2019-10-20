@@ -22,20 +22,20 @@ class Logger {
   }
 
   static void e(String message) {
-    _writeToLog("Error", message);
+    _writeToLog("ERROR", message);
   }
 
   static void w(String message) {
-    _writeToLog("Warning", message);
+    _writeToLog("WARN", message);
   }
 
   static void d(String message) {
-    _writeToLog("Debug", message);
+    _writeToLog("DEBUG", message);
   }
 
   static void _writeToLog(String level, String message) {
     if (isInDebugMode) {
-      debugPrint('$message');
+      debugPrint('$level $message');
     }
     DateTime t = DateTime.now();
     _log.add("${formatDate(t, [

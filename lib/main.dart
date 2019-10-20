@@ -17,7 +17,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(builder: (context) => ProviderData()),
+        ChangeNotifierProvider(builder: (context) => GeneralData()),
       ],
       child: MyApp(),
     ),
@@ -27,10 +27,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    pD = Provider.of<ProviderData>(context);
+    gd = Provider.of<GeneralData>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: pD.currentTheme,
+      theme: gd.currentTheme,
       title: 'HassKit',
       home: HomeView(),
     );
@@ -110,7 +110,7 @@ class _HomeViewState extends State<HomeView> {
 
   mainInitState() async {
     Logger.w("mainInitState START await loginDataInstance.loadLoginData");
-    await pD.loadLoginData();
+    await gd.loadLoginData();
     Logger.w("mainInitState END await loginDataInstance.loadLoginData");
   }
 }

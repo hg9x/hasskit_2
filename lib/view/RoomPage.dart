@@ -4,18 +4,18 @@ import 'package:hasskit_2/model/SwitchlikeCheckbox.dart';
 
 class RoomPage extends StatelessWidget {
   final PageController controller =
-      PageController(initialPage: pD.lastSelectedRoom, keepPage: true);
+      PageController(initialPage: gd.lastSelectedRoom, keepPage: true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Room'),
-        actions: pD.appBarThemeChanger,
+        actions: gd.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: PageView(
         onPageChanged: (pageNumber) {
-          pD.lastSelectedRoom = pageNumber;
+          gd.lastSelectedRoom = pageNumber;
         },
         controller: controller,
         children: <Widget>[

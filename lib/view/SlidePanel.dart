@@ -16,7 +16,7 @@ class SlidePanel extends StatelessWidget {
 //        color: Theme.of(context).primaryColorLight,
         child: ListTile(
           onTap: () {
-            pD.loginDataListUpdateAccessTime(loginData);
+            gd.loginDataListUpdateAccessTime(loginData);
           },
           leading: Icon(
             MdiIcons.serverNetwork,
@@ -38,8 +38,8 @@ class SlidePanel extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
             icon: Icons.delete,
             onTap: () {
-              pD.showSnackBar('Delete', context);
-              pD.loginDataListDelete(loginData);
+              gd.showSnackBar('Delete', context);
+              gd.loginDataListDelete(loginData);
             }),
       ],
     );

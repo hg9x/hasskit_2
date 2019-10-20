@@ -11,21 +11,21 @@ class WebViewLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String initialUrl = pD.url +
+    String initialUrl = gd.url +
         '/auth/authorize?client_id=' +
-        pD.url +
+        gd.url +
         "/hasskit" '&redirect_uri=' +
-        pD.url +
+        gd.url +
         "/hasskit";
 //    initUrl = Uri.encodeComponent(initUrl);
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
-        actions: pD.appBarThemeChanger,
+        actions: gd.appBarThemeChanger,
       ),
       body: Column(
         children: <Widget>[
-          pD.loading
+          gd.loading
               ? Expanded(
                   flex: 5,
                   child: Column(
@@ -39,7 +39,7 @@ class WebViewLoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "${pD.url}",
+                        "${gd.url}",
                         style: Theme.of(context).textTheme.title,
                         textAlign: TextAlign.center,
                         maxLines: 10,
@@ -74,13 +74,13 @@ class WebViewLoginPage extends StatelessWidget {
                 Logger.d('onWebViewCreated ${_controller.isCompleted}');
               },
               onPageFinished: (finishedString) {
-                pD.loading = false;
+                gd.loading = false;
                 Logger.d('onPageFinished finishedString $finishedString');
                 if (finishedString.contains('code=')) {
                   var authCode = finishedString.split('code=')[1];
-                  pD.sendHttpPost(pD.url, authCode, context);
+                  gd.sendHttpPost(gd.url, authCode, context);
                   Logger.d('authCode [' + authCode + ']');
-                  pD.removeSnackBar(context);
+                  gd.removeSnackBar(context);
                   Logger.d('Navigator.pop(context)');
                 }
               },

@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/model/CameraThumbnail.dart';
 import 'package:hasskit_2/model/Entity.dart';
@@ -9,9 +8,9 @@ import "package:http/http.dart" as http;
 import 'Logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-ProviderData pD;
+GeneralData gd;
 
-class ProviderData with ChangeNotifier {
+class GeneralData with ChangeNotifier {
   int _lastSelectedRoom = 0;
   int get lastSelectedRoom => _lastSelectedRoom;
   set lastSelectedRoom(int val) {
@@ -109,7 +108,7 @@ class ProviderData with ChangeNotifier {
         .post(url + "/auth/token", headers: headers, body: body)
         .then((response) {
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        pD.connectionStatus =
+        gd.connectionStatus =
             "Got response from server with code ${response.statusCode}";
 
         var bodyDecode = json.decode(response.body);
@@ -118,12 +117,12 @@ class ProviderData with ChangeNotifier {
         loginDataListUpdateAccessTime(loginData);
         Navigator.pop(context);
       } else {
-        pD.connectionStatus =
+        gd.connectionStatus =
             "Error response from server with code ${response.statusCode}";
         Navigator.pop(context);
       }
     }).catchError((e) {
-      pD.connectionStatus = "Error response from server with e $e";
+      gd.connectionStatus = "Error response from server with e $e";
       Navigator.pop(context);
     });
   }
@@ -353,7 +352,7 @@ class ProviderData with ChangeNotifier {
   loadLoginData() async {
     Logger.d("LoginData.loadLoginData");
     loginDataCurrent = null;
-    String loginDataLisString = await pD.getString('loginDataList');
+    String loginDataLisString = await gd.getString('loginDataList');
     if (loginDataLisString.length > 0) {
       Logger.d("FOUND loginDataLisString $loginDataLisString");
 
@@ -406,7 +405,7 @@ class ProviderData with ChangeNotifier {
 //    for (var e in loginDataList) {
 //      Logger.d("\nloginDataListSave: ${e.url} ${e.lastAccess}");
 //    }
-    pD.saveString('loginDataList', jsonEncode(loginDataList));
+    gd.saveString('loginDataList', jsonEncode(loginDataList));
     loginDataCurrent = loginDataList[0];
     Logger.d("loginDataCurrent: ${loginDataCurrent.url} ");
     notifyListeners();
@@ -430,7 +429,7 @@ class ProviderData with ChangeNotifier {
   }
 
   get socketUrl {
-    String recVal = pD.url;
+    String recVal = gd.url;
     recVal = recVal.replaceAll("http", "ws");
     recVal = recVal + "/api/websocket";
     return recVal;
