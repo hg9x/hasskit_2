@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:hasskit_2/model/Setting.dart';
+import 'package:hasskit_2/helper/providerData.dart';
 import 'package:hasskit_2/model/SwitchlikeCheckbox.dart';
 
 class RoomPage extends StatelessWidget {
   final PageController controller =
-      PageController(initialPage: pSetting.lastSelectedRoom, keepPage: true);
+      PageController(initialPage: pD.lastSelectedRoom, keepPage: true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Room'),
-        actions: pSetting.appBarThemeChanger,
+        actions: pD.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: PageView(
         onPageChanged: (pageNumber) {
-          pSetting.lastSelectedRoom = pageNumber;
+          pD.lastSelectedRoom = pageNumber;
         },
         controller: controller,
         children: <Widget>[

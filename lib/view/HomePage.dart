@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hasskit_2/model/Setting.dart';
+import 'package:hasskit_2/helper/providerData.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
-        actions: pSetting.appBarThemeChanger,
+        actions: pD.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/Logger.dart';
-import 'package:hasskit_2/model/LoginData.dart';
-import 'package:hasskit_2/model/Setting.dart';
+import 'package:hasskit_2/helper/providerData.dart';
 import 'package:validators/validators.dart';
 import 'SlidePanel.dart';
 import 'SliverAppBarDelegate.dart';
@@ -31,18 +30,18 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     addressController.addListener(addressListener);
     addressFocusNode.addListener(addressFocusNodeListener);
-    addressController.text = 'http://hasskitdemo.duckdns.org:8123';
+    addressController.text = "http://hasskitdemo.duckdns.org:8123";
     super.initState();
   }
 
   addressFocusNodeListener() {
     if (addressFocusNode.hasFocus) {
       keyboardVisible = true;
-      log.d(
+      Logger.d(
           "addressFocusNode.hasFocus ${addressFocusNode.hasFocus} $keyboardVisible");
     } else {
       keyboardVisible = false;
-      log.d(
+      Logger.d(
           "addressFocusNode.hasFocus ${addressFocusNode.hasFocus} $keyboardVisible");
     }
   }
@@ -50,13 +49,13 @@ class _SettingPageState extends State<SettingPage> {
   addressListener() {
     if (isURL(addressController.text.trim(),
         requireProtocol: true, protocols: ['http', 'https'])) {
-//      log.d("validURL = true isURL ${addressController.text}");
+//      Logger.d("validURL = true isURL ${addressController.text}");
       if (!showConnect) {
         showConnect = true;
         setState(() {});
       }
     } else {
-//      log.d("validURL = false isURL ${addressController.text}");
+//      Logger.d("validURL = false isURL ${addressController.text}");
       if (showConnect) {
         showConnect = false;
         setState(() {});
@@ -117,12 +116,12 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-//    log.d(
+//    Logger.d(
 //        "MediaQuery.of(context).viewInsets.vertical ${MediaQuery.of(context).viewInsets.vertical}");
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: pSetting.appBarThemeChanger,
+        actions: pD.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
@@ -141,7 +140,7 @@ class _SettingPageState extends State<SettingPage> {
             makeHeader(
                 Theme.of(context).primaryColorDark,
                 Image.asset('assets/images/home-assistant-512x512.png'),
-                'Connection Setting',
+                'Connection Setting \n${pD.connectionStatus}',
                 context),
             SliverList(
               delegate: SliverChildListDelegate(
@@ -180,18 +179,17 @@ class _SettingPageState extends State<SettingPage> {
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
                                       }
-                                      pSetting.loading = true;
+                                      pD.url = addressController.text.trim();
+                                      pD.loading = true;
                                       showModalBottomSheet(
                                           useRootNavigator: false,
                                           isScrollControlled: true,
                                           context: context,
                                           builder: (context) =>
-                                              WebViewLoginPage(addressController
-                                                  .text
-                                                  .trim()));
+                                              WebViewLoginPage());
                                     }
                                   : null,
-                              child: Text("Connect"),
+                              child: Text("Create"),
                             ),
                           ],
                         ),
@@ -206,8 +204,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => SlidePanel(pLoginData.loginDataList[index]),
-                childCount: pLoginData.loginDataList.length,
+                (context, index) => SlidePanel(pD.loginDataList[index]),
+                childCount: pD.loginDataList.length,
               ),
             ),
             makeHeader(Theme.of(context).primaryColorDark,

@@ -1,35 +1,31 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/Logger.dart';
-import 'package:hasskit_2/model/Setting.dart';
+import 'package:hasskit_2/helper/providerData.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewLoginPage extends StatelessWidget {
-  WebViewLoginPage(this.url);
-  final String url;
-  final String clientId = ('http://hasskit.com');
-  final String redirectUri = ('http://hasskit.com');
+  WebViewLoginPage();
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-    String initialUrl = url +
+    String initialUrl = pD.url +
         '/auth/authorize?client_id=' +
-        clientId +
-        '&redirect_uri=' +
-        redirectUri;
-    initialUrl = initialUrl.replaceAll('//auth', "/auth");
+        pD.url +
+        "/hasskit" '&redirect_uri=' +
+        pD.url +
+        "/hasskit";
 //    initUrl = Uri.encodeComponent(initUrl);
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
-        actions: pSetting.appBarThemeChanger,
+        actions: pD.appBarThemeChanger,
       ),
       body: Column(
         children: <Widget>[
-          pSetting.loading
+          pD.loading
               ? Expanded(
                   flex: 5,
                   child: Column(
@@ -43,7 +39,7 @@ class WebViewLoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "$url",
+                        "${pD.url}",
                         style: Theme.of(context).textTheme.title,
                         textAlign: TextAlign.center,
                         maxLines: 10,
@@ -57,6 +53,13 @@ class WebViewLoginPage extends StatelessWidget {
                         "http / https / port number",
                         textAlign: TextAlign.center,
                       ),
+                      SizedBox(height: 20),
+                      RaisedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel"),
+                      )
                     ],
                   ),
                 )
@@ -64,22 +67,21 @@ class WebViewLoginPage extends StatelessWidget {
           Expanded(
             child: WebView(
               debuggingEnabled: true,
-//              userAgent: ,
               initialUrl: initialUrl,
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {
                 _controller.complete(webViewController);
-                log.d('onWebViewCreated ${_controller.isCompleted}');
+                Logger.d('onWebViewCreated ${_controller.isCompleted}');
               },
               onPageFinished: (finishedString) {
-                pSetting.loading = false;
-                log.d('onPageFinished finishedString $finishedString');
+                pD.loading = false;
+                Logger.d('onPageFinished finishedString $finishedString');
                 if (finishedString.contains('code=')) {
                   var authCode = finishedString.split('code=')[1];
-                  pSetting.httpPost(url, authCode, clientId, context);
-                  log.d('authCode [' + authCode + ']');
-                  pSetting.removeSnackBar(context);
-                  log.d('Navigator.pop(context)');
+                  pD.sendHttpPost(pD.url, authCode, context);
+                  Logger.d('authCode [' + authCode + ']');
+                  pD.removeSnackBar(context);
+                  Logger.d('Navigator.pop(context)');
                 }
               },
             ),

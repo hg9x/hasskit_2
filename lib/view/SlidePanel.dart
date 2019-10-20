@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hasskit_2/helper/providerData.dart';
 import 'package:hasskit_2/model/LoginData.dart';
-import 'package:hasskit_2/model/Setting.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SlidePanel extends StatelessWidget {
@@ -9,14 +9,6 @@ class SlidePanel extends StatelessWidget {
   const SlidePanel(this.loginData);
   @override
   Widget build(BuildContext context) {
-//    for (LoginData loginData in pSetting.loginDataList) {
-//      log.d("url ${loginData.url} "
-//          "accessToken ${loginData.accessToken} "
-//          "expiresIn ${loginData.expiresIn} "
-//          "refreshToken ${loginData.refreshToken} "
-//          "tokenType ${loginData.tokenType} ");
-//    }
-
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
@@ -24,7 +16,7 @@ class SlidePanel extends StatelessWidget {
 //        color: Theme.of(context).primaryColorLight,
         child: ListTile(
           onTap: () {
-            pLoginData.loginDataListUpdateAccessTime(loginData);
+            pD.loginDataListUpdateAccessTime(loginData);
           },
           leading: Icon(
             MdiIcons.serverNetwork,
@@ -34,15 +26,7 @@ class SlidePanel extends StatelessWidget {
               style: Theme.of(context).textTheme.subhead,
               maxLines: 2,
               overflow: TextOverflow.ellipsis),
-          subtitle: Text(
-//              "accessToken ${loginData.accessToken.length} "
-//              "expiresIn ${loginData.expiresIn} "
-//              "refreshToken ${loginData.refreshToken.length} "
-//              "tokenType ${loginData.tokenType} "
-//              "lastAccess ${loginData.lastAccess} "
-              "Last Access: ${loginData.timeSinceLastAccess}"
-//              " (${DateTime.now().toUtc().millisecondsSinceEpoch - loginData.lastAccess})"
-              ,
+          subtitle: Text("Last Access: ${loginData.timeSinceLastAccess}",
               style: Theme.of(context).textTheme.body1,
               maxLines: 3,
               overflow: TextOverflow.ellipsis),
@@ -54,8 +38,8 @@ class SlidePanel extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
             icon: Icons.delete,
             onTap: () {
-              pSetting.showSnackBar('Delete', context);
-              pLoginData.loginDataListDelete(loginData.url);
+              pD.showSnackBar('Delete', context);
+              pD.loginDataListDelete(loginData);
             }),
       ],
     );
