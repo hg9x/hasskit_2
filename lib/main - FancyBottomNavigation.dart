@@ -1,4 +1,3 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/view/HomePage.dart';
@@ -45,8 +44,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int pageNumber = 2;
-  PageController _pageController = PageController();
-
   @override
   void initState() {
     mainInitState();
@@ -60,31 +57,41 @@ class _HomeViewState extends State<HomeView> {
         child: _getPage(pageNumber),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      bottomNavigationBar: BottomNavyBar(
-        selectedIndex: pageNumber,
-        showElevation: true, // use this to remove appBar's elevation
-        onItemSelected: (index) => setState(() {
-          pageNumber = index;
-          _getPage(pageNumber);
-        }),
-        items: [
-          BottomNavyBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Favorite'),
-            activeColor: Theme.of(context).accentColor,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(Icons.view_carousel),
-            title: Text('Room'),
-            activeColor: Theme.of(context).accentColor,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Setting'),
-            activeColor: Theme.of(context).accentColor,
-          ),
-        ],
+      bottomNavigationBar: SafeArea(
+        child: FancyBottomNavigation(
+          initialSelection: pageNumber,
+          barBackgroundColor: Theme.of(context).primaryColorLight,
+          tabs: [
+            TabData(
+              title: "Home",
+              iconData: Icons.home,
+//            onclick: () {},
+            ),
+            TabData(
+              title: "Room",
+              iconData: Icons.view_carousel,
+//            onclick: () {},
+            ),
+            TabData(
+              title: "Setting",
+              iconData: Icons.settings,
+//            onclick: () {},
+            ),
+          ],
+          onTabChangedListener: (position) {
+            setState(() {
+              pageNumber = position;
+//              Logger.d("onTabChangedListener position $position");
+            });
+          },
+        ),
       ),
+
+//      drawer: Drawer(
+//        child: ListView(
+//          children: <Widget>[Text("Hello"), Text("World")],
+//        ),
+//      ),
     );
   }
 
