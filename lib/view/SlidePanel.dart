@@ -10,14 +10,44 @@ class SlidePanel extends StatelessWidget {
   const SlidePanel(this.loginData);
   @override
   Widget build(BuildContext context) {
+    List<Widget> secondaryWidgets;
+    Widget deleteWidget = new IconSlideAction(
+        caption: 'Delete',
+        color: Colors.transparent,
+        icon: Icons.delete,
+        onTap: () {
+          gd.showSnackBar('Delete', context);
+          gd.loginDataListDelete(loginData);
+          if (gd.loginDataCurrent.url == loginData.url) {
+            webSocket.reset();
+          }
+        });
+    secondaryWidgets = [deleteWidget];
+    if (gd.loginDataCurrent.url == loginData.url) {
+      var disconnectWidget = IconSlideAction(
+          caption: 'Disconnect',
+          color: Colors.transparent,
+          icon: MdiIcons.serverNetworkOff,
+          onTap: () {
+            gd.showSnackBar('Disconnect from ${loginData.url}', context);
+            webSocket.reset();
+          });
+      secondaryWidgets = [disconnectWidget, deleteWidget];
+    } else {
+      secondaryWidgets = [deleteWidget];
+    }
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
       child: InkWell(
         onTap: () {
-          gd.loginDataCurrent = loginData;
-          webSocket.initCommunication();
-          gd.showSnackBar('Connect to ${loginData.url}', context);
+          if (gd.loginDataCurrent.url == loginData.url &&
+              gd.connectionStatus == "Connected") {
+            gd.showSnackBar(
+                "Swift Right to Refresh, Left to Disconnect/Delete", context);
+          } else {
+            gd.showSnackBar("Swift Right to Connect, Left to Delete", context);
+          }
         },
         child: Card(
           margin: EdgeInsets.all(4),
@@ -26,7 +56,8 @@ class SlidePanel extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Row(
               children: <Widget>[
-                gd.loginDataCurrent.url == loginData.url
+                gd.loginDataCurrent.url == loginData.url &&
+                        gd.connectionStatus == "Connected"
                     ? Icon(
                         MdiIcons.serverNetwork,
                         color: Theme.of(context).primaryColorDark,
@@ -59,24 +90,29 @@ class SlidePanel extends StatelessWidget {
           ),
         ),
       ),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-            caption: 'Disconnect',
-            color: Theme.of(context).primaryColorDark,
-            icon: MdiIcons.serverNetworkOff,
-            onTap: () {
-              gd.showSnackBar('Disconnect from ${loginData.url}', context);
-              webSocket.reset();
-            }),
-        IconSlideAction(
-            caption: 'Delete',
-            color: Theme.of(context).primaryColorDark,
-            icon: Icons.delete,
-            onTap: () {
-              gd.showSnackBar('Delete', context);
-              gd.loginDataListDelete(loginData);
-            }),
+      actions: <Widget>[
+        (gd.loginDataCurrent.url == loginData.url &&
+                gd.connectionStatus == "Connected")
+            ? IconSlideAction(
+                caption: 'Refresh',
+                color: Colors.transparent,
+                icon: MdiIcons.refresh,
+                onTap: () {
+                  gd.showSnackBar(
+                      'Refresh data from ${loginData.url}', context);
+                  webSocket.initCommunication();
+                })
+            : IconSlideAction(
+                caption: 'Connect',
+                color: Colors.transparent,
+                icon: MdiIcons.serverNetwork,
+                onTap: () {
+                  gd.showSnackBar('Connect to ${loginData.url}', context);
+                  gd.loginDataCurrent = loginData;
+                  webSocket.initCommunication();
+                }),
       ],
+      secondaryActions: secondaryWidgets,
     );
   }
 }

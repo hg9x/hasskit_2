@@ -159,59 +159,62 @@ class _SettingPageState extends State<SettingPage> {
                 [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      focusNode: addressFocusNode,
-                      controller: addressController,
-                      decoration: InputDecoration(
-                        hintText: 'http://sample.duckdns.org:8123',
-                        labelText: 'Create New Connection...',
-                        suffix: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            showCancel
-                                ? IconButton(
-                                    icon: Icon(
-                                      Icons.cancel,
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    ),
-                                    onPressed: () {
-                                      addressController.clear();
-                                      if (keyboardVisible) {
-                                        FocusScope.of(context)
-                                            .requestFocus(new FocusNode());
-                                      }
-                                    },
-                                  )
-                                : Container(),
-                            RaisedButton(
-                              onPressed: showConnect
-                                  ? () {
-                                      if (keyboardVisible) {
-                                        FocusScope.of(context)
-                                            .requestFocus(new FocusNode());
-                                      }
-                                      gd.loginDataCurrent = LoginData(
-                                          url: gd
-                                              .trimUrl(addressController.text));
-                                      gd.webViewLoading = true;
-                                      addressController.clear();
-                                      showModalBottomSheet(
-                                          useRootNavigator: false,
-                                          isScrollControlled: true,
-                                          context: context,
-                                          builder: (context) =>
-                                              WebViewLoginPage());
-                                    }
-                                  : null,
-                              child: Text("Create"),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        TextField(
+                          focusNode: addressFocusNode,
+                          controller: addressController,
+                          decoration: InputDecoration(
+                            hintText: 'http://sample.duckdns.org:8123',
+                            labelText: 'Create New Connection...',
+                            suffix: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                showCancel
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.cancel,
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                        ),
+                                        onPressed: () {
+                                          addressController.clear();
+                                          if (keyboardVisible) {
+                                            FocusScope.of(context)
+                                                .requestFocus(new FocusNode());
+                                          }
+                                        },
+                                      )
+                                    : Container(),
+                              ],
                             ),
-                          ],
+                          ),
+                          keyboardType: TextInputType.url,
+                          autocorrect: false,
+                          onEditingComplete: () {},
                         ),
-                      ),
-                      keyboardType: TextInputType.url,
-                      autocorrect: false,
-                      onEditingComplete: () {},
+                        showConnect
+                            ? RaisedButton(
+                                onPressed: () {
+                                  if (keyboardVisible) {
+                                    FocusScope.of(context)
+                                        .requestFocus(new FocusNode());
+                                  }
+                                  gd.loginDataCurrent = LoginData(
+                                      url: gd.trimUrl(addressController.text));
+                                  gd.webViewLoading = true;
+                                  addressController.clear();
+                                  showModalBottomSheet(
+                                      useRootNavigator: false,
+                                      isScrollControlled: true,
+                                      context: context,
+                                      builder: (context) => WebViewLoginPage());
+                                },
+                                child: Text("Create"),
+                              )
+                            : Container(),
+                      ],
                     ),
                   ),
                 ],

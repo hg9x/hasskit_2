@@ -386,6 +386,13 @@ class GeneralData with ChangeNotifier {
     if (gd.loginDataList.length > 0) {
       loginDataCurrent = gd.loginDataList[0];
     }
+
+    if (loginDataLisString.length > 0 &&
+        loginDataList[0].longToken.length > 0) {
+      loginDataCurrent = loginDataList[0];
+      webSocket.initCommunication();
+      log.w("Auto connect to ${loginDataCurrent.url}");
+    }
   }
 
   void loginDataListAdd(LoginData loginData) {
