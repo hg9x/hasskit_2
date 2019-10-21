@@ -350,6 +350,10 @@ class GeneralData with ChangeNotifier {
 
   List<LoginData> loginDataList = [];
 
+  int get loginDataListLength {
+    return loginDataList.length;
+  }
+
   LoginData loginDataCurrent = LoginData();
 
   loadLoginData() async {

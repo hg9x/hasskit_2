@@ -32,9 +32,8 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     addressController.addListener(addressListener);
     addressFocusNode.addListener(addressFocusNodeListener);
-//    gd.loginDataList.length < 1
-//        ? addressController.text = "http://hasskitdemo.duckdns.org:8123"
-//        : addressController.text = "";
+    addressController.text = "";
+
     super.initState();
   }
 
@@ -204,14 +203,13 @@ class _SettingPageState extends State<SettingPage> {
                                   gd.loginDataCurrent = LoginData(
                                       url: gd.trimUrl(addressController.text));
                                   gd.webViewLoading = true;
-                                  addressController.clear();
                                   showModalBottomSheet(
                                       useRootNavigator: false,
                                       isScrollControlled: true,
                                       context: context,
                                       builder: (context) => WebViewLoginPage());
                                 },
-                                child: Text("Create"),
+                                child: Text("Create New Connection"),
                               )
                             : Container(),
                       ],
