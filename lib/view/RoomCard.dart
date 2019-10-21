@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/view/RoomDetailPage.dart';
+
+class RoomCard extends StatelessWidget {
+  final int roomIndex;
+  const RoomCard({@required this.roomIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showBottomSheet(
+          context: context,
+          elevation: 1,
+          builder: (BuildContext context) {
+            return RoomDetailPage(roomIndex: roomIndex);
+          },
+        );
+      },
+      child: Card(
+        margin: EdgeInsets.all(4),
+        elevation: 0,
+        semanticContainer: false,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(gd.roomList[roomIndex].image),
+            ),
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 10),
+              Text(
+                "${gd.roomList[roomIndex].name}",
+                style: Theme.of(context).textTheme.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              roomIndex == gd.roomList.length - 1
+                  ? Expanded(
+                      child: Icon(
+                      Icons.add_circle,
+                      size: 80,
+                    ))
+                  : Container(),
+              Container(
+                height: roomIndex == gd.roomList.length - 1 ? 20 : 0,
+              )
+            ],
+          ),
+        ),
+//      child: Stack(
+//        fit: StackFit.expand,
+//        children: <Widget>[
+//          Image.asset(
+//            gd.roomList[roomIndex].image,
+//            fit: BoxFit.cover,
+//          ),
+//          Text(gd.roomList[roomIndex].name),
+//        ],
+//      ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+}

@@ -5,9 +5,9 @@ import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class SlidePanel extends StatelessWidget {
+class ServerSelectPanel extends StatelessWidget {
   final LoginData loginData;
-  const SlidePanel(this.loginData);
+  const ServerSelectPanel(this.loginData);
   @override
   Widget build(BuildContext context) {
     List<Widget> secondaryWidgets;
@@ -81,6 +81,7 @@ class SlidePanel extends StatelessWidget {
                               ? "Status: ${gd.connectionStatus}"
                               : "Last Access: ${loginData.timeSinceLastAccess}",
                           style: Theme.of(context).textTheme.body1,
+                          maxLines: 5,
                           overflow: TextOverflow.ellipsis),
                     ],
                   ),

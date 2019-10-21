@@ -4,7 +4,8 @@ import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:validators/validators.dart';
-import 'SlidePanel.dart';
+import 'RoomCard.dart';
+import 'ServerSelectPanel.dart';
 import 'SliverAppBarDelegate.dart';
 import 'WebViewLoginPage.dart';
 
@@ -161,7 +162,7 @@ class _SettingPageState extends State<SettingPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        TextField(
+                        TextFormField(
                           focusNode: addressFocusNode,
                           controller: addressController,
                           decoration: InputDecoration(
@@ -220,25 +221,53 @@ class _SettingPageState extends State<SettingPage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => SlidePanel(gd.loginDataList[index]),
+                (context, index) => ServerSelectPanel(gd.loginDataList[index]),
                 childCount: gd.loginDataList.length,
               ),
             ),
             makeHeader(
                 Theme.of(context).primaryColorDark,
+                Image.asset('assets/images/view_carousel_512x512.png'),
+                'Room Setting',
+                "",
+                context),
+            SliverFixedExtentList(
+              itemExtent: 240.0,
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    child: Container(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: gd.roomList.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            width: 150,
+                            child: RoomCard(roomIndex: index),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            makeHeader(
+                Theme.of(context).primaryColorDark,
                 Image.asset('assets/images/icon.png'),
-                'Quick Tour',
+                'About HassKit',
                 "",
                 context),
             SliverFixedExtentList(
               itemExtent: 150.0,
               delegate: SliverChildListDelegate(
                 [
-                  Container(),
-                  Container(),
-                  Container(),
-                  Container(),
-                  Container(),
+                  Container(color: Theme.of(context).primaryColorLight),
+                  Container(color: Theme.of(context).primaryColor),
+                  Container(color: Theme.of(context).primaryColorDark),
+                  Container(color: Theme.of(context).primaryColorLight),
+                  Container(color: Theme.of(context).primaryColor),
+                  Container(color: Theme.of(context).primaryColorDark),
                 ],
               ),
             ),

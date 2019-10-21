@@ -1,13 +1,17 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:core';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/CameraThumbnail.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/model/LoginData.dart';
+import 'package:hasskit_2/model/Room.dart';
 import "package:http/http.dart" as http;
 import 'Logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 GeneralData gd;
 
@@ -545,5 +549,59 @@ class GeneralData with ChangeNotifier {
       log.w("$url contain last /");
     }
     return url;
+  }
+
+  List<Room> roomList = [
+    Room(
+        name: "Favorite",
+        index: 0,
+        image: "assets/background_images/Orange-iOS-13-Home-app-wallpaper.jpg"),
+    Room(
+        name: "Living Room",
+        index: 1,
+        image:
+            "assets/background_images/DarkBlue-iOS-13-Home-app-wallpaper.jpg"),
+    Room(
+        name: "Kitchen",
+        index: 2,
+        image:
+            "assets/background_images/DarkGreen-iOS-13-Home-app-wallpaper.jpg"),
+    Room(
+        name: "Bedroom",
+        index: 3,
+        image:
+            "assets/background_images/LightBlue-iOS-13-Home-app-wallpaper.jpg"),
+    Room(
+        name: "Bathroom",
+        index: 4,
+        image:
+            "assets/background_images/LightGreen-iOS-13-Home-app-wallpaper.jpg"),
+    Room(
+        name: "New Room",
+        index: 1000,
+        image: "assets/background_images/Red-iOS-13-Home-app-wallpaper.jpg"),
+  ];
+
+  List<String> backgroundImage = [
+    "assets/background_images/DarkBlue-iOS-13-Home-app-wallpaper.jpg",
+    "assets/background_images/DarkGreen-iOS-13-Home-app-wallpaper.jpg",
+    "assets/background_images/LightBlue-iOS-13-Home-app-wallpaper.jpg",
+    "assets/background_images/LightGreen-iOS-13-Home-app-wallpaper.jpg",
+    "assets/background_images/Orange-iOS-13-Home-app-wallpaper.jpg",
+    "assets/background_images/Red-iOS-13-Home-app-wallpaper.jpg",
+  ];
+
+  setRoomBackgroundImage(Room room, String backgroundImageName) {
+    if (room.image != backgroundImageName) {
+      room.image = backgroundImageName;
+      notifyListeners();
+    }
+  }
+
+  setRoomName(Room room, String name) {
+    if (room.name != name) {
+      room.name = name;
+      notifyListeners();
+    }
   }
 }

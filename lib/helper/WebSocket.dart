@@ -162,7 +162,7 @@ class WebSocket {
     gd.connectionStatus = "Connected";
 
     var decode = json.decode(message);
-    log.d("_onData decode $decode");
+//    log.d("_onData decode $decode");
 
     var type = decode['type'];
 
