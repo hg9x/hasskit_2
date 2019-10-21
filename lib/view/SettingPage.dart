@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/Logger.dart';
-import 'package:hasskit_2/helper/providerData.dart';
+import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/model/LoginData.dart';
 import 'package:validators/validators.dart';
 import 'SlidePanel.dart';
 import 'SliverAppBarDelegate.dart';
@@ -30,18 +32,20 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     addressController.addListener(addressListener);
     addressFocusNode.addListener(addressFocusNodeListener);
-    addressController.text = "http://hasskitdemo.duckdns.org:8123";
+//    gd.loginDataList.length < 1
+//        ? addressController.text = "http://hasskitdemo.duckdns.org:8123"
+//        : addressController.text = "";
     super.initState();
   }
 
   addressFocusNodeListener() {
     if (addressFocusNode.hasFocus) {
       keyboardVisible = true;
-      Logger.d(
+      log.d(
           "addressFocusNode.hasFocus ${addressFocusNode.hasFocus} $keyboardVisible");
     } else {
       keyboardVisible = false;
-      Logger.d(
+      log.d(
           "addressFocusNode.hasFocus ${addressFocusNode.hasFocus} $keyboardVisible");
     }
   }
@@ -79,6 +83,7 @@ class _SettingPageState extends State<SettingPage> {
     Color color,
     Image image,
     String headerText,
+    String subText,
     BuildContext context,
   ) {
     return SliverPersistentHeader(
@@ -103,7 +108,13 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text(headerText),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(headerText),
+                        subText.length > 0 ? Text(subText) : Container(),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -140,7 +151,8 @@ class _SettingPageState extends State<SettingPage> {
             makeHeader(
                 Theme.of(context).primaryColorDark,
                 Image.asset('assets/images/home-assistant-512x512.png'),
-                'Connection Setting \n${gd.connectionStatus}',
+                'Home Assistant Connection',
+                "",
                 context),
             SliverList(
               delegate: SliverChildListDelegate(
@@ -179,8 +191,11 @@ class _SettingPageState extends State<SettingPage> {
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
                                       }
-                                      gd.url = addressController.text.trim();
-                                      gd.loading = true;
+                                      gd.loginDataCurrent = LoginData(
+                                          url: gd
+                                              .trimUrl(addressController.text));
+                                      gd.webViewLoading = true;
+                                      addressController.clear();
                                       showModalBottomSheet(
                                           useRootNavigator: false,
                                           isScrollControlled: true,
@@ -208,8 +223,12 @@ class _SettingPageState extends State<SettingPage> {
                 childCount: gd.loginDataList.length,
               ),
             ),
-            makeHeader(Theme.of(context).primaryColorDark,
-                Image.asset('assets/images/icon.png'), 'Quick Tour', context),
+            makeHeader(
+                Theme.of(context).primaryColorDark,
+                Image.asset('assets/images/icon.png'),
+                'Quick Tour',
+                "",
+                context),
             SliverFixedExtentList(
               itemExtent: 150.0,
               delegate: SliverChildListDelegate(

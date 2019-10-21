@@ -5,7 +5,7 @@ import 'package:hasskit_2/view/RoomPage.dart';
 import 'package:hasskit_2/view/SettingPage.dart';
 import 'package:provider/provider.dart';
 import 'helper/Logger.dart';
-import 'helper/providerData.dart';
+import 'helper/GeneralData.dart';
 
 //void main() => runApp(MyApp());
 void main() {
@@ -81,7 +81,7 @@ class _HomeViewState extends State<HomeView> {
           onTabChangedListener: (position) {
             setState(() {
               pageNumber = position;
-              Logger.d("onTabChangedListener position $position");
+//              Logger.d("onTabChangedListener position $position");
             });
           },
         ),
@@ -109,8 +109,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   mainInitState() async {
-    Logger.w("mainInitState START await loginDataInstance.loadLoginData");
+    log.w("mainInitState START await loginDataInstance.loadLoginData");
     await gd.loadLoginData();
-    Logger.w("mainInitState END await loginDataInstance.loadLoginData");
+    log.w("mainInitState END await loginDataInstance.loadLoginData");
   }
 }

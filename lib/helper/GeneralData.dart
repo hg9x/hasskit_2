@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/CameraThumbnail.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/model/LoginData.dart';
@@ -23,18 +24,6 @@ class GeneralData with ChangeNotifier {
     }
   }
 
-  String _url = "";
-  String get url => _url;
-  set url(String val) {
-    if (val == null) {
-      throw new ArgumentError();
-    }
-    if (_url != val) {
-      _url = val;
-      notifyListeners();
-    }
-  }
-
   String _connectionStatus = "";
   String get connectionStatus => _connectionStatus;
   set connectionStatus(String val) {
@@ -50,7 +39,7 @@ class GeneralData with ChangeNotifier {
   void saveBool(String key, bool content) async {
     var _preferences = await SharedPreferences.getInstance();
     _preferences.setBool(key, content);
-    Logger.d("saveBool: key $key content $content");
+    log.d("saveBool: key $key content $content");
   }
 
   Future<bool> getBool(String key) async {
@@ -62,7 +51,7 @@ class GeneralData with ChangeNotifier {
   void saveString(String key, String content) async {
     var _preferences = await SharedPreferences.getInstance();
     _preferences.setString(key, content);
-    Logger.d("saveString: key $key content $content");
+    log.d("saveString: key $key content $content");
   }
 
   Future<String> getString(String key) async {
@@ -97,7 +86,7 @@ class GeneralData with ChangeNotifier {
   }
 
   void sendHttpPost(String url, String authCode, BuildContext context) async {
-    Logger.d("httpPost $url "
+    log.d("httpPost $url "
         "\nauthCode $authCode");
     Map<String, String> headers = {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -114,7 +103,21 @@ class GeneralData with ChangeNotifier {
         var bodyDecode = json.decode(response.body);
         var loginData = LoginData.fromJson(bodyDecode);
         loginData.url = url;
-        loginDataListUpdateAccessTime(loginData);
+//        log.d("bodyDecode $bodyDecode\n"
+//            "url ${loginData.url}\n"
+//            "longToken ${loginData.longToken}\n"
+//            "accessToken ${loginData.accessToken}\n"
+//            "expiresIn ${loginData.expiresIn}\n"
+//            "refreshToken ${loginData.refreshToken}\n"
+//            "tokenType ${loginData.tokenType}\n"
+//            "lastAccess ${loginData.lastAccess}\n"
+//            "");
+        gd.loginDataCurrent = loginData;
+        gd.loginDataListAdd(loginData);
+        loginDataListSortAndSave();
+        webSocket.initCommunication();
+        log.w(
+            "webSocket.initCommunication loginDataCurrent ${loginDataCurrent.url}");
         Navigator.pop(context);
       } else {
         gd.connectionStatus =
@@ -144,7 +147,7 @@ class GeneralData with ChangeNotifier {
       _entities.add(entity);
     }
 
-    Logger.d('_entities.length ${entities.length}');
+    log.d('_entities.length ${entities.length}');
     notifyListeners();
   }
 
@@ -158,7 +161,7 @@ class GeneralData with ChangeNotifier {
     var cardNumber = 0;
 
     List<dynamic> viewsParse = message['result']['views'];
-    Logger.d('viewsParse.length ${viewsParse.length}');
+    log.d('viewsParse.length ${viewsParse.length}');
 
     for (var viewParse in viewsParse) {
       //iterate over the list
@@ -245,14 +248,14 @@ class GeneralData with ChangeNotifier {
 
   void entityValidationAdd(String entityId, List<Entity> list) {
     if (entityId == null) {
-      Logger.d('entityValidationAdd $entityId null');
+      log.d('entityValidationAdd $entityId null');
       return;
     }
     String entityIdOriginal = entityId;
     entityId = entityId.split(',').first;
 
     if (!entityId.contains('.')) {
-      Logger.d('entityValidationAdd $entityIdOriginal not valid');
+      log.d('entityValidationAdd $entityIdOriginal not valid');
       return;
     }
 
@@ -268,7 +271,7 @@ class GeneralData with ChangeNotifier {
         list.add(entity);
       }
     } catch (e) {
-      Logger.d('entityValidationAdd Error finding $entityId - $e');
+      log.d('entityValidationAdd Error finding $entityId - $e');
     }
   }
 
@@ -288,7 +291,6 @@ class GeneralData with ChangeNotifier {
     notifyListeners();
   }
 
-  int themeIndex = 3;
   List<ThemeData> themesData = [
     ThemeData(
       brightness: Brightness.light,
@@ -336,28 +338,28 @@ class GeneralData with ChangeNotifier {
     return themesData[themeIndex];
   }
 
+  int themeIndex = 7;
   themeChange() {
     themeIndex = themeIndex + 1;
     if (themeIndex >= themesData.length) {
       themeIndex = 0;
     }
-    Logger.d("themeIndex $themeIndex");
+    log.d("themeIndex $themeIndex");
     notifyListeners();
   }
 
   List<LoginData> loginDataList = [];
 
-  LoginData loginDataCurrent;
+  LoginData loginDataCurrent = LoginData();
 
   loadLoginData() async {
-    Logger.d("LoginData.loadLoginData");
+    log.d("LoginData.loadLoginData");
     loginDataCurrent = null;
     String loginDataLisString = await gd.getString('loginDataList');
     if (loginDataLisString.length > 0) {
-      Logger.d("FOUND loginDataLisString $loginDataLisString");
-
+      log.d("FOUND loginDataLisString $loginDataLisString");
       List<dynamic> loginDataList = jsonDecode(loginDataLisString);
-      Logger.d("loginDataList.length ${loginDataList.length}");
+      log.d("loginDataList.length ${loginDataList.length}");
       for (var loginData in loginDataList) {
         LoginData newLoginData = LoginData(
           url: loginData["url"],
@@ -368,7 +370,7 @@ class GeneralData with ChangeNotifier {
           tokenType: loginData["tokenType"],
           lastAccess: loginData["lastAccess"],
         );
-        Logger.d("loginDataListAdd url ${newLoginData.url}");
+        log.d("loginDataListAdd url ${newLoginData.url}");
 //            "accessToken  ${newLoginData.accessToken} \n"
 //            "expiresIn  ${newLoginData.expiresIn} \n"
 //            "refreshToken  ${newLoginData.refreshToken} \n"
@@ -376,60 +378,59 @@ class GeneralData with ChangeNotifier {
 //            "lastAccess  ${newLoginData.lastAccess} \n");
         loginDataListAdd(newLoginData);
       }
-      Logger.d("loginDataList.length ${loginDataList.length}");
+      log.d("loginDataList.length ${loginDataList.length}");
     } else {
-      Logger.d("CAN NOT FIND loginDataList");
+      log.d("CAN NOT FIND loginDataList");
     }
     loginDataListSortAndSave();
+    if (gd.loginDataList.length > 0) {
+      loginDataCurrent = gd.loginDataList[0];
+    }
   }
 
   void loginDataListAdd(LoginData loginData) {
-    Logger.d("LoginData.loginDataListAdd ${loginData.url}");
+    log.d("LoginData.loginDataListAdd ${loginData.url}");
     var loginDataOld = loginDataList
         .firstWhere((rec) => rec.url == loginData.url, orElse: () => null);
     if (loginDataOld == null) {
       loginDataList.add(loginData);
-      Logger.d("loginDataListAdd ${loginData.url}");
+      log.d("loginDataListAdd ${loginData.url}");
     } else {
-      loginDataOld = loginData;
-      Logger.e("loginDataListAdd ALREADY HAVE ${loginData.url}");
+      loginDataOld.url = loginData.url;
+      loginDataOld.accessToken = loginData.accessToken;
+      loginDataOld.longToken = loginData.longToken;
+      loginDataOld.expiresIn = loginData.expiresIn;
+      loginDataOld.refreshToken = loginData.refreshToken;
+      loginDataOld.tokenType = loginData.tokenType;
+      loginDataOld.lastAccess = DateTime.now().toUtc().millisecondsSinceEpoch;
+      log.e("loginDataListAdd ALREADY HAVE ${loginData.url}");
     }
+    notifyListeners();
   }
 
   void loginDataListSortAndSave() {
-    Logger.d("LoginData.loginDataListSortAndSave");
-    if (loginDataList.length < 1) {
-      return;
+    log.d("LoginData.loginDataListSortAndSave");
+    if (loginDataList.length > 1) {
+      loginDataList.sort((a, b) => b.lastAccess.compareTo(a.lastAccess));
     }
-    loginDataList.sort((a, b) => b.lastAccess.compareTo(a.lastAccess));
-//    for (var e in loginDataList) {
-//      Logger.d("\nloginDataListSave: ${e.url} ${e.lastAccess}");
-//    }
     gd.saveString('loginDataList', jsonEncode(loginDataList));
-    loginDataCurrent = loginDataList[0];
-    Logger.d("loginDataCurrent: ${loginDataCurrent.url} ");
+    log.d("loginDataList.length ${loginDataList.length}");
     notifyListeners();
   }
 
   void loginDataListDelete(LoginData loginData) {
-    Logger.d("LoginData.loginDataListDelete ${loginData.url}");
+    log.d("LoginData.loginDataListDelete ${loginData.url}");
     if (loginData != null) {
       loginDataList.remove(loginData);
-      Logger.d("loginDataList.remove ${loginData.url}");
+      log.d("loginDataList.remove ${loginData.url}");
     } else {
-      Logger.e("loginDataList.remove Can not find ${loginData.url}");
+      log.e("loginDataList.remove Can not find ${loginData.url}");
     }
     loginDataListSortAndSave();
   }
 
-  void loginDataListUpdateAccessTime(LoginData loginData) {
-    loginData.lastAccess = DateTime.now().toUtc().millisecondsSinceEpoch;
-    Logger.d("loginDataListUpdateAccessTime ${loginData.lastAccess}");
-    loginDataListSortAndSave();
-  }
-
   get socketUrl {
-    String recVal = gd.url;
+    String recVal = loginDataCurrent.url;
     recVal = recVal.replaceAll("http", "ws");
     recVal = recVal + "/api/websocket";
     return recVal;
@@ -459,6 +460,18 @@ class GeneralData with ChangeNotifier {
     }
     if (_subscribeEventsId != value) {
       _subscribeEventsId = value;
+      notifyListeners();
+    }
+  }
+
+  int _longTokenId = 0;
+  get longTokenId => _longTokenId;
+  set longTokenId(int value) {
+    if (value == null) {
+      throw new ArgumentError();
+    }
+    if (_longTokenId != value) {
+      _longTokenId = value;
       notifyListeners();
     }
   }
@@ -499,18 +512,27 @@ class GeneralData with ChangeNotifier {
     }
   }
 
-  bool _loading = false;
-  bool get loading {
-    return _loading;
+  bool _webViewLoading = false;
+  bool get webViewLoading {
+    return _webViewLoading;
   }
 
-  set loading(bool value) {
+  set webViewLoading(bool value) {
     if (value != true && value != false) {
       throw new ArgumentError();
     }
-    if (_loading != value) {
-      _loading = value;
+    if (_webViewLoading != value) {
+      _webViewLoading = value;
       notifyListeners();
     }
+  }
+
+  String trimUrl(String url) {
+    url = url.trim();
+    if (url.substring(url.length - 1, url.length) == '/') {
+      url = url.substring(0, url.length - 1);
+      log.w("$url contain last /");
+    }
+    return url;
   }
 }

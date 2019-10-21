@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:hasskit_2/helper/providerData.dart';
+import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:web_socket_channel/io.dart';
 import 'Logger.dart';
 
@@ -47,7 +47,7 @@ class WebSocket {
   /// Initialization the WebSockets connection with the server
   /// ----------------------------------------------------------
   initCommunication() async {
-    Logger.d(
+    log.d(
         'initCommunication socketUrl ${gd.socketUrl} autoConnect ${gd.autoConnect} connectionStatus ${gd.connectionStatus}');
 
     ///
@@ -74,7 +74,7 @@ class WebSocket {
     } catch (e) {
       ///
       /// General error handling
-      Logger.d('initCommunication catch $e');
+      log.d('initCommunication catch $e');
       gd.connectionStatus = 'Error:\n' + e.toString();
       connected = false;
 
@@ -93,9 +93,12 @@ class WebSocket {
         gd.connectionStatus = "reset";
         gd.socketId = 0;
         gd.subscribeEventsId = 0;
-//        providerData.cameraThumbnailsId.clear();
-//        providerData.cameraRequestTime.clear();
-//        providerData.cameraActives.clear();
+        gd.longTokenId = 0;
+        gd.getStatesId = 0;
+        gd.loveLaceConfigId = 0;
+        gd.cameraThumbnailsId.clear();
+        gd.cameraRequestTime.clear();
+        gd.cameraActives.clear();
       }
     }
   }
@@ -104,7 +107,7 @@ class WebSocket {
   /// Sends a message to the server
   /// ---------------------------------------------------------
   send(String message) {
-    Logger.d("send String message $message");
+    log.d("send String message $message");
     if (_channel != null) {
       if (_channel.sink != null && connected) {
         var decode = json.decode(message);
@@ -113,12 +116,14 @@ class WebSocket {
 
         if (type == 'subscribe_events') {
           if (gd.subscribeEventsId != 0) {
-            Logger.d('??? subscribe_events We do not sub twice');
+            log.d('??? subscribe_events We do not sub twice');
             return;
           }
           gd.subscribeEventsId = id;
         }
-
+        if (type == 'auth/long_lived_access_token') {
+          gd.longTokenId = id;
+        }
         if (type == 'get_states') {
           gd.getStatesId = id;
         }
@@ -130,7 +135,7 @@ class WebSocket {
         }
 
         _channel.sink.add(message);
-        Logger.d('WebSocket send: id $id type $type $message');
+//        log.d('WebSocket send: id $id type $type $message');
         gd.socketIdIncrement();
       }
     }
@@ -157,7 +162,7 @@ class WebSocket {
     gd.connectionStatus = "Connected";
 
     var decode = json.decode(message);
-    Logger.d("_onData decode $decode");
+    log.d("_onData decode $decode");
 
     var type = decode['type'];
 
@@ -165,15 +170,57 @@ class WebSocket {
     switch (type) {
       case 'auth_required':
         {
-          outMsg = {
-            "type": "auth",
-            "access_token": "${gd.loginDataCurrent.accessToken}"
-          };
+          if (gd.loginDataCurrent.longToken.length > 100) {
+            outMsg = {
+              "type": "auth",
+              "access_token": "${gd.loginDataCurrent.longToken}"
+            };
+            gd.connectionStatus = "Sending longToken";
+            log.w("Sending longToken");
+          } else {
+            outMsg = {
+              "type": "auth",
+              "access_token": "${gd.loginDataCurrent.accessToken}"
+            };
+            gd.connectionStatus = "Sending accessToken";
+            log.w("Sending accessToken");
+          }
           send(json.encode(outMsg));
-          gd.connectionStatus = "Sending access_token";
         }
         break;
       case 'auth_ok':
+        {
+          if (gd.loginDataCurrent.longToken.length < 100) {
+            outMsg = {
+              "id": gd.socketId,
+              "type": "auth/long_lived_access_token",
+              "client_name":
+                  "hasskit_${DateTime.now().toUtc().millisecondsSinceEpoch}",
+//              "client_name": "${gd.loginDataCurrent.url}",
+              "lifespan": 365
+            };
+            gd.connectionStatus = "Sending auth/long_lived_access_token";
+          } else {
+            outMsg = {"id": gd.socketId, "type": "get_states"};
+            gd.connectionStatus = "Sending get_states";
+          }
+
+          gd.loginDataCurrent.lastAccess =
+              DateTime.now().millisecondsSinceEpoch;
+          var loginDataCurrentInList = gd.loginDataList.firstWhere(
+              (e) => e.url == gd.loginDataCurrent.url,
+              orElse: () => null);
+          if (loginDataCurrentInList == null) {
+            log.e("loginDataCurrentInList==null ${gd.loginDataCurrent.url}");
+          } else {
+            loginDataCurrentInList.lastAccess =
+                DateTime.now().millisecondsSinceEpoch;
+            gd.loginDataListSortAndSave();
+          }
+          send(json.encode(outMsg));
+        }
+        break;
+      case 'auth/long_lived_access_token':
         {
           outMsg = {"id": gd.socketId, "type": "get_states"};
           send(json.encode(outMsg));
@@ -184,18 +231,32 @@ class WebSocket {
         {
           var success = decode['success'];
           if (!success) {
-            Logger.d('result not success');
+            log.d('result not success');
             break;
           }
           var id = decode['id'];
 
-          if (id == gd.getStatesId) {
-            Logger.d('Processing Get States');
+          //Processing long_lived_access_token
+          if (id == gd.longTokenId) {
+            log.d('Processing long_lived_access_token');
+            String longToken = decode['result'];
+            gd.loginDataCurrent.longToken = longToken;
+            gd.loginDataList[0].longToken = longToken;
+            gd.loginDataListSortAndSave();
+            log.w("Got the longToken, set and save it $longToken}");
+            outMsg = {"id": gd.socketId, "type": "get_states"};
+            send(json.encode(outMsg));
+          }
+          //Processing get_states
+          else if (id == gd.getStatesId) {
+            log.d('Processing Get States');
             gd.getStates(decode['result']);
             outMsg = {"id": gd.socketId, "type": "lovelace/config"};
             send(json.encode(outMsg));
-          } else if (id == gd.loveLaceConfigId) {
-            Logger.d('Processing Lovelace Config');
+          }
+          //Processing lovelace/config
+          else if (id == gd.loveLaceConfigId) {
+            log.d('Processing Lovelace Config');
             gd.getLovelaceConfig(decode);
             outMsg = {
               "id": gd.socketId,
@@ -203,7 +264,9 @@ class WebSocket {
               "event_type": "state_changed"
             };
             send(json.encode(outMsg));
-          } else if (gd.cameraThumbnailsId.containsKey(id)) {
+          }
+          //Processing cameraThumbnailsId
+          else if (gd.cameraThumbnailsId.containsKey(id)) {
             var content = decode['result']['content'];
 //            Logger.d(
 //                'cameraThumbnailsId $id ${providerData.cameraThumbnailsId[id]} content $content');
@@ -225,7 +288,7 @@ class WebSocket {
         break;
       default:
         {
-          Logger.d('type default $decode');
+          log.d('type default $decode');
         }
     }
 
@@ -236,14 +299,14 @@ class WebSocket {
 
   void _onDone() {
 //    providerData.connectionStatus = 'Disconnected';
-    gd.connectionStatus = 'On Done';
+    gd.connectionStatus = 'Disconnected';
     connected = false;
-    Logger.d('_onDone');
+    log.d('_onDone');
   }
 
   _onError(error, StackTrace stackTrace) {
     gd.connectionStatus = 'On Error\n' + error.toString();
     connected = false;
-    Logger.d('_onError error: $error stackTrace: $stackTrace');
+    log.d('_onError error: $error stackTrace: $stackTrace');
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:hasskit_2/helper/WebSocket.dart';
-import 'package:hasskit_2/helper/providerData.dart';
+import 'package:hasskit_2/helper/GeneralData.dart';
 
 enum EntityType {
   lightSwitches,

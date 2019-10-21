@@ -1,31 +1,30 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/Logger.dart';
-import 'package:hasskit_2/helper/providerData.dart';
+import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewLoginPage extends StatelessWidget {
-  WebViewLoginPage();
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-    String initialUrl = gd.url +
+    String initialUrl = gd.loginDataCurrent.url +
         '/auth/authorize?client_id=' +
-        gd.url +
+        gd.loginDataCurrent.url +
         "/hasskit" '&redirect_uri=' +
-        gd.url +
+        gd.loginDataCurrent.url +
         "/hasskit";
 //    initUrl = Uri.encodeComponent(initUrl);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Home Assistant Login'),
         actions: gd.appBarThemeChanger,
       ),
       body: Column(
         children: <Widget>[
-          gd.loading
+          gd.webViewLoading
               ? Expanded(
                   flex: 5,
                   child: Column(
@@ -39,7 +38,7 @@ class WebViewLoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "${gd.url}",
+                        "${gd.loginDataCurrent.url}",
                         style: Theme.of(context).textTheme.title,
                         textAlign: TextAlign.center,
                         maxLines: 10,
@@ -71,17 +70,17 @@ class WebViewLoginPage extends StatelessWidget {
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {
                 _controller.complete(webViewController);
-                Logger.d('onWebViewCreated ${_controller.isCompleted}');
+                log.d('onWebViewCreated ${_controller.isCompleted}');
               },
               onPageFinished: (finishedString) {
-                gd.loading = false;
-                Logger.d('onPageFinished finishedString $finishedString');
+                gd.webViewLoading = false;
+                log.d('onPageFinished finishedString $finishedString');
                 if (finishedString.contains('code=')) {
                   var authCode = finishedString.split('code=')[1];
-                  gd.sendHttpPost(gd.url, authCode, context);
-                  Logger.d('authCode [' + authCode + ']');
+                  gd.sendHttpPost(gd.loginDataCurrent.url, authCode, context);
+                  log.d('authCode [' + authCode + ']');
                   gd.removeSnackBar(context);
-                  Logger.d('Navigator.pop(context)');
+                  log.d('Navigator.pop(context)');
                 }
               },
             ),

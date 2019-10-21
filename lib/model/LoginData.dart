@@ -1,3 +1,5 @@
+import 'package:hasskit_2/helper/Logger.dart';
+
 class LoginData {
   String url;
   String longToken;
@@ -8,8 +10,8 @@ class LoginData {
   int lastAccess;
   LoginData({
     this.url,
-    this.longToken,
     this.accessToken,
+    this.longToken,
     this.expiresIn,
     this.refreshToken,
     this.tokenType,
@@ -18,17 +20,20 @@ class LoginData {
 
   factory LoginData.fromJson(Map<String, dynamic> json) {
     return LoginData(
-      url: json['url'],
+      url: "",
       accessToken: json['access_token'],
+      longToken: "",
       expiresIn: json['expires_in'],
       refreshToken: json['refresh_token'],
       tokenType: json['token_type'],
+      lastAccess: DateTime.now().toUtc().millisecondsSinceEpoch,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'url': url,
         'accessToken': accessToken,
+        'longToken': longToken,
         'expiresIn': expiresIn,
         'refreshToken': refreshToken,
         'tokenType': tokenType,
@@ -36,8 +41,15 @@ class LoginData {
       };
 
   Duration get timeDurationSinceLastAccess {
-    var totalDiff = DateTime.now().toUtc().millisecondsSinceEpoch - lastAccess;
-    return Duration(milliseconds: totalDiff);
+    try {
+      var totalDiff =
+          DateTime.now().toUtc().millisecondsSinceEpoch - lastAccess;
+      return Duration(milliseconds: totalDiff);
+    } catch (e) {
+      log.e("timeDurationSinceLastAccess $e");
+      return Duration(
+          milliseconds: DateTime.now().toUtc().millisecondsSinceEpoch);
+    }
   }
 
   String get timeSinceLastAccess {
@@ -51,8 +63,8 @@ class LoginData {
     var hour = int.parse(spit[1]);
     var minute = int.parse(spit[2]);
 //    var second = int.parse(spit[3]);
-    if (day > 360) {
-      return "";
+    if (day > 365) {
+      return "...";
     }
     if (day > 0) {
       String s = " day, ";

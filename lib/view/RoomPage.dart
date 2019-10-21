@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hasskit_2/helper/providerData.dart';
+import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/model/SwitchlikeCheckbox.dart';
 
 class RoomPage extends StatelessWidget {
