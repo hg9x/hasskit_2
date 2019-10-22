@@ -568,12 +568,30 @@ class GeneralData with ChangeNotifier {
   }
 
   List<Room> roomList = [
-    Room(name: "Home", imageIndex: 4),
-    Room(name: "Living Room", imageIndex: 0),
-    Room(name: "Kitchen", imageIndex: 1),
-    Room(name: "Bedroom", imageIndex: 2),
-    Room(name: "Default Room", imageIndex: 3),
-    Room(name: "Add New", imageIndex: 5),
+    Room(
+        name: "Home",
+        imageIndex: 4,
+        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
+    Room(
+        name: "Living Room",
+        imageIndex: 0,
+        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
+    Room(
+        name: "Kitchen",
+        imageIndex: 1,
+        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
+    Room(
+        name: "Bedroom",
+        imageIndex: 2,
+        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
+    Room(
+        name: "Default Room",
+        imageIndex: 3,
+        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
+    Room(
+        name: "Add New",
+        imageIndex: 5,
+        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
   ];
 
   String roomTitle(int roomIndex) {
@@ -598,6 +616,11 @@ class GeneralData with ChangeNotifier {
     "assets/background_images/LightGreen-iOS-13-Home-app-wallpaper.jpg",
     "assets/background_images/Orange-iOS-13-Home-app-wallpaper.jpg",
     "assets/background_images/Red-iOS-13-Home-app-wallpaper.jpg",
+    "assets/background_images/Blue-Gradient.jpg",
+    "assets/background_images/Green-Gradient.jpg",
+    "assets/background_images/Yellow-Gradient.jpg",
+    "assets/background_images/White-Gradient.jpg",
+    "assets/background_images/Black-Gradient.jpg",
   ];
 
   setRoomBackgroundImage(Room room, int backgroundImageIndex) {

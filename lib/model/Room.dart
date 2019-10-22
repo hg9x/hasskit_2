@@ -5,7 +5,7 @@ class Room {
   int imageIndex;
   List<String> entities;
 
-  Room({@required this.name, @required this.imageIndex});
+  Room({@required this.name, @required this.imageIndex, this.entities});
 
   Map<String, dynamic> toJson() => {
         'name': name,

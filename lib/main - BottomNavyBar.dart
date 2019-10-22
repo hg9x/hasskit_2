@@ -61,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Theme.of(context).backgroundColor,
       bottomNavigationBar: BottomNavyBar(
         selectedIndex: pageNumber,
-        showElevation: true, // use this to remove appBar's elevation
+//        showElevation: true, // use this to remove appBar's elevation
         onItemSelected: (index) => setState(() {
           pageNumber = index;
           _getPage(pageNumber);
@@ -90,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
   _getPage(int pageNumber) {
     if (pageNumber == 1) {
 //      Logger.d("pageNumber $pageNumber ");
-      return RoomPage();
+      return RoomsPage();
     } else if (pageNumber == 2) {
 //      Logger.d("pageNumber $pageNumber ");
       return SettingPage();
