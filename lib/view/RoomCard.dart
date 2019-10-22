@@ -10,12 +10,12 @@ class RoomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        showBottomSheet(
+        showModalBottomSheet(
           context: context,
           elevation: 1,
           backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.8),
-//          isScrollControlled: true,
-//          useRootNavigator: true,
+          isScrollControlled: true,
+          useRootNavigator: true,
           builder: (BuildContext context) {
             return RoomDetailPage(roomIndex: roomIndex);
           },

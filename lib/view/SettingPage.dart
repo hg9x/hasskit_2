@@ -211,14 +211,14 @@ class _SettingPageState extends State<SettingPage> {
                                   gd.loginDataCurrent = LoginData(
                                       url: gd.trimUrl(addressController.text));
                                   gd.webViewLoading = true;
-                                  showBottomSheet(
+                                  showModalBottomSheet(
                                       context: context,
                                       elevation: 1,
                                       backgroundColor: Theme.of(context)
                                           .primaryColorDark
                                           .withOpacity(0.8),
-//                                      isScrollControlled: true,
-//                                      useRootNavigator: true,
+                                      isScrollControlled: true,
+                                      useRootNavigator: true,
                                       builder: (context) => WebViewLoginPage());
                                 },
                                 child: Text("Create New Connection"),

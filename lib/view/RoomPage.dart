@@ -125,7 +125,7 @@ class _RoomPage3State extends State<RoomPage3> {
           children: <Widget>[
             SwitchlikeCheckbox(checked: enableCoolStuff),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0),
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 "Enable cool stuff",
                 textScaleFactor: 1.3,

@@ -84,7 +84,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
       buttonWidgets = [saveButton];
     }
     return Padding(
-      padding: EdgeInsets.only(top: 0),
+      padding: EdgeInsets.only(top: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
