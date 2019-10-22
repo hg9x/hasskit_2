@@ -170,6 +170,17 @@ class WebSocket {
     switch (type) {
       case 'auth_required':
         {
+          if (gd.loginDataCurrent.longToken == null ||
+              gd.loginDataCurrent.accessToken == null) {
+            if (gd.loginDataList[0] != null) {
+              gd.loginDataCurrent = gd.loginDataList[0];
+            } else {
+              gd.connectionStatus =
+                  "Error getting token, please delete old connection data";
+              return;
+            }
+          }
+
           if (gd.loginDataCurrent.longToken.length > 100) {
             outMsg = {
               "type": "auth",

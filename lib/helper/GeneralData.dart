@@ -396,6 +396,7 @@ class GeneralData with ChangeNotifier {
     }
 
     if (loginDataLisString.length > 0 &&
+        loginDataList[0].longToken != null &&
         loginDataList[0].longToken.length > 0) {
       loginDataCurrent = loginDataList[0];
       webSocket.initCommunication();
@@ -542,6 +543,21 @@ class GeneralData with ChangeNotifier {
     }
   }
 
+//  bool _showLoading = false;
+//  bool get showLoading {
+//    return _showLoading;
+//  }
+//
+//  set showLoading(bool value) {
+//    if (value != true && value != false) {
+//      throw new ArgumentError();
+//    }
+//    if (_showLoading != value) {
+//      _showLoading = value;
+//      notifyListeners();
+//    }
+//  }
+
   String trimUrl(String url) {
     url = url.trim();
     if (url.substring(url.length - 1, url.length) == '/') {
@@ -552,36 +568,15 @@ class GeneralData with ChangeNotifier {
   }
 
   List<Room> roomList = [
-    Room(
-        name: "Favorite",
-        index: 0,
-        image: "assets/background_images/Orange-iOS-13-Home-app-wallpaper.jpg"),
-    Room(
-        name: "Living Room",
-        index: 1,
-        image:
-            "assets/background_images/DarkBlue-iOS-13-Home-app-wallpaper.jpg"),
-    Room(
-        name: "Kitchen",
-        index: 2,
-        image:
-            "assets/background_images/DarkGreen-iOS-13-Home-app-wallpaper.jpg"),
-    Room(
-        name: "Bedroom",
-        index: 3,
-        image:
-            "assets/background_images/LightBlue-iOS-13-Home-app-wallpaper.jpg"),
-    Room(
-        name: "Bathroom",
-        index: 4,
-        image:
-            "assets/background_images/LightGreen-iOS-13-Home-app-wallpaper.jpg"),
-    Room(
-        name: "New Room",
-        index: 1000,
-        image: "assets/background_images/Red-iOS-13-Home-app-wallpaper.jpg"),
+    Room(name: "Favorite", imageIndex: 4),
+    Room(name: "Living Room", imageIndex: 0),
+    Room(name: "Kitchen", imageIndex: 1),
+    Room(name: "Bedroom", imageIndex: 2),
+    Room(name: "Default Room", imageIndex: 3),
+    Room(name: "Add New", imageIndex: 5),
   ];
 
+  Room roomAddDefault = Room(name: "Add New", imageIndex: 5);
   List<String> backgroundImage = [
     "assets/background_images/DarkBlue-iOS-13-Home-app-wallpaper.jpg",
     "assets/background_images/DarkGreen-iOS-13-Home-app-wallpaper.jpg",
@@ -591,11 +586,12 @@ class GeneralData with ChangeNotifier {
     "assets/background_images/Red-iOS-13-Home-app-wallpaper.jpg",
   ];
 
-  setRoomBackgroundImage(Room room, String backgroundImageName) {
-    if (room.image != backgroundImageName) {
-      room.image = backgroundImageName;
+  setRoomBackgroundImage(Room room, int backgroundImageIndex) {
+    if (room.imageIndex != backgroundImageIndex) {
+      room.imageIndex = backgroundImageIndex;
       notifyListeners();
     }
+    roomListSave();
   }
 
   setRoomName(Room room, String name) {
@@ -603,5 +599,27 @@ class GeneralData with ChangeNotifier {
       room.name = name;
       notifyListeners();
     }
+    roomListSave();
+  }
+
+  deleteRoom(int roomIndex) {
+    if (roomList.length >= roomIndex) {
+      roomList.removeAt(roomIndex);
+      notifyListeners();
+    }
+    roomListSave();
+  }
+
+  addRoom(Room newRoom) {
+    roomList.insert(roomList.length - 2, newRoom);
+    roomList.last.name = roomAddDefault.name;
+    roomList.last.imageIndex = roomAddDefault.imageIndex;
+    roomListSave();
+    notifyListeners();
+  }
+
+  void roomListSave() {
+    gd.saveString('roomList ${gd.loginDataCurrent.url}', jsonEncode(roomList));
+    log.d("${gd.loginDataCurrent.url} roomList.length ${roomList.length}");
   }
 }

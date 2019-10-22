@@ -13,6 +13,9 @@ class RoomCard extends StatelessWidget {
         showBottomSheet(
           context: context,
           elevation: 1,
+          backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.8),
+//          isScrollControlled: true,
+//          useRootNavigator: true,
           builder: (BuildContext context) {
             return RoomDetailPage(roomIndex: roomIndex);
           },
@@ -27,7 +30,8 @@ class RoomCard extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage(gd.roomList[roomIndex].image),
+              image: AssetImage(
+                  gd.backgroundImage[gd.roomList[roomIndex].imageIndex]),
             ),
           ),
           child: Column(
@@ -38,16 +42,17 @@ class RoomCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
               roomIndex == gd.roomList.length - 1
                   ? Expanded(
                       child: Icon(
-                      Icons.add_circle,
+                      Icons.add_box,
                       size: 80,
                     ))
                   : Container(),
               Container(
-                height: roomIndex == gd.roomList.length - 1 ? 20 : 0,
+                height: roomIndex == gd.roomList.length - 1 ? 30 : 0,
               )
             ],
           ),

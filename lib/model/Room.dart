@@ -2,9 +2,14 @@ import 'package:flutter/cupertino.dart';
 
 class Room {
   String name;
-  int index;
-  String image;
+  int imageIndex;
   List<String> entities;
 
-  Room({@required this.name, @required this.index, @required this.image});
+  Room({@required this.name, @required this.imageIndex});
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'imageIndex': imageIndex,
+        'entities': entities,
+      };
 }
