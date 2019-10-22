@@ -59,18 +59,8 @@ class RoomCard extends StatelessWidget {
             ],
           ),
         ),
-//      child: Stack(
-//        fit: StackFit.expand,
-//        children: <Widget>[
-//          Image.asset(
-//            gd.roomList[roomIndex].image,
-//            fit: BoxFit.cover,
-//          ),
-//          Text(gd.roomList[roomIndex].name),
-//        ],
-//      ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(8.0),
         ),
       ),
     );

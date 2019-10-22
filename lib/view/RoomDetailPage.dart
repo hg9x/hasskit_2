@@ -82,7 +82,6 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
       buttonWidgets = [addButton];
     } else {
       buttonWidgets = [saveButton];
-//      buttonWidgets = [Container()];
     }
     return Padding(
       padding: EdgeInsets.only(top: 0),
@@ -123,6 +122,19 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             maxLines: 1,
                             onChanged: (val) {
                               roomName = val;
+                              log.d("onChanged $roomName");
+                            },
+                            onEditingComplete: () {
+                              log.d("onEditingComplete $roomName");
+                              gd.setRoomName(
+                                  gd.roomList[widget.roomIndex], roomName);
+                            },
+                            onFieldSubmitted: (val) {
+                              log.d("onFieldSubmitted $roomName");
+                              gd.setRoomName(
+                                  gd.roomList[widget.roomIndex], roomName);
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
                             },
                           )
                         : Container(
@@ -153,10 +165,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    log.d(
-                        "InkWell 1 ${gd.roomList[widget.roomIndex].imageIndex}");
-                    gd.setRoomBackgroundImage(
-                        gd.roomList[widget.roomIndex], index);
+//                    log.d(
+//                        "InkWell 1 ${gd.roomList[widget.roomIndex].imageIndex}");
+                    gd.setRoomBackgroundAndName(
+                        gd.roomList[widget.roomIndex], index, roomName);
                     log.d(
                         "InkWell 2 ${gd.roomList[widget.roomIndex].imageIndex}");
                     setState(() {});
@@ -164,9 +176,13 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   child: Card(
                     elevation: 1,
                     margin: EdgeInsets.all(4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                     child: Container(
-                      width: 80,
+                      width: 50,
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: AssetImage(gd.backgroundImage[index]),

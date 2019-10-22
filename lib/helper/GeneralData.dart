@@ -602,6 +602,11 @@ class GeneralData with ChangeNotifier {
     roomListSave();
   }
 
+  setRoomBackgroundAndName(Room room, int backgroundImageIndex, String name) {
+    setRoomBackgroundImage(room, backgroundImageIndex);
+    setRoomName(room, name);
+  }
+
   deleteRoom(int roomIndex) {
     if (roomList.length >= roomIndex) {
       roomList.removeAt(roomIndex);
