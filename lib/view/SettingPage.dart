@@ -16,7 +16,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final title = 'Setting';
-  final addressController = TextEditingController();
+  final _controller = TextEditingController();
   bool showConnect = false;
   bool showCancel = false;
   bool keyboardVisible = false;
@@ -24,16 +24,16 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void dispose() {
-    addressController.removeListener(addressListener);
-    addressController.removeListener(addressFocusNodeListener);
+    _controller.removeListener(addressListener);
+    _controller.removeListener(addressFocusNodeListener);
     super.dispose();
   }
 
   @override
   void initState() {
-    addressController.addListener(addressListener);
+    _controller.addListener(addressListener);
     addressFocusNode.addListener(addressFocusNodeListener);
-    addressController.text = "";
+    _controller.text = "";
 
     super.initState();
   }
@@ -51,7 +51,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   addressListener() {
-    if (isURL(addressController.text.trim(),
+    if (isURL(_controller.text.trim(),
         requireProtocol: true, protocols: ['http', 'https'])) {
 //      Logger.d("validURL = true isURL ${addressController.text}");
       if (!showConnect) {
@@ -66,7 +66,7 @@ class _SettingPageState extends State<SettingPage> {
       }
     }
 
-    if (addressController.text.trim().length > 0) {
+    if (_controller.text.trim().length > 0) {
       if (!showCancel) {
         showCancel = true;
         setState(() {});
@@ -164,7 +164,7 @@ class _SettingPageState extends State<SettingPage> {
                       children: <Widget>[
                         TextFormField(
                           focusNode: addressFocusNode,
-                          controller: addressController,
+                          controller: _controller,
                           decoration: InputDecoration(
                             hintText: 'http://sample.duckdns.org:8123',
                             labelText: 'Create New Connection...',
@@ -179,7 +179,7 @@ class _SettingPageState extends State<SettingPage> {
                                               .primaryColorLight,
                                         ),
                                         onPressed: () {
-                                          addressController.clear();
+                                          _controller.clear();
                                           if (keyboardVisible) {
                                             FocusScope.of(context)
                                                 .requestFocus(new FocusNode());
@@ -209,7 +209,7 @@ class _SettingPageState extends State<SettingPage> {
                                         .requestFocus(new FocusNode());
                                   }
                                   gd.loginDataCurrent = LoginData(
-                                      url: gd.trimUrl(addressController.text));
+                                      url: gd.trimUrl(_controller.text));
                                   gd.webViewLoading = true;
                                   showModalBottomSheet(
                                       context: context,

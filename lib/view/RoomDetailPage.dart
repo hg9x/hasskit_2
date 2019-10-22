@@ -20,16 +20,17 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
     super.dispose();
   }
 
+  final _controller = TextEditingController();
   List<Widget> buttonWidgets;
 
   @override
   Widget build(BuildContext context) {
-    String roomName = gd.roomList[widget.roomIndex].name;
+    _controller.text = gd.roomList[widget.roomIndex].name;
     OutlineButton addButton = OutlineButton(
       onPressed: () {
-        log.w("Add New Room");
-        var newRoom =
-            Room(name: roomName, imageIndex: gd.roomList.last.imageIndex);
+        var newRoom = Room(
+            name: _controller.text.trim(),
+            imageIndex: gd.roomList.last.imageIndex);
         gd.addRoom(newRoom);
         Navigator.pop(context);
       },
@@ -45,8 +46,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
     );
     OutlineButton saveButton = OutlineButton(
       onPressed: () {
-        log.w("Save");
-        gd.setRoomName(gd.roomList[widget.roomIndex], roomName);
+        gd.setRoomName(gd.roomList[widget.roomIndex], _controller.text.trim());
         Navigator.pop(context);
       },
       child: Row(
@@ -61,7 +61,6 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
     );
     OutlineButton deleteButton = OutlineButton(
       onPressed: () {
-        log.w("Delete");
         gd.deleteRoom(widget.roomIndex);
         Navigator.pop(context);
       },
@@ -121,18 +120,19 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             style: Theme.of(context).textTheme.title,
                             maxLines: 1,
                             onChanged: (val) {
-                              roomName = val;
-                              log.d("onChanged $roomName");
+                              _controller.text = val;
                             },
                             onEditingComplete: () {
-                              log.d("onEditingComplete $roomName");
-                              gd.setRoomName(
-                                  gd.roomList[widget.roomIndex], roomName);
+                              log.d(
+                                  "onEditingComplete ${_controller.text.trim()}");
+                              gd.setRoomName(gd.roomList[widget.roomIndex],
+                                  _controller.text.trim());
                             },
                             onFieldSubmitted: (val) {
-                              log.d("onFieldSubmitted $roomName");
-                              gd.setRoomName(
-                                  gd.roomList[widget.roomIndex], roomName);
+                              log.d(
+                                  "onFieldSubmitted ${_controller.text.trim()}");
+                              gd.setRoomName(gd.roomList[widget.roomIndex],
+                                  _controller.text.trim());
                               FocusScope.of(context)
                                   .requestFocus(new FocusNode());
                             },
@@ -142,7 +142,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             gd.roomList[widget.roomIndex].name,
                             style: Theme.of(context).textTheme.title,
                           )),
-                    Expanded(child: Container()),
+                    SizedBox(height: 8),
                     Row(
                       children: <Widget>[
                         Expanded(child: Container()),
@@ -152,6 +152,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         Expanded(child: Container()),
                       ],
                     ),
+                    Expanded(child: Container()),
                   ],
                 ),
               ),
@@ -167,8 +168,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                   onTap: () {
 //                    log.d(
 //                        "InkWell 1 ${gd.roomList[widget.roomIndex].imageIndex}");
-                    gd.setRoomBackgroundAndName(
-                        gd.roomList[widget.roomIndex], index, roomName);
+                    gd.setRoomBackgroundAndName(gd.roomList[widget.roomIndex],
+                        index, _controller.text.trim());
                     log.d(
                         "InkWell 2 ${gd.roomList[widget.roomIndex].imageIndex}");
                     setState(() {});

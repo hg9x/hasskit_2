@@ -151,7 +151,7 @@ class GeneralData with ChangeNotifier {
       _entities.add(entity);
     }
 
-    log.d('_entities.length ${entities.length}');
+//    log.d('_entities.length ${entities.length}');
     notifyListeners();
   }
 
@@ -165,7 +165,7 @@ class GeneralData with ChangeNotifier {
     var cardNumber = 0;
 
     List<dynamic> viewsParse = message['result']['views'];
-    log.d('viewsParse.length ${viewsParse.length}');
+//    log.d('viewsParse.length ${viewsParse.length}');
 
     for (var viewParse in viewsParse) {
       //iterate over the list
@@ -388,7 +388,7 @@ class GeneralData with ChangeNotifier {
       }
       log.d("loginDataList.length ${loginDataList.length}");
     } else {
-      log.d("CAN NOT FIND loginDataList");
+      log.w("CAN NOT FIND loginDataList");
     }
     loginDataListSortAndSave();
     if (gd.loginDataList.length > 0) {
@@ -396,6 +396,9 @@ class GeneralData with ChangeNotifier {
     }
 
     if (loginDataLisString.length > 0 &&
+        loginDataList != null &&
+        loginDataList.length > 0 &&
+        loginDataList[0] != null &&
         loginDataList[0].longToken != null &&
         loginDataList[0].longToken.length > 0) {
       loginDataCurrent = loginDataList[0];
@@ -426,12 +429,14 @@ class GeneralData with ChangeNotifier {
 
   void loginDataListSortAndSave() {
     log.d("LoginData.loginDataListSortAndSave");
-    if (loginDataList.length > 1) {
+    if (loginDataList != null && loginDataList.length > 0) {
       loginDataList.sort((a, b) => b.lastAccess.compareTo(a.lastAccess));
+      gd.saveString('loginDataList', jsonEncode(loginDataList));
+      log.d("loginDataList.length ${loginDataList.length}");
+      notifyListeners();
+    } else {
+      log.d("LoginData.loginDataListSortAndSave NO DATA");
     }
-    gd.saveString('loginDataList', jsonEncode(loginDataList));
-    log.d("loginDataList.length ${loginDataList.length}");
-    notifyListeners();
   }
 
   void loginDataListDelete(LoginData loginData) {
@@ -567,42 +572,36 @@ class GeneralData with ChangeNotifier {
     return url;
   }
 
-  List<Room> roomList = [
-    Room(
-        name: "Home",
-        imageIndex: 4,
-        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
-    Room(
-        name: "Living Room",
-        imageIndex: 0,
-        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
-    Room(
-        name: "Kitchen",
-        imageIndex: 1,
-        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
-    Room(
-        name: "Bedroom",
-        imageIndex: 2,
-        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
-    Room(
-        name: "Default Room",
-        imageIndex: 3,
-        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
-    Room(
-        name: "Add New",
-        imageIndex: 5,
-        entities: ["light.gateway_light_1", "light.gateway_light_2"]),
+  List<Room> roomList = [];
+  List<Room> roomListDefault = [
+    Room(name: "Home", imageIndex: 4, entities: []),
+    Room(name: "Living Room", imageIndex: 0, entities: []),
+    Room(name: "Kitchen", imageIndex: 1, entities: []),
+    Room(name: "Bedroom", imageIndex: 2, entities: []),
+    Room(name: "Default Room", imageIndex: 3, entities: []),
+    Room(name: "Add New", imageIndex: 5, entities: []),
   ];
 
+  int get roomPageLength {
+    if (roomList.length - 2 < 0) {
+      return 0;
+    }
+    return roomList.length - 2;
+  }
+
   String roomTitle(int roomIndex) {
-    if (roomList[roomIndex] != null && roomList[roomIndex].name != null) {
+    if (roomList != null &&
+        roomList.length > 0 &&
+        roomList[roomIndex].name != null) {
       return roomList[roomIndex].name;
     }
     return "Home";
   }
 
   AssetImage getRoomImage(int roomIndex) {
-    if (roomList[roomIndex] != null && roomList[roomIndex].imageIndex != null) {
+    if (roomList.length > 0 &&
+        roomList[roomIndex] != null &&
+        roomList[roomIndex].imageIndex != null) {
       return AssetImage(backgroundImage[roomList[roomIndex].imageIndex]);
     }
     return AssetImage(backgroundImage[4]);
@@ -663,5 +662,29 @@ class GeneralData with ChangeNotifier {
   void roomListSave() {
     gd.saveString('roomList ${gd.loginDataCurrent.url}', jsonEncode(roomList));
     log.d("${gd.loginDataCurrent.url} roomList.length ${roomList.length}");
+  }
+
+  roomListLoad(String url) async {
+    log.w("roomListLoad $url ");
+    String roomListLoadString = await gd.getString('roomList $url');
+    if (roomListLoadString.length > 0) {
+      log.w("FOUND roomListLoadString $roomListLoadString");
+      List<dynamic> roomListJson = jsonDecode(roomListLoadString);
+
+      roomList.clear();
+
+      for (var roomJson in roomListJson) {
+        Room room = Room.fromJson(roomJson);
+        log.d("addRoom ${room.name}");
+        roomList.add(room);
+      }
+      log.d("loginDataList.length ${roomList.length}");
+    } else {
+      log.w("CAN NOT FIND roomList $url adding default data");
+      roomList.clear();
+      for (var room in roomListDefault) {
+        roomList.add(room);
+      }
+    }
   }
 }

@@ -59,26 +59,27 @@ class Entity {
   });
 
   factory Entity.fromJson(Map<String, dynamic> json) {
-    List<String> hvacModes = [];
-    if (json['attributes']['hvac_modes'] != null) {
-      for (String hvac_mode in json['attributes']['hvac_modes']) {
-        hvacModes.add(hvac_mode);
-      }
-    }
-
-    List<String> fanModes = [];
-    if (json['attributes']['fan_modes'] != null) {
-      for (String fan_mode in json['attributes']['fan_modes']) {
-        fanModes.add(fan_mode);
-      }
-    }
-
-    List<String> speedList = [];
-    if (json['attributes']['speed_list'] != null) {
-      for (String speed in json['attributes']['speed_list']) {
-        speedList.add(speed);
-      }
-    }
+//    List<String> hvacModes = [];
+//    if (json['attributes']['hvac_modes'] != null) {
+//      for (String hvac_mode in json['attributes']['hvac_modes']) {
+//        hvacModes.add(hvac_mode);
+//      }
+//      hvacModes = List<String>.from(json['attributes']['hvac_modes']);
+//    }
+//
+//    List<String> fanModes = [];
+//    if (json['attributes']['fan_modes'] != null) {
+//      for (String fan_mode in json['attributes']['fan_modes']) {
+//        fanModes.add(fan_mode);
+//      }
+//    }
+//
+//    List<String> speedList = [];
+//    if (json['attributes']['speed_list'] != null) {
+//      for (String speed in json['attributes']['speed_list']) {
+//        speedList.add(speed);
+//      }
+//    }
     return Entity(
       entityId: json['entity_id'],
       deviceClass: json['attributes']['device_class'],
@@ -86,7 +87,9 @@ class Entity {
       friendlyName: json['attributes']['friendly_name'],
       state: json['state'],
       //climate
-      hvacModes: hvacModes,
+      hvacModes: json['attributes']['hvac_modes'] != null
+          ? List<String>.from(json['attributes']['hvac_modes'])
+          : null,
       minTemp: double.tryParse(json['attributes']['min_temp'].toString()),
       maxTemp: double.tryParse(json['attributes']['max_temp'].toString()),
       targetTempStep:
@@ -94,11 +97,15 @@ class Entity {
       temperature:
           double.tryParse(json['attributes']['temperature'].toString()),
       fanMode: json['attributes']['fan_mode'],
-      fanModes: fanModes,
+      fanModes: json['attributes']['fan_modes'] != null
+          ? List<String>.from(json['attributes']['fan_modes'])
+          : null,
       deviceCode: json['attributes']['device_code'],
       manufacturer: json['attributes']['manufacturer'],
       //fan
-      speedList: speedList,
+      speedList: json['attributes']['speed_list'] != null
+          ? List<String>.from(json['attributes']['speed_list'])
+          : null,
       oscillating: json['attributes']['oscillating'],
       speedLevel: json['attributes']['speed_level'],
       angle: json['attributes']['angle'],

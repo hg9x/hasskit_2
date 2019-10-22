@@ -50,6 +50,8 @@ class WebSocket {
     log.d(
         'initCommunication socketUrl ${gd.socketUrl} autoConnect ${gd.autoConnect} connectionStatus ${gd.connectionStatus}');
 
+    gd.roomListLoad(gd.loginDataCurrent.url);
+
     ///
     /// Just in case, close any previous communication
     ///

@@ -12,4 +12,13 @@ class Room {
         'imageIndex': imageIndex,
         'entities': entities,
       };
+
+  factory Room.fromJson(Map<String, dynamic> json) {
+    return Room(
+        name: json['name'],
+        imageIndex: json['imageIndex'],
+        entities: json['entities'] != null
+            ? List<String>.from(json['entities'])
+            : null);
+  }
 }

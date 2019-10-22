@@ -16,7 +16,7 @@ class RoomsPage extends StatelessWidget {
         itemBuilder: (context, position) {
           return RoomPage(position: position + 1);
         },
-        itemCount: gd.roomList.length - 2);
+        itemCount: gd.roomPageLength);
   }
 }
 
