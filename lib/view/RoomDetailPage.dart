@@ -25,66 +25,64 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   @override
   Widget build(BuildContext context) {
     String roomName = gd.roomList[widget.roomIndex].name;
-    if (widget.roomIndex == gd.roomList.length - 1) {
-      var addButton = OutlineButton(
-        onPressed: () {
-          log.w("Add New Room");
-          var newRoom =
-              Room(name: roomName, imageIndex: gd.roomList.last.imageIndex);
-          gd.addRoom(newRoom);
-          Navigator.pop(context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.add_circle),
-            Text("Add"),
-          ],
-        ),
-        borderSide: BorderSide(width: 1),
-        shape:
-            RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
-      );
-      buttonWidgets = [addButton];
-    } else if (widget.roomIndex != 0 &&
-        widget.roomIndex != gd.roomList.length - 2) {
-      var saveButton = OutlineButton(
-        onPressed: () {
-          log.w("Save");
-          gd.setRoomName(gd.roomList[widget.roomIndex], roomName);
-          Navigator.pop(context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(MdiIcons.databaseEdit),
-            Text("Save"),
-          ],
-        ),
-        borderSide: BorderSide(width: 1),
-        shape:
-            RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
-      );
-      var deleteButton = OutlineButton(
-        onPressed: () {
-          log.w("Delete");
-          gd.deleteRoom(widget.roomIndex);
-          Navigator.pop(context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(MdiIcons.delete),
-            Text("Delete"),
-          ],
-        ),
-        borderSide: BorderSide(width: 1),
-        shape:
-            RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
-      );
+    OutlineButton addButton = OutlineButton(
+      onPressed: () {
+        log.w("Add New Room");
+        var newRoom =
+            Room(name: roomName, imageIndex: gd.roomList.last.imageIndex);
+        gd.addRoom(newRoom);
+        Navigator.pop(context);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.add_circle),
+          Text("Add"),
+        ],
+      ),
+      borderSide: BorderSide(width: 1),
+      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+    );
+    OutlineButton saveButton = OutlineButton(
+      onPressed: () {
+        log.w("Save");
+        gd.setRoomName(gd.roomList[widget.roomIndex], roomName);
+        Navigator.pop(context);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(MdiIcons.databaseEdit),
+          Text("Save"),
+        ],
+      ),
+      borderSide: BorderSide(width: 1),
+      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+    );
+    OutlineButton deleteButton = OutlineButton(
+      onPressed: () {
+        log.w("Delete");
+        gd.deleteRoom(widget.roomIndex);
+        Navigator.pop(context);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(MdiIcons.delete),
+          Text("Delete"),
+        ],
+      ),
+      borderSide: BorderSide(width: 1),
+      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+    );
+
+    if (widget.roomIndex > 0 && widget.roomIndex < gd.roomList.length - 2) {
       buttonWidgets = [saveButton, Container(width: 10), deleteButton];
+    } else if (widget.roomIndex == gd.roomList.length - 1) {
+      buttonWidgets = [addButton];
     } else {
-      buttonWidgets = [Container()];
+      buttonWidgets = [saveButton];
+//      buttonWidgets = [Container()];
     }
     return Padding(
       padding: EdgeInsets.only(top: 0),

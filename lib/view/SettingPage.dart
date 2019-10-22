@@ -90,8 +90,8 @@ class _SettingPageState extends State<SettingPage> {
       pinned: true,
       floating: false,
       delegate: SliverAppBarDelegate(
-        minHeight: 50,
-        maxHeight: 100.0,
+        minHeight: 30,
+        maxHeight: 44,
         child: Container(
           color: color,
           child: Column(
@@ -99,15 +99,15 @@ class _SettingPageState extends State<SettingPage> {
               Expanded(
                 child: Row(
                   children: <Widget>[
-                    SizedBox(width: 5),
+                    SizedBox(width: 8),
                     ClipRRect(
-                      borderRadius: new BorderRadius.circular(8.0),
+                      borderRadius: new BorderRadius.circular(4.0),
                       child: SizedBox(
-                        width: 40,
+                        width: 28,
                         child: image,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    SizedBox(width: 8),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -236,7 +236,7 @@ class _SettingPageState extends State<SettingPage> {
                 "",
                 context),
             SliverFixedExtentList(
-              itemExtent: 240.0,
+              itemExtent: 160,
               delegate: SliverChildListDelegate(
                 [
                   Container(
@@ -246,7 +246,7 @@ class _SettingPageState extends State<SettingPage> {
                         itemCount: gd.roomList.length,
                         itemBuilder: (context, index) {
                           return Container(
-                            width: 150,
+                            width: 100,
                             child: RoomCard(roomIndex: index),
                           );
                         },

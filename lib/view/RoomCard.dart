@@ -49,6 +49,8 @@ class RoomCard extends StatelessWidget {
                       child: Icon(
                       Icons.add_box,
                       size: 80,
+                      color:
+                          Theme.of(context).primaryColorLight.withOpacity(0.8),
                     ))
                   : Container(),
               Container(
