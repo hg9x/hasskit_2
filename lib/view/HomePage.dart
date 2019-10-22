@@ -11,12 +11,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text(gd.roomTitle(0)),
         actions: gd.appBarThemeChanger,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         decoration: BoxDecoration(
+          image: DecorationImage(
+            image: gd.getRoomImage(0),
+            fit: BoxFit.cover,
+          ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

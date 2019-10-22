@@ -192,7 +192,14 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           keyboardType: TextInputType.url,
                           autocorrect: false,
-                          onEditingComplete: () {},
+                          onEditingComplete: () {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                          },
+                          onFieldSubmitted: (val) {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                          },
                         ),
                         showConnect
                             ? RaisedButton(

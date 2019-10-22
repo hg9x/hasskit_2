@@ -2,27 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/model/SwitchlikeCheckbox.dart';
 
-class RoomPage extends StatelessWidget {
+class RoomPages extends StatelessWidget {
   final PageController controller =
       PageController(initialPage: gd.lastSelectedRoom, keepPage: true);
   @override
   Widget build(BuildContext context) {
+    return PageView.builder(
+        itemBuilder: (context, position) {
+          return RoomPage(position: position + 1);
+        },
+        itemCount: gd.roomList.length - 2);
+  }
+}
+
+class RoomPage extends StatelessWidget {
+  final int position;
+
+  const RoomPage({@required this.position});
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Room'),
+        title: Text(gd.roomTitle(position)),
         actions: gd.appBarThemeChanger,
       ),
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: PageView(
-        onPageChanged: (pageNumber) {
-          gd.lastSelectedRoom = pageNumber;
-        },
-        controller: controller,
-        children: <Widget>[
-          RoomPage1(),
-          RoomPage2(),
-          RoomPage3(),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: gd.getRoomImage(position),
+            fit: BoxFit.cover,
+          ),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).primaryColorLight,
+                Theme.of(context).primaryColorDark
+              ]),
+        ),
+        child: Center(
+          child: Text(
+            "${gd.roomTitle(position)}",
+            style: Theme.of(context).textTheme.title,
+          ),
+        ),
       ),
     );
   }

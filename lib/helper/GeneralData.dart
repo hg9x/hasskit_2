@@ -568,13 +568,27 @@ class GeneralData with ChangeNotifier {
   }
 
   List<Room> roomList = [
-    Room(name: "Favorite", imageIndex: 4),
+    Room(name: "Home", imageIndex: 4),
     Room(name: "Living Room", imageIndex: 0),
     Room(name: "Kitchen", imageIndex: 1),
     Room(name: "Bedroom", imageIndex: 2),
     Room(name: "Default Room", imageIndex: 3),
     Room(name: "Add New", imageIndex: 5),
   ];
+
+  String roomTitle(int roomIndex) {
+    if (roomList[roomIndex] != null && roomList[roomIndex].name != null) {
+      return roomList[roomIndex].name;
+    }
+    return "Home";
+  }
+
+  AssetImage getRoomImage(int roomIndex) {
+    if (roomList[roomIndex] != null && roomList[roomIndex].imageIndex != null) {
+      return AssetImage(backgroundImage[roomList[roomIndex].imageIndex]);
+    }
+    return AssetImage(backgroundImage[4]);
+  }
 
   Room roomAddDefault = Room(name: "Add New", imageIndex: 5);
   List<String> backgroundImage = [

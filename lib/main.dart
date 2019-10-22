@@ -74,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
           items: [
             BottomNavyBarItem(
               icon: Icon(Icons.home),
-              title: Text('Home'),
+              title: Text("${gd.roomTitle(0)}"),
               activeColor: Theme.of(context).accentColor,
             ),
             BottomNavyBarItem(
@@ -96,7 +96,7 @@ class _HomeViewState extends State<HomeView> {
   _getPage(int pageNumber) {
     if (pageNumber == 1) {
 //      Logger.d("pageNumber $pageNumber ");
-      return RoomPage();
+      return RoomPages();
     } else if (pageNumber == 2) {
 //      Logger.d("pageNumber $pageNumber ");
       return SettingPage();
