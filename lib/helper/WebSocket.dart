@@ -164,6 +164,7 @@ class WebSocket {
     gd.connectionStatus = "Connected";
 
     var decode = json.decode(message);
+
 //    log.d("_onData decode $decode");
 
     var type = decode['type'];
@@ -214,8 +215,8 @@ class WebSocket {
             };
             gd.connectionStatus = "Sending auth/long_lived_access_token";
           } else {
-            outMsg = {"id": gd.socketId, "type": "get_states"};
-            gd.connectionStatus = "Sending get_states";
+            outMsg = {"id": gd.socketId, "type": "lovelace/config"};
+            gd.connectionStatus = "Sending lovelace/config";
           }
 
           gd.loginDataCurrent.lastAccess =
@@ -257,18 +258,20 @@ class WebSocket {
             gd.loginDataList[0].longToken = longToken;
             gd.loginDataListSortAndSave();
             log.w("Got the longToken, set and save it $longToken}");
-            outMsg = {"id": gd.socketId, "type": "get_states"};
-            send(json.encode(outMsg));
-          }
-          //Processing get_states
-          else if (id == gd.getStatesId) {
-            gd.getStates(decode['result']);
             outMsg = {"id": gd.socketId, "type": "lovelace/config"};
             send(json.encode(outMsg));
           }
           //Processing lovelace/config
           else if (id == gd.loveLaceConfigId) {
+            log.d('Processing Lovelace Config');
             gd.getLovelaceConfig(decode);
+            outMsg = {"id": gd.socketId, "type": "get_states"};
+            send(json.encode(outMsg));
+          }
+          //Processing get_states
+          else if (id == gd.getStatesId) {
+            log.d('Processing Get States');
+            gd.getStates(decode['result']);
             outMsg = {
               "id": gd.socketId,
               "type": "subscribe_events",
@@ -295,6 +298,7 @@ class WebSocket {
       case 'event':
         {
           gd.connectionStatus = 'Connected';
+          gd.socketSubscribeEvents(decode);
         }
         break;
       default:

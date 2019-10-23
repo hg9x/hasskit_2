@@ -3,17 +3,21 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/CameraThumbnail.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:hasskit_2/model/Room.dart';
+import 'package:hasskit_2/view/EntitiesSliverGrid.dart';
 import 'package:hasskit_2/view/SliverAppBarDelegate.dart';
 import "package:http/http.dart" as http;
 import 'Logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+
+import 'MaterialDesignIcons.dart';
 
 GeneralData gd;
 
@@ -78,17 +82,6 @@ class GeneralData with ChangeNotifier {
     }
   }
 
-  get appBarThemeChanger {
-    return <Widget>[
-      IconButton(
-        icon: Icon(Icons.palette),
-        onPressed: () {
-          themeChange();
-        },
-      ),
-    ];
-  }
-
   showSnackBar(String text, BuildContext context) {
     Scaffold.of(context)
         .removeCurrentSnackBar(reason: SnackBarClosedReason.remove);
@@ -134,17 +127,21 @@ class GeneralData with ChangeNotifier {
         gd.loginDataListAdd(loginData);
         loginDataListSortAndSave();
         webSocket.initCommunication();
-        log.w(
-            "webSocket.initCommunication loginDataCurrent ${loginDataCurrent.url}");
-        Navigator.pop(context);
+        gd.connectionStatus =
+            "Init Websocket Communication to ${loginDataCurrent.url}";
+        log.w(gd.connectionStatus);
+        Navigator.pop(context, gd.connectionStatus);
+//        gd.showSnackBar(gd.connectionStatus, context);
       } else {
         gd.connectionStatus =
             "Error response from server with code ${response.statusCode}";
-        Navigator.pop(context);
+        Navigator.pop(context, gd.connectionStatus);
+//        gd.showSnackBar(gd.connectionStatus, context);
       }
     }).catchError((e) {
-      gd.connectionStatus = "Error response from server with e $e";
-      Navigator.pop(context);
+      gd.connectionStatus = "Error response from server with code $e";
+      Navigator.pop(context, gd.connectionStatus);
+//      gd.showSnackBar(gd.connectionStatus, context);
     });
   }
 
@@ -152,10 +149,6 @@ class GeneralData with ChangeNotifier {
   UnmodifiableListView<Entity> get entities {
     return UnmodifiableListView(_entities);
   }
-
-  List<Entity> badges = [];
-
-  Map<String, List<Entity>> cards = {};
 
   void getStates(List<dynamic> message) {
     log.d('getStates');
@@ -171,115 +164,136 @@ class GeneralData with ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> lovelaceEntities = [];
+
   void getLovelaceConfig(dynamic message) {
     log.d('getLovelaceConfig');
-    badges.clear();
-    cards.clear();
-
-//    var title = message['result']['title'];
-//    Logger.d('title $title');
-    var viewNumber = 0;
-    var cardNumber = 0;
 
     List<dynamic> viewsParse = message['result']['views'];
 //    log.d('viewsParse.length ${viewsParse.length}');
 
     for (var viewParse in viewsParse) {
-      //iterate over the list
-      var titleView = viewParse['title'];
-//      if (titleView == null) {
-//        titleView = 'Unnamed $cardNumber';
-//      }
       List<dynamic> badgesParse = viewParse['badges'];
-      List<Entity> tempListView = [];
-//      Logger.d(
-//          '\nviewNumber $viewNumber badgesParse.length ${badgesParse.length}');
-
-      List<Entity> tempListEntities = [];
       for (var badgeParse in badgesParse) {
-//        Logger.d('badgeParse $badgeParse');
-        entityValidationAdd(badgeParse.toString(), tempListEntities);
-      }
-
-      for (var entity in tempListEntities) {
-        if (!badges.contains(entity)) {
-          badges.add(entity);
+        badgeParse = processEntityId(badgeParse.toString());
+//        log.d("badgeParse $badgeParse");
+        if (isEntityNameValid(badgeParse) &&
+            !lovelaceEntities.contains(badgeParse)) {
+          lovelaceEntities.add(badgeParse);
         }
       }
-//      Logger.d('badges.length ${badges.length}');
 
       List<dynamic> cardsParse = viewParse['cards'];
-//      Logger.d('viewNumber $viewNumber cardsParse.length ${cardsParse.length}');
 
       for (var cardParse in cardsParse) {
-        var titleCard = cardParse['title'];
-//        if (titleCard == null) {
-//          titleCard = 'Unnamed $cardNumber';
-//        }
         var type = cardParse['type'];
-//        Logger.d('cardParse title $title type $type');
-
-        //entities type = 1 page view
         if (type == 'entities' || type == 'glance') {
           List<dynamic> entitiesParse = cardParse['entities'];
-          List<Entity> tempListEntities = [];
-
           for (var entityParse in entitiesParse) {
-            entityValidationAdd(entityParse.toString(), tempListEntities);
+            entityParse = processEntityId(entityParse.toString());
+//            log.d("entityParse 1 $entityParse");
+            if (isEntityNameValid(entityParse) &&
+                !lovelaceEntities.contains(entityParse)) {
+              lovelaceEntities.add(entityParse);
+            }
           }
-          if (tempListEntities.length > 0) {
-            cards['[$viewNumber-$cardNumber].$titleView.$titleCard'] =
-                tempListEntities;
-          }
-          //all none entities in 1 pageview
         } else {
           var entityParse = cardParse['entity'];
-          entityValidationAdd(entityParse.toString(), tempListView);
+          entityParse = processEntityId(entityParse.toString());
+//          log.d("entityParse 2 $entityParse");
+          if (isEntityNameValid(entityParse) &&
+              !lovelaceEntities.contains(entityParse)) {
+            lovelaceEntities.add(entityParse);
+          }
         }
-
-        //Don't add empty card
-
-        cardNumber++;
       }
-      if (tempListView.length > 0) {
-        cards['[$viewNumber-$cardNumber].$titleView'] = tempListView;
-      }
-      viewNumber++;
-      cardNumber = 0;
     }
 
-    log.d("badges.length ${badges.length} cards.length ${cards.length}");
+    log.d("lovelaceEntities.length ${lovelaceEntities.length} ");
 
+    int i = 1;
+    for (var entity in lovelaceEntities) {
+      log.d("$i. lovelaceEntities $entity");
+      i++;
+    }
     notifyListeners();
   }
 
-  void entityValidationAdd(String entityId, List<Entity> list) {
-    if (entityId == null) {
-      log.d('entityValidationAdd $entityId null');
-      return;
+  void socketSubscribeEvents(dynamic message) {
+//    print('socketSubscribeEvents $message');
+    Entity newEntity = Entity.fromJson(message['event']['data']['new_state']);
+
+    Entity oldEntity = entities.firstWhere(
+        (e) => e != null && e.entityId == newEntity.entityId,
+        orElse: () => null);
+
+    if (oldEntity != null) {
+      oldEntity.state = newEntity.state;
+      oldEntity.icon = newEntity.icon;
+      oldEntity.friendlyName = newEntity.friendlyName;
+
+      if (newEntity.entityId.contains("climate.")) {
+        oldEntity.hvacModes = newEntity.hvacModes;
+        oldEntity.minTemp = newEntity.minTemp;
+        oldEntity.maxTemp = newEntity.maxTemp;
+        oldEntity.targetTempStep = newEntity.targetTempStep;
+        oldEntity.temperature = newEntity.temperature;
+        oldEntity.fanMode = newEntity.fanMode;
+        oldEntity.fanModes = newEntity.fanModes;
+        oldEntity.deviceCode = newEntity.deviceCode;
+        oldEntity.manufacturer = newEntity.manufacturer;
+      }
+
+      if (newEntity.entityId.contains("fan.")) {
+        oldEntity.speedList = newEntity.speedList;
+        oldEntity.oscillating = newEntity.oscillating;
+        oldEntity.speedLevel = newEntity.speedLevel;
+        oldEntity.angle = newEntity.angle;
+        oldEntity.directSpeed = newEntity.directSpeed;
+        oldEntity.angle = newEntity.angle;
+      }
+
+//      print('Replace old oldEntity ${oldEntity.entityId}');
+      notifyListeners();
+    } else {
+      _entities.add(newEntity);
+      log.e('WTF newEntity ${newEntity.entityId}');
+      notifyListeners();
     }
+  }
+
+  bool isEntityNameValid(String entityId) {
+    if (entityId == null) {
+      log.d('isEntityNameValid entityName null');
+      return false;
+    }
+
+    if (!entityId.contains('.')) {
+      log.d('isEntityNameValid $entityId not valid');
+      return false;
+    }
+
+    return true;
+  }
+
+  String processEntityId(String entityId) {
+    if (entityId == null) {
+      log.e('processEntityId String entityId null');
+      return null;
+    }
+
     String entityIdOriginal = entityId;
     entityId = entityId.split(',').first;
 
     if (!entityId.contains('.')) {
-      log.d('entityValidationAdd $entityIdOriginal not valid');
-      return;
+      log.e('processEntityId $entityIdOriginal not valid');
+      return null;
     }
 
     entityId = entityId.replaceAll('{entity: ', '');
     entityId = entityId.replaceAll('}', '');
 
-    Entity entity;
-
-    try {
-      entity = entities.firstWhere((e) => e.entityId == entityId,
-          orElse: () => null);
-      if (entity != null) {
-        list.add(entity);
-      }
-    } catch (e) {
-      log.d('entityValidationAdd Error finding $entityId - $e');
-    }
+    return entityId;
   }
 
   Map<int, String> cameraThumbnailsId = {};
@@ -304,10 +318,13 @@ class GeneralData with ChangeNotifier {
       primarySwatch: Colors.amber,
       accentColor: Colors.amber[900],
       toggleableActiveColor: Colors.amber[900],
+      cardColor: Colors.black,
     ),
     ThemeData(
       brightness: Brightness.light,
       primarySwatch: Colors.amber,
+      accentColor: Colors.amber[900],
+      cardColor: Colors.white,
     ),
 //    ThemeData(
 //      brightness: Brightness.light,
@@ -363,6 +380,21 @@ class GeneralData with ChangeNotifier {
     }
     log.d("themeIndex $themeIndex");
     notifyListeners();
+  }
+
+  get cupertinoActionSheet {
+    return CupertinoActionSheet(
+      title: Text("title"),
+      message: Text("Message"),
+      actions: <Widget>[
+        CupertinoActionSheetAction(
+          child: Text("CupertinoActionSheetAction"),
+          onPressed: () {
+            log.d("CupertinoActionSheet");
+          },
+        )
+      ],
+    );
   }
 
   List<LoginData> loginDataList = [];
@@ -614,7 +646,7 @@ class GeneralData with ChangeNotifier {
     return roomList.length - 2;
   }
 
-  String roomTitle(int roomIndex) {
+  String getRoomName(int roomIndex) {
     if (roomList != null &&
         roomList.length > 0 &&
         roomList[roomIndex].name != null) {
@@ -775,7 +807,7 @@ class GeneralData with ChangeNotifier {
       pinned: true,
       floating: false,
       delegate: SliverAppBarDelegate(
-        minHeight: 30,
+        minHeight: 24,
         maxHeight: 60,
         child: ClipRect(
           child: BackdropFilter(
@@ -813,5 +845,195 @@ class GeneralData with ChangeNotifier {
         ),
       ),
     );
+  }
+
+  List<Widget> customScrollView(int roomIndex, BuildContext context) {
+    var emptySliver = SliverFixedExtentList(
+      itemExtent: 0,
+      delegate: SliverChildListDelegate(
+        [Container()],
+      ),
+    );
+
+    List<Entity> entitiesFiltered = gd.entities
+        .where((e) => lovelaceEntities.contains(e.entityId))
+        .toList();
+    entitiesFiltered.sort((a, b) => a.friendlyName.compareTo(b.friendlyName));
+
+    var lightSwitches = entitiesFiltered
+        .where((e) => e.entityType == EntityType.lightSwitches)
+        .toList();
+    var climateFans = entitiesFiltered
+        .where((e) => e.entityType == EntityType.climateFans)
+        .toList();
+    var cameras = entitiesFiltered
+        .where((e) => e.entityType == EntityType.cameras)
+        .toList();
+    var mediaPlayers = entitiesFiltered
+        .where((e) => e.entityType == EntityType.mediaPlayers)
+        .toList();
+    var accessories = entitiesFiltered
+        .where((e) => e.entityType == EntityType.accessories)
+        .toList();
+    var scriptAutomation = entitiesFiltered
+        .where((e) => e.entityType == EntityType.scriptAutomation)
+        .toList();
+
+    return [
+      CupertinoSliverNavigationBar(
+        leading: Image(
+          image: AssetImage(
+              'assets/images/icon_transparent_border_transparent.png'),
+        ),
+        largeTitle: Text(gd.getRoomName(roomIndex)),
+        trailing: IconButton(
+          icon: Icon(Icons.palette),
+          onPressed: () {
+            gd.themeChange();
+          },
+        ),
+      ),
+      lightSwitches.length > 0
+          ? gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName(
+                  "mdi:toggle-switch")),
+              'Light, Switchs...',
+              "",
+              context)
+          : emptySliver,
+      lightSwitches.length > 0
+          ? EntitiesSliverGrid(
+              entities: entitiesFiltered
+                  .where((e) => e.entityType == EntityType.lightSwitches)
+                  .toList(),
+              crossAxisCount: 3,
+              childAspectRatio: 1,
+              entityType: EntityType.lightSwitches,
+            )
+          : emptySliver,
+      climateFans.length > 0
+          ? gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName(
+                  "mdi:thermometer")),
+              'Climates, Fans...',
+              "",
+              context)
+          : emptySliver,
+      climateFans.length > 0
+          ? EntitiesSliverGrid(
+              entities: entitiesFiltered
+                  .where((e) => e.entityType == EntityType.climateFans)
+                  .toList(),
+              crossAxisCount: 3,
+              childAspectRatio: 1,
+              entityType: EntityType.climateFans,
+            )
+          : emptySliver,
+      cameras.length > 0
+          ? gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:cctv")),
+              'Camera...',
+              "",
+              context)
+          : emptySliver,
+      cameras.length > 0
+          ? EntitiesSliverGrid(
+              entities: entitiesFiltered
+                  .where((e) => e.entityType == EntityType.cameras)
+                  .toList(),
+              crossAxisCount: 1,
+              childAspectRatio: 8 / 5,
+              entityType: EntityType.cameras,
+            )
+          : emptySliver,
+      mediaPlayers.length > 0
+          ? gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:theater")),
+              'Media Players...',
+              "",
+              context)
+          : emptySliver,
+      mediaPlayers.length > 0
+          ? EntitiesSliverGrid(
+              entities: entitiesFiltered
+                  .where((e) => e.entityType == EntityType.mediaPlayers)
+                  .toList(),
+              crossAxisCount: 1,
+              childAspectRatio: 8 / 5,
+              entityType: EntityType.mediaPlayers,
+            )
+          : emptySliver,
+      accessories.length > 0
+          ? gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName(
+                  "mdi:home-automation")),
+              'Accessories...',
+              "",
+              context)
+          : emptySliver,
+      accessories.length > 0
+          ? EntitiesSliverGrid(
+              entities: entitiesFiltered
+                  .where((e) => e.entityType == EntityType.accessories)
+                  .toList(),
+              crossAxisCount: 3,
+              childAspectRatio: 8 / 8,
+              entityType: EntityType.accessories,
+            )
+          : emptySliver,
+      scriptAutomation.length > 0
+          ? gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName(
+                  "mdi:playlist-check")),
+              'Automation, Script...',
+              "",
+              context)
+          : emptySliver,
+      scriptAutomation.length > 0
+          ? EntitiesSliverGrid(
+              entities: entitiesFiltered
+                  .where((e) => e.entityType == EntityType.scriptAutomation)
+                  .toList(),
+              crossAxisCount: 3,
+              childAspectRatio: 8 / 8,
+              entityType: EntityType.accessories,
+            )
+          : emptySliver,
+      SliverFixedExtentList(
+        itemExtent: 60,
+        delegate: SliverChildListDelegate(
+          [Container()],
+        ),
+      ),
+    ];
+  }
+
+  String textToDisplay(String text) {
+    text = text.replaceAll('_', ' ');
+    if (text.length > 1) {
+      return text[0].toUpperCase() + text.substring(1);
+    } else if (text.length > 0) {
+      return text[0].toUpperCase();
+    } else {
+      return '???';
+    }
+  }
+
+  void toggleStatus(Entity entity) {
+    if (entity.entityType != EntityType.lightSwitches &&
+        entity.entityType != EntityType.scriptAutomation &&
+        entity.entityType != EntityType.climateFans &&
+        entity.entityType != EntityType.mediaPlayers) {
+      return;
+    }
+
+    entity.toggleState();
+    notifyListeners();
   }
 }

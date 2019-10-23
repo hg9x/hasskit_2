@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
 import 'package:hasskit_2/model/LoginData.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:validators/validators.dart';
 import 'RoomCard.dart';
 import 'ServerSelectPanel.dart';
@@ -116,7 +116,10 @@ class _SettingPageState extends State<SettingPage> {
           ),
           gd.makeHeaderIcon(
               Theme.of(context).primaryColorDark.withOpacity(0.2),
-              Icon(MdiIcons.serverNetwork),
+              Icon(
+                MaterialDesignIcons.getIconDataFromIconName(
+                    "mdi:server-network"),
+              ),
               'Home Assistant Connection',
               "",
               context),
@@ -222,8 +225,13 @@ class _SettingPageState extends State<SettingPage> {
               childCount: gd.loginDataList.length,
             ),
           ),
-          gd.makeHeaderIcon(Theme.of(context).primaryColorDark.withOpacity(0.2),
-              Icon(MdiIcons.viewCarousel), 'Room Setting', "", context),
+          gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName(
+                  "mdi:view-carousel")),
+              'Room Setting',
+              "",
+              context),
           SliverFixedExtentList(
             itemExtent: 160,
             delegate: SliverChildListDelegate(
@@ -245,8 +253,13 @@ class _SettingPageState extends State<SettingPage> {
               ],
             ),
           ),
-          gd.makeHeaderIcon(Theme.of(context).primaryColorDark.withOpacity(0.2),
-              Icon(MdiIcons.accountCircle), 'About HassKit', "", context),
+          gd.makeHeaderIcon(
+              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Icon(MaterialDesignIcons.getIconDataFromIconName(
+                  "mdi:account-circle")),
+              'About HassKit',
+              "",
+              context),
           SliverFixedExtentList(
             itemExtent: 1000.0,
             delegate: SliverChildListDelegate(

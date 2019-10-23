@@ -58,7 +58,8 @@ class _WebViewLoginPageState extends State<WebViewLoginPage> {
                     SizedBox(height: 20),
                     RaisedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, "Cancel Web Login Connection");
+//                        gd.showSnackBar("Cancel Web Login Connection", context);
                       },
                       child: Text("Cancel"),
                     )

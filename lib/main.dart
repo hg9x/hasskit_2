@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/view/HomePage.dart';
 import 'package:hasskit_2/view/RoomPage.dart';
 import 'package:hasskit_2/view/SettingPage.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'helper/Logger.dart';
 import 'helper/GeneralData.dart';
+import 'helper/MaterialDesignIcons.dart';
 
 //void main() => runApp(MyApp());
 void main() {
@@ -66,15 +66,18 @@ class _HomeViewState extends State<HomeView> {
             currentIndex: 0,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(MdiIcons.home),
-                title: Text('Home'),
+                icon: Icon(
+                    MaterialDesignIcons.getIconDataFromIconName("mdi:star")),
+                title: Text(gd.getRoomName(0)),
               ),
               BottomNavigationBarItem(
-                icon: Icon(MdiIcons.viewCarousel),
-                title: Text('Room'),
+                icon: Icon(MaterialDesignIcons.getIconDataFromIconName(
+                    "mdi:view-carousel")),
+                title: Text(gd.getRoomName(gd.lastSelectedRoom + 1)),
               ),
               BottomNavigationBarItem(
-                icon: Icon(MdiIcons.settings),
+                icon: Icon(MaterialDesignIcons.getIconDataFromIconName(
+                    "mdi:settings")),
                 title: Text('Setting'),
               ),
             ],

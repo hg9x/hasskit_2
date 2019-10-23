@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/LoginData.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ServerSelectPanel extends StatelessWidget {
   final LoginData loginData;
@@ -16,7 +16,7 @@ class ServerSelectPanel extends StatelessWidget {
         color: Colors.transparent,
         icon: Icons.delete,
         onTap: () {
-          gd.showSnackBar('Delete', context);
+//          gd.showSnackBar('Delete', context);
           gd.loginDataListDelete(loginData);
           if (gd.loginDataCurrent.url == loginData.url) {
             webSocket.reset();
@@ -27,7 +27,8 @@ class ServerSelectPanel extends StatelessWidget {
       var disconnectWidget = IconSlideAction(
           caption: 'Disconnect',
           color: Colors.transparent,
-          icon: MdiIcons.serverNetworkOff,
+          icon: MaterialDesignIcons.getIconDataFromIconName(
+              "mdi:server-network-off"),
           onTap: () {
             gd.showSnackBar('Disconnect from ${loginData.url}', context);
             webSocket.reset();
@@ -51,7 +52,7 @@ class ServerSelectPanel extends StatelessWidget {
         },
         child: Card(
           margin: EdgeInsets.all(4),
-          color: Colors.white.withOpacity(0.8),
+          color: Theme.of(context).canvasColor.withOpacity(0.5),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -59,13 +60,16 @@ class ServerSelectPanel extends StatelessWidget {
                 gd.loginDataCurrent.url == loginData.url &&
                         gd.connectionStatus == "Connected"
                     ? Icon(
-                        MdiIcons.serverNetwork,
-                        color: Theme.of(context).primaryColorDark,
+                        MaterialDesignIcons.getIconDataFromIconName(
+                            "mdi:server-network"),
+                        color: Theme.of(context).toggleableActiveColor,
                       )
                     : Icon(
-                        MdiIcons.serverNetworkOff,
-                        color:
-                            Theme.of(context).primaryColorDark.withOpacity(0.5),
+                        MaterialDesignIcons.getIconDataFromIconName(
+                            "mdi:server-network-off"),
+                        color: Theme.of(context)
+                            .toggleableActiveColor
+                            .withOpacity(0.5),
                       ),
                 SizedBox(width: 12),
                 Expanded(
@@ -97,7 +101,8 @@ class ServerSelectPanel extends StatelessWidget {
             ? IconSlideAction(
                 caption: 'Refresh',
                 color: Colors.transparent,
-                icon: MdiIcons.refresh,
+                icon:
+                    MaterialDesignIcons.getIconDataFromIconName("mdi:refresh"),
                 onTap: () {
                   gd.showSnackBar(
                       'Refresh data from ${loginData.url}', context);
@@ -106,9 +111,10 @@ class ServerSelectPanel extends StatelessWidget {
             : IconSlideAction(
                 caption: 'Connect',
                 color: Colors.transparent,
-                icon: MdiIcons.serverNetwork,
+                icon: MaterialDesignIcons.getIconDataFromIconName(
+                    "mdi:server-network"),
                 onTap: () {
-                  gd.showSnackBar('Connect to ${loginData.url}', context);
+//                  gd.showSnackBar('Connect to ${loginData.url}', context);
                   gd.loginDataCurrent = loginData;
                   webSocket.initCommunication();
                 }),

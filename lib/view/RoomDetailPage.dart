@@ -31,7 +31,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
             name: _controller.text.trim(),
             imageIndex: gd.roomList.last.imageIndex);
         gd.addRoom(newRoom);
-        Navigator.pop(context);
+        Navigator.pop(context, "Add New Room");
+//        gd.showSnackBar("Add New Room", context);
       },
       child: Text("Add"),
       shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
@@ -39,7 +40,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
     var saveButton = RaisedButton(
       onPressed: () {
         gd.setRoomName(gd.roomList[widget.roomIndex], _controller.text.trim());
-        Navigator.pop(context);
+        Navigator.pop(context, "Save Room");
+//        gd.showSnackBar("Save Room", context);
       },
       child: Text("Save"),
       shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
@@ -47,7 +49,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
     var deleteButton = RaisedButton(
       onPressed: () {
         gd.deleteRoom(widget.roomIndex);
-        Navigator.pop(context);
+        Navigator.pop(context, "Delete Room");
+//        gd.showSnackBar("Delete Room", context);
       },
       child: Text("Delete"),
       shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),

@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/Logger.dart';
 
 enum EntityType {
   lightSwitches,
@@ -8,6 +11,7 @@ enum EntityType {
   cameras,
   mediaPlayers,
   accessories,
+  scriptAutomation,
 }
 
 class Entity {
@@ -59,27 +63,6 @@ class Entity {
   });
 
   factory Entity.fromJson(Map<String, dynamic> json) {
-//    List<String> hvacModes = [];
-//    if (json['attributes']['hvac_modes'] != null) {
-//      for (String hvac_mode in json['attributes']['hvac_modes']) {
-//        hvacModes.add(hvac_mode);
-//      }
-//      hvacModes = List<String>.from(json['attributes']['hvac_modes']);
-//    }
-//
-//    List<String> fanModes = [];
-//    if (json['attributes']['fan_modes'] != null) {
-//      for (String fan_mode in json['attributes']['fan_modes']) {
-//        fanModes.add(fan_mode);
-//      }
-//    }
-//
-//    List<String> speedList = [];
-//    if (json['attributes']['speed_list'] != null) {
-//      for (String speed in json['attributes']['speed_list']) {
-//        speedList.add(speed);
-//      }
-//    }
     return Entity(
       entityId: json['entity_id'],
       deviceClass: json['attributes']['device_class'],
@@ -158,6 +141,9 @@ class Entity {
       return EntityType.cameras;
     } else if (entityId.contains('media_player.')) {
       return EntityType.mediaPlayers;
+    } else if (entityId.contains('script.') ||
+        entityId.contains('automation.')) {
+      return EntityType.scriptAutomation;
     } else if (entityId.contains('light.') ||
         entityId.contains('switch.') ||
         entityId.contains('cover.') ||
@@ -176,5 +162,124 @@ class Entity {
 
   int get hvacModeIndex {
     return hvacModes.indexOf(state);
+  }
+
+  IconData get mdiIcon {
+    try {
+      return MaterialDesignIcons.getIconDataFromIconName(getDefaultIconString);
+    } catch (e) {
+      log.e("mdiIcon $e");
+      return MaterialDesignIcons.getIconDataFromIconName("help-box");
+    }
+  }
+
+  String get getDefaultIconString {
+    if (!["", null].contains(icon)) {
+      return icon;
+    }
+
+    var deviceClass = entityId.split('.')[0];
+    var deviceName = entityId.split('.')[1];
+
+    if (deviceClass == 'lock' && isStateOn) {
+      return 'mdi:lock-open';
+    }
+    if (deviceClass == 'climate') {
+      return 'mdi:checkbox-blank-circle';
+    }
+
+    if ([null, ''].contains(deviceClass) || [null, ''].contains(deviceName)) {
+      return 'mdi:help-circle';
+    }
+
+    if (iconOverrider.containsKey(deviceClass)) {
+      return '${iconOverrider[deviceClass]}';
+    }
+
+    if (deviceName.contains('automation')) {
+      return 'mdi:home-automation';
+    }
+    if (deviceName.contains('cover')) {
+      return isStateOn ? 'mdi:garage-open' : 'mdi:garage';
+    }
+    if (deviceName.contains('door_window')) {
+      return isStateOn ? 'mdi:window-open' : 'mdi:window-closed';
+    }
+    if (deviceName.contains('illumination')) {
+      return 'mdi:brightness-4';
+    }
+    if (deviceName.contains('humidity')) {
+      return 'mdi:water-percent';
+    }
+    if (deviceName.contains('light')) {
+      return 'mdi:brightness-4';
+    }
+    if (deviceName.contains('motion')) {
+      return isStateOn ? 'mdi:run' : 'mdi:walk';
+    }
+    if (deviceName.contains('pressure')) {
+      return 'mdi:gauge';
+    }
+    if (deviceName.contains('smoke')) {
+      return 'mdi:fire';
+    }
+    if (deviceName.contains('temperature')) {
+      return 'mdi:thermometer';
+    }
+    if (deviceName.contains('time')) {
+      return 'mdi:clock';
+    }
+    if (deviceName.contains('switch')) {
+      return 'mdi:toggle-switch';
+    }
+    if (deviceName.contains('water_leak')) {
+      return 'mdi:water-off';
+    }
+    if (deviceName.contains('water')) {
+      return 'mdi:water';
+    }
+    if (deviceName.contains('yr_symbol')) {
+      return 'mdi:weather-partlycloudy';
+    }
+
+    return 'mdi:help-circle';
+  }
+
+  Map<String, String> iconOverrider = {
+    'automation': 'mdi:home-automation',
+    'camera': 'mdi:camera',
+    'climate': 'mdi:thermostat',
+    'cover': 'mdi:garage',
+    'fan': 'mdi:fan',
+    'group': 'mdi:group',
+    'light': 'mdi:lightbulb',
+    'lock': 'mdi:lock',
+    'media_player': 'mdi:cast',
+    'person': 'mdi:account',
+    'sun': 'mdi:white-balance-sunny',
+    'script': 'mdi:script-text',
+    'switch': 'mdi:power',
+    'timer': 'mdi:timer',
+    'vacuum': 'mdi:robot-vacuum',
+    'weather': 'mdi:weather-partlycloudy',
+  };
+
+  bool get isStateOn {
+    var stateLower = state.toLowerCase();
+    if ([
+      'on',
+      'turning on...',
+      'open',
+      'opening...',
+      'unlocked',
+      'unlocking...'
+    ].contains(stateLower)) {
+      return true;
+    }
+
+    if (entityId.split('.')[0] == 'climate' && state.toLowerCase() != 'off') {
+      return true;
+    }
+    return false;
   }
 }
