@@ -58,12 +58,13 @@ class EntitySquare extends StatelessWidget {
                         Expanded(
                           child: FittedBox(
                             alignment: Alignment.centerRight,
-                            child: gd.connectionStatus == "Connected"
-                                ? null
-                                : SpinKitThreeBounce(
+                            child: (gd.connectionStatus != "Connected" ||
+                                    entity.state.contains("..."))
+                                ? SpinKitThreeBounce(
                                     size: 100,
                                     color: Theme.of(context).cardColor,
-                                  ),
+                                  )
+                                : null,
                           ),
                         ),
                       ],
