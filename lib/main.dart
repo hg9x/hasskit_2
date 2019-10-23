@@ -1,8 +1,9 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/view/HomePage.dart';
 import 'package:hasskit_2/view/RoomPage.dart';
 import 'package:hasskit_2/view/SettingPage.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'helper/Logger.dart';
 import 'helper/GeneralData.dart';
@@ -60,51 +61,79 @@ class _HomeViewState extends State<HomeView> {
           child: Center(child: CircularProgressIndicator()));
     } else {
       return Scaffold(
-        body: SafeArea(
-          child: _getPage(pageNumber),
-        ),
-        backgroundColor: Theme.of(context).backgroundColor,
-        bottomNavigationBar: BottomNavyBar(
-          selectedIndex: pageNumber,
-          showElevation: true, // use this to remove appBar's elevation
-          onItemSelected: (index) => setState(() {
-            pageNumber = index;
-            _getPage(pageNumber);
-          }),
-          items: [
-            BottomNavyBarItem(
-              icon: Icon(Icons.home),
-              title: Text("${gd.roomTitle(0)}"),
-              activeColor: Theme.of(context).accentColor,
-            ),
-            BottomNavyBarItem(
-              icon: Icon(Icons.view_carousel),
-              title: Text('Room'),
-              activeColor: Theme.of(context).accentColor,
-            ),
-            BottomNavyBarItem(
-              icon: Icon(Icons.settings),
-              title: Text('Setting'),
-              activeColor: Theme.of(context).accentColor,
-            ),
-          ],
+        body: CupertinoTabScaffold(
+          tabBar: CupertinoTabBar(
+            currentIndex: 0,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(MdiIcons.home),
+                title: Text('Home'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(MdiIcons.viewCarousel),
+                title: Text('Room'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(MdiIcons.settings),
+                title: Text('Setting'),
+              ),
+            ],
+          ),
+          tabBuilder: (context, index) {
+            switch (index) {
+              case 0:
+                return CupertinoTabView(
+                  builder: (context) {
+                    return CupertinoPageScaffold(
+                      child: HomePage(),
+//                    child: HomePage(),
+                    );
+                  },
+                );
+              case 1:
+                return CupertinoTabView(
+                  builder: (context) {
+                    return CupertinoPageScaffold(
+                      child: RoomsPage(),
+//                    child: RoomTab(),
+                    );
+                  },
+                );
+              case 2:
+                return CupertinoTabView(
+                  builder: (context) {
+                    return CupertinoPageScaffold(
+                      child: SettingPage(),
+                    );
+                  },
+                );
+              default:
+                return CupertinoTabView(
+                  builder: (context) {
+                    return CupertinoPageScaffold(
+                      child: HomePage(),
+                    );
+                  },
+                );
+            }
+          },
         ),
       );
     }
   }
 
-  _getPage(int pageNumber) {
-    if (pageNumber == 1) {
-//      Logger.d("pageNumber $pageNumber ");
-      return RoomsPage();
-    } else if (pageNumber == 2) {
-//      Logger.d("pageNumber $pageNumber ");
-      return SettingPage();
-    } else {
-//      Logger.d("pageNumber $pageNumber ");
-      return HomePage();
-    }
-  }
+//  _getPage(int pageNumber) {
+//    if (pageNumber == 1) {
+////      Logger.d("pageNumber $pageNumber ");
+//      return RoomsPage();
+//    } else if (pageNumber == 2) {
+////      Logger.d("pageNumber $pageNumber ");
+//      return SettingPage();
+//    } else {
+////      Logger.d("pageNumber $pageNumber ");
+//      return HomePage();
+//    }
+//  }
 
   mainInitState() async {
     log.w("showLoading $showLoading");

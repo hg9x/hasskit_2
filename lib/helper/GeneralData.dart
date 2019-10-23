@@ -2,12 +2,14 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/CameraThumbnail.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:hasskit_2/model/Room.dart';
+import 'package:hasskit_2/view/SliverAppBarDelegate.dart';
 import "package:http/http.dart" as http;
 import 'Logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +18,30 @@ import 'package:flutter/services.dart';
 GeneralData gd;
 
 class GeneralData with ChangeNotifier {
+  void saveBool(String key, bool content) async {
+    var _preferences = await SharedPreferences.getInstance();
+    _preferences.setBool(key, content);
+    log.d("saveBool: key $key content $content");
+  }
+
+  Future<bool> getBool(String key) async {
+    var _preferences = await SharedPreferences.getInstance();
+    var value = _preferences.getBool(key) ?? false;
+    return value;
+  }
+
+  void saveString(String key, String content) async {
+    var _preferences = await SharedPreferences.getInstance();
+    _preferences.setString(key, content);
+    log.d("saveString: key $key content $content");
+  }
+
+  Future<String> getString(String key) async {
+    var _preferences = await SharedPreferences.getInstance();
+    var value = _preferences.getString(key) ?? "";
+    return value;
+  }
+
   int _lastSelectedRoom = 0;
   int get lastSelectedRoom => _lastSelectedRoom;
   set lastSelectedRoom(int val) {
@@ -40,28 +66,16 @@ class GeneralData with ChangeNotifier {
     }
   }
 
-  void saveBool(String key, bool content) async {
-    var _preferences = await SharedPreferences.getInstance();
-    _preferences.setBool(key, content);
-    log.d("saveBool: key $key content $content");
-  }
-
-  Future<bool> getBool(String key) async {
-    var _preferences = await SharedPreferences.getInstance();
-    var value = _preferences.getBool(key) ?? false;
-    return value;
-  }
-
-  void saveString(String key, String content) async {
-    var _preferences = await SharedPreferences.getInstance();
-    _preferences.setString(key, content);
-    log.d("saveString: key $key content $content");
-  }
-
-  Future<String> getString(String key) async {
-    var _preferences = await SharedPreferences.getInstance();
-    var value = _preferences.getString(key) ?? "";
-    return value;
+  String _urlTextField = "";
+  String get urlTextField => _urlTextField;
+  set urlTextField(String val) {
+    if (val == null) {
+      throw new ArgumentError();
+    }
+    if (_urlTextField != val) {
+      _urlTextField = val;
+      notifyListeners();
+    }
   }
 
   get appBarThemeChanger {
@@ -144,6 +158,7 @@ class GeneralData with ChangeNotifier {
   Map<String, List<Entity>> cards = {};
 
   void getStates(List<dynamic> message) {
+    log.d('getStates');
     _entities.clear();
 
     for (dynamic mess in message) {
@@ -152,10 +167,12 @@ class GeneralData with ChangeNotifier {
     }
 
 //    log.d('_entities.length ${entities.length}');
+    log.d("_entities.length ${_entities.length}");
     notifyListeners();
   }
 
   void getLovelaceConfig(dynamic message) {
+    log.d('getLovelaceConfig');
     badges.clear();
     cards.clear();
 
@@ -231,21 +248,7 @@ class GeneralData with ChangeNotifier {
       cardNumber = 0;
     }
 
-//    Logger.d('\nbadges.length ${badges.length}');
-//    for (int i = 0; i < badges.length; i++) {
-//      Logger.d('  - ${i + 1}. ${badges[i].entityId}');
-//    }
-
-//    Logger.d('\ncards.length ${cards.length}');
-//    var cardsKeys = cards.keys.toList();
-//    for (var cardsKey in cardsKeys) {
-////      Logger.d('\ncardskey $cardsKey length ${cards[cardsKey].length}');
-//      int i = 0;
-//      for (var entity in cards[cardsKey]) {
-////        Logger.d('  - ${i + 1}. ${entity.entityId}');
-//        i++;
-//      }
-//    }
+    log.d("badges.length ${badges.length} cards.length ${cards.length}");
 
     notifyListeners();
   }
@@ -297,52 +300,62 @@ class GeneralData with ChangeNotifier {
 
   List<ThemeData> themesData = [
     ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.grey,
-    ),
-    ThemeData(
       brightness: Brightness.dark,
-      primarySwatch: Colors.grey,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.red,
+      primarySwatch: Colors.amber,
+      accentColor: Colors.amber[900],
+      toggleableActiveColor: Colors.amber[900],
     ),
     ThemeData(
       brightness: Brightness.light,
       primarySwatch: Colors.amber,
     ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.green,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.teal,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.cyan,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.blue,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.indigo,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.purple,
-    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.grey,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.dark,
+//      primarySwatch: Colors.grey,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.red,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.yellow,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.green,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.teal,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.cyan,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.blue,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.indigo,
+//    ),
+//    ThemeData(
+//      brightness: Brightness.light,
+//      primarySwatch: Colors.purple,
+//    ),
   ];
 
   get currentTheme {
     return themesData[themeIndex];
   }
 
-  int themeIndex = 7;
+  int themeIndex = 0;
   themeChange() {
     themeIndex = themeIndex + 1;
     if (themeIndex >= themesData.length) {
@@ -521,6 +534,18 @@ class GeneralData with ChangeNotifier {
     }
   }
 
+  bool _useSSL = true;
+  get useSSL => _useSSL;
+  set useSSL(bool value) {
+    if (value != true && value != false) {
+      throw new ArgumentError();
+    }
+    if (_useSSL != value) {
+      _useSSL = value;
+      notifyListeners();
+    }
+  }
+
   bool _autoConnect = true;
   get autoConnect => _autoConnect;
   set autoConnect(bool value) {
@@ -686,5 +711,107 @@ class GeneralData with ChangeNotifier {
         roomList.add(room);
       }
     }
+  }
+
+  SliverPersistentHeader makeHeader(
+    Color color,
+    Image image,
+    String headerText,
+    String subText,
+    BuildContext context,
+  ) {
+    return SliverPersistentHeader(
+      pinned: true,
+      floating: false,
+      delegate: SliverAppBarDelegate(
+        minHeight: 30,
+        maxHeight: 60,
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Container(
+              color: color,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(width: 24),
+                        ClipRRect(
+                          borderRadius: new BorderRadius.circular(4.0),
+                          child: SizedBox(
+                            width: 28,
+                            child: image,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(headerText),
+                            subText.length > 0 ? Text(subText) : Container(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader makeHeaderIcon(
+    Color color,
+    Icon icon,
+    String headerText,
+    String subText,
+    BuildContext context,
+  ) {
+    return SliverPersistentHeader(
+      pinned: true,
+      floating: false,
+      delegate: SliverAppBarDelegate(
+        minHeight: 30,
+        maxHeight: 60,
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Container(
+              color: color,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(width: 24),
+                        ClipRRect(
+                          borderRadius: new BorderRadius.circular(4.0),
+                          child: SizedBox(
+                            width: 28,
+                            child: icon,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(headerText),
+                            subText.length > 0 ? Text(subText) : Container(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

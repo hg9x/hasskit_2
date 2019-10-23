@@ -85,7 +85,7 @@ class LoginData {
     if (minute > 0 || !lessThanAMinute) {
       String s = " minute";
       if (minute > 1) {
-        s = " minutes";
+        s = " minutes ago";
       }
       recVal = recVal + minute.toString() + s;
       lessThanAMinute = false;

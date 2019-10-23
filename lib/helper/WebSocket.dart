@@ -262,14 +262,12 @@ class WebSocket {
           }
           //Processing get_states
           else if (id == gd.getStatesId) {
-            log.d('Processing Get States');
             gd.getStates(decode['result']);
             outMsg = {"id": gd.socketId, "type": "lovelace/config"};
             send(json.encode(outMsg));
           }
           //Processing lovelace/config
           else if (id == gd.loveLaceConfigId) {
-            log.d('Processing Lovelace Config');
             gd.getLovelaceConfig(decode);
             outMsg = {
               "id": gd.socketId,

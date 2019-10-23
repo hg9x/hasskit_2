@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/model/Room.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RoomDetailPage extends StatefulWidget {
   final int roomIndex;
@@ -26,7 +25,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   @override
   Widget build(BuildContext context) {
     _controller.text = gd.roomList[widget.roomIndex].name;
-    OutlineButton addButton = OutlineButton(
+    var addButton = RaisedButton(
       onPressed: () {
         var newRoom = Room(
             name: _controller.text.trim(),
@@ -34,53 +33,52 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         gd.addRoom(newRoom);
         Navigator.pop(context);
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.add_circle),
-          Text("Add"),
-        ],
-      ),
-      borderSide: BorderSide(width: 1),
-      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+      child: Text("Add"),
+      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
     );
-    OutlineButton saveButton = OutlineButton(
+    var saveButton = RaisedButton(
       onPressed: () {
         gd.setRoomName(gd.roomList[widget.roomIndex], _controller.text.trim());
         Navigator.pop(context);
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(MdiIcons.databaseEdit),
-          Text("Save"),
-        ],
-      ),
-      borderSide: BorderSide(width: 1),
-      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+      child: Text("Save"),
+      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
     );
-    OutlineButton deleteButton = OutlineButton(
+    var deleteButton = RaisedButton(
       onPressed: () {
         gd.deleteRoom(widget.roomIndex);
         Navigator.pop(context);
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(MdiIcons.delete),
-          Text("Delete"),
-        ],
-      ),
-      borderSide: BorderSide(width: 1),
-      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+      child: Text("Delete"),
+      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
     );
-
+//    IconButton moveLeft = IconButton(
+//      icon: Icon(
+//        MdiIcons.chevronLeftBox,
+//        size: 32,
+//      ),
+//      onPressed: () {},
+//    );
+//    IconButton moveRight = IconButton(
+//      icon: Icon(
+//        MdiIcons.chevronRightBox,
+//        size: 32,
+//      ),
+//      onPressed: () {},
+//    );
+    Expanded expanded = Expanded(child: Container());
     if (widget.roomIndex > 0 && widget.roomIndex < gd.roomList.length - 2) {
-      buttonWidgets = [saveButton, Container(width: 10), deleteButton];
+      buttonWidgets = [
+        expanded,
+        saveButton,
+        Container(width: 10),
+        deleteButton,
+        expanded,
+      ];
     } else if (widget.roomIndex == gd.roomList.length - 1) {
-      buttonWidgets = [addButton];
+      buttonWidgets = [expanded, addButton, expanded];
     } else {
-      buttonWidgets = [saveButton];
+      buttonWidgets = [expanded, saveButton, expanded];
     }
     return Padding(
       padding: EdgeInsets.only(top: 24),
@@ -144,14 +142,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           )),
                     SizedBox(height: 8),
                     Row(
-                      children: <Widget>[
-                        Expanded(child: Container()),
-                        Row(
-                          children: buttonWidgets,
-                        ),
-                        Expanded(child: Container()),
-                      ],
-                    ),
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: buttonWidgets),
                     Expanded(child: Container()),
                   ],
                 ),
