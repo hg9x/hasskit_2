@@ -252,8 +252,6 @@ class GeneralData with ChangeNotifier {
         oldEntity.directSpeed = newEntity.directSpeed;
         oldEntity.angle = newEntity.angle;
       }
-
-//      print('Replace old oldEntity ${oldEntity.entityId}');
       notifyListeners();
     } else {
       _entities.add(newEntity);
