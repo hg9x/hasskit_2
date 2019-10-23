@@ -270,7 +270,6 @@ class GeneralData with ChangeNotifier {
       log.d('isEntityNameValid $entityId not valid');
       return false;
     }
-
     return true;
   }
 
