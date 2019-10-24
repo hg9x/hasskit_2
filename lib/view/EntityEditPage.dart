@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/helper/Logger.dart';
+import 'package:hasskit_2/view/EntityControl/EntityControlClimate.dart';
+import 'package:hasskit_2/view/EntityControl/EntityControlGeneral.dart';
 
 class EntityEditPage extends StatelessWidget {
   final String entityId;
@@ -15,11 +17,18 @@ class EntityEditPage extends StatelessWidget {
       log.e("Cant find entity name $entityId");
       return Container();
     }
+
+    Widget entityControl;
+    if (entity.hvacModes != null && entity.hvacModes.length > 0) {
+      entityControl = EntityControlClimate(entity: entity);
+    } else {
+      entityControl = EntityControlGeneral(entity: entity);
+    }
     return Scaffold(
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.only(top: 0),
-          color: Colors.grey,
+          color: Colors.white,
           child: Column(
             children: <Widget>[
               Container(
@@ -37,7 +46,17 @@ class EntityEditPage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Expanded(
-                child: Container(),
+                child: Container(
+//                  color: Colors.red,
+                    ),
+              ),
+              Container(
+                child: entityControl,
+              ),
+              Expanded(
+                child: Container(
+//                  color: Colors.red,
+                    ),
               ),
               Text(
                 "Show In Room",

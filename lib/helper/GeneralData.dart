@@ -1139,4 +1139,35 @@ class GeneralData with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  IconData climateModeToIcon(String text) {
+    text = text.toLowerCase();
+    if (text.contains('off')) {
+      return MaterialDesignIcons.getIconDataFromIconName('mdi:power');
+    }
+    if (text.contains('cool')) {
+      return MaterialDesignIcons.getIconDataFromIconName('mdi:snowflake');
+    }
+    if (text.contains('heat')) {
+      return MaterialDesignIcons.getIconDataFromIconName('mdi:weather-sunny');
+    }
+    if (text.contains('fan')) {
+      return MaterialDesignIcons.getIconDataFromIconName('mdi:fan');
+    }
+    return MaterialDesignIcons.getIconDataFromIconName('mdi:thermometer');
+  }
+
+  Color climateModeToColor(String text) {
+    text = text.toLowerCase();
+    if (text.contains('off')) {
+      return Colors.black;
+    }
+    if (text.contains('heat')) {
+      return Colors.red;
+    }
+    if (text.contains('cool')) {
+      return Colors.green;
+    }
+    return Colors.yellow;
+  }
 }
