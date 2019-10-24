@@ -55,8 +55,6 @@ class WebSocket {
     log.d(
         'initCommunication socketUrl ${gd.socketUrl} autoConnect ${gd.autoConnect} connectionStatus ${gd.connectionStatus}');
 
-    gd.roomListLoad(gd.loginDataCurrent.url);
-
     ///
     /// Just in case, close any previous communication
     ///
@@ -209,6 +207,8 @@ class WebSocket {
         break;
       case 'auth_ok':
         {
+          gd.roomListLoad(gd.loginDataCurrent.url);
+
           if (gd.loginDataCurrent.longToken.length < 100) {
             outMsg = {
               "id": gd.socketId,
