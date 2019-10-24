@@ -31,7 +31,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
           : null,
       child: Row(
         children: <Widget>[
-          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:plus-box")),
+//          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:plus-box")),
           Text("Add"),
         ],
       ),
@@ -46,7 +46,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
       },
       child: Row(
         children: <Widget>[
-          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:content-save")),
+//          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:content-save")),
           Text(" Save"),
         ],
       ),
@@ -64,7 +64,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
               : null,
       child: Row(
         children: <Widget>[
-          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:delete")),
+//          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:delete")),
           Text("Delete"),
         ],
       ),
@@ -154,6 +154,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
             Expanded(child: Container()),
             Text(
               "Select Background Color",
+              style: Theme.of(context).textTheme.subtitle,
               textScaleFactor: gd.textScaleFactor(context),
             ),
             Container(

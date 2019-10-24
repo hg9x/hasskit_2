@@ -46,7 +46,7 @@ class EntityEditPage extends StatelessWidget {
             children: <Widget>[
               Container(
                 height: 25,
-                color: Colors.black,
+                color: Colors.transparent,
               ),
               Container(
                 height: 8,

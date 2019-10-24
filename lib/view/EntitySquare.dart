@@ -93,7 +93,7 @@ class EntitySquare extends StatelessWidget {
                                     entity.state.contains("..."))
                                 ? SpinKitThreeBounce(
                                     size: 100,
-                                    color: Theme.of(context).cardColor,
+                                    color: ThemeInfo.colorIconActive,
                                   )
                                 : null,
                           ),
