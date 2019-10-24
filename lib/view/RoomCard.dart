@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
-import 'package:hasskit_2/view/RoomDetailPage.dart';
+import 'package:hasskit_2/view/RoomEditPage.dart';
 
 class RoomCard extends StatelessWidget {
   final int roomIndex;
@@ -17,7 +17,7 @@ class RoomCard extends StatelessWidget {
           isScrollControlled: true,
           useRootNavigator: true,
           builder: (BuildContext context) {
-            return RoomDetailPage(roomIndex: roomIndex);
+            return RoomEditPage(roomIndex: roomIndex);
           },
         );
       },

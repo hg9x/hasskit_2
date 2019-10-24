@@ -11,6 +11,7 @@ import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:hasskit_2/model/Room.dart';
 import 'package:hasskit_2/view/EntitiesSliverGrid.dart';
+import 'package:hasskit_2/view/RoomEditPage.dart';
 import 'package:hasskit_2/view/SliverAppBarDelegate.dart';
 import "package:http/http.dart" as http;
 import 'Logger.dart';
@@ -311,17 +312,17 @@ class GeneralData with ChangeNotifier {
 
   List<ThemeData> themesData = [
     ThemeData(
+      brightness: Brightness.light,
+      primarySwatch: Colors.amber,
+      accentColor: Colors.amber[900],
+      cardColor: Colors.white,
+    ),
+    ThemeData(
       brightness: Brightness.dark,
       primarySwatch: Colors.amber,
       accentColor: Colors.amber[900],
       toggleableActiveColor: Colors.amber[900],
       cardColor: Colors.black,
-    ),
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.amber,
-      accentColor: Colors.amber[900],
-      cardColor: Colors.white,
     ),
 //    ThemeData(
 //      brightness: Brightness.light,
@@ -637,23 +638,21 @@ class GeneralData with ChangeNotifier {
   ];
 
   int get roomPageLength {
-    if (roomList.length - 2 < 0) {
+    if (roomList.length - 1 < 0) {
       return 0;
     }
-    return roomList.length - 2;
+    return roomList.length - 1;
   }
 
   String getRoomName(int roomIndex) {
-    if (roomList != null &&
-        roomList.length > 0 &&
-        roomList[roomIndex].name != null) {
+    if (roomList.length >= roomIndex && roomList[roomIndex].name != null) {
       return roomList[roomIndex].name;
     }
-    return "Home";
+    return roomList.last.name;
   }
 
   AssetImage getRoomImage(int roomIndex) {
-    if (roomList.length > 0 &&
+    if (roomList.length >= roomIndex &&
         roomList[roomIndex] != null &&
         roomList[roomIndex].imageIndex != null) {
       return AssetImage(backgroundImage[roomList[roomIndex].imageIndex]);
@@ -661,7 +660,6 @@ class GeneralData with ChangeNotifier {
     return AssetImage(backgroundImage[4]);
   }
 
-  Room roomAddDefault = Room(name: "Add New", imageIndex: 5);
   List<String> backgroundImage = [
     "assets/background_images/DarkBlue-iOS-13-Home-app-wallpaper.jpg",
     "assets/background_images/DarkGreen-iOS-13-Home-app-wallpaper.jpg",
@@ -685,6 +683,7 @@ class GeneralData with ChangeNotifier {
   }
 
   setRoomName(Room room, String name) {
+    log.w("setRoomName room.name ${room.name} name $name");
     if (room.name != name) {
       room.name = name;
       notifyListeners();
@@ -698,6 +697,7 @@ class GeneralData with ChangeNotifier {
   }
 
   deleteRoom(int roomIndex) {
+    log.w("deleteRoom roomIndex $roomIndex");
     if (roomList.length >= roomIndex) {
       roomList.removeAt(roomIndex);
       notifyListeners();
@@ -705,10 +705,38 @@ class GeneralData with ChangeNotifier {
     roomListSave();
   }
 
-  addRoom(Room newRoom) {
-    roomList.insert(roomList.length - 2, newRoom);
-    roomList.last.name = roomAddDefault.name;
-    roomList.last.imageIndex = roomAddDefault.imageIndex;
+  PageController pageController;
+  addRoom() {
+    log.w("addRoom ");
+    var newRoom = Room(
+      name: "New Room",
+      imageIndex: 5,
+      entities: [],
+    );
+    roomList.insert(roomList.length - 1, newRoom);
+    pageController.jumpToPage(roomList.length - 3);
+
+    roomListSave();
+    notifyListeners();
+  }
+
+  moveRoom(int roomIndex, bool toLeft) {
+    var room = roomList[roomIndex];
+
+    if (toLeft) {
+      roomList.removeAt(roomIndex);
+      roomList.insert(roomIndex - 1, room);
+      pageController.jumpToPage(roomIndex - 1);
+//      lastSelectedRoom = roomIndex - 1;
+    } else {
+      roomList.removeAt(roomIndex);
+      roomList.insert(roomIndex + 1, room);
+      pageController.jumpToPage(roomIndex);
+//      lastSelectedRoom = roomIndex + 1;
+    }
+
+    log.w(
+        "moveRoom $roomIndex toLeft $toLeft lastSelectedRoom $lastSelectedRoom");
     roomListSave();
     notifyListeners();
   }
@@ -884,9 +912,19 @@ class GeneralData with ChangeNotifier {
         ),
         largeTitle: Text(gd.getRoomName(roomIndex)),
         trailing: IconButton(
-          icon: Icon(Icons.palette),
+          icon: Icon(Icons.menu),
           onPressed: () {
-            gd.themeChange();
+            showModalBottomSheet(
+              context: context,
+              elevation: 1,
+              backgroundColor:
+                  Theme.of(context).primaryColorDark.withOpacity(0.8),
+              isScrollControlled: false,
+              useRootNavigator: false,
+              builder: (BuildContext context) {
+                return RoomEditPage(roomIndex: roomIndex);
+              },
+            );
           },
         ),
       ),

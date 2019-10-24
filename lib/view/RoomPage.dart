@@ -5,9 +5,9 @@ import 'package:hasskit_2/helper/GeneralData.dart';
 class RoomsPage extends StatelessWidget {
   final PageController controller = PageController(
       initialPage: gd.lastSelectedRoom, keepPage: true, viewportFraction: 1);
-
   @override
   Widget build(BuildContext context) {
+    gd.pageController = controller;
     return PageView.builder(
         controller: controller,
         onPageChanged: (val) {

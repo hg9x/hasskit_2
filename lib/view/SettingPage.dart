@@ -118,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
               Theme.of(context).primaryColorDark.withOpacity(0.2),
               Icon(
                 MaterialDesignIcons.getIconDataFromIconName(
-                    "mdi:server-network"),
+                    "mdi:home-assistant"),
               ),
               'Home Assistant Connection',
               "",

@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/view/HomePage.dart';
 import 'package:hasskit_2/view/RoomPage.dart';
 import 'package:hasskit_2/view/SettingPage.dart';
@@ -46,9 +50,22 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int pageNumber = 2;
   bool showLoading = true;
+
+  Timer timer1;
+  Timer timer5;
+  Timer timer10;
+  Timer timer30;
+
   @override
   void initState() {
-//    gd.showLoading = true;
+    timer1 =
+        Timer.periodic(Duration(seconds: 1), (Timer t) => timer1Callback());
+    timer5 =
+        Timer.periodic(Duration(seconds: 5), (Timer t) => timer5Callback());
+    timer10 =
+        Timer.periodic(Duration(seconds: 10), (Timer t) => timer10Callback());
+    timer30 =
+        Timer.periodic(Duration(seconds: 30), (Timer t) => timer30Callback());
     mainInitState();
     super.initState();
   }
@@ -73,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
               BottomNavigationBarItem(
                 icon: Icon(MaterialDesignIcons.getIconDataFromIconName(
                     "mdi:view-carousel")),
-                title: Text(gd.getRoomName(gd.lastSelectedRoom + 1)),
+                title: Text("Room"),
               ),
               BottomNavigationBarItem(
                 icon: Icon(MaterialDesignIcons.getIconDataFromIconName(
@@ -147,5 +164,25 @@ class _HomeViewState extends State<HomeView> {
     showLoading = false;
     log.w("showLoading $showLoading");
     setState(() {});
+  }
+
+  timer1Callback() {
+//    updateCameraThumbnails();
+  }
+
+  timer5Callback() {}
+
+  timer10Callback() {
+    if (gd.connectionStatus != "Connected") {
+      webSocket.initCommunication();
+    }
+  }
+
+  timer30Callback() {
+    if (gd.connectionStatus == "Connected") {
+      var outMsg = {"id": gd.socketId, "type": "get_states"};
+      var outMsgEncoded = json.encode(outMsg);
+      webSocket.send(outMsgEncoded);
+    }
   }
 }
