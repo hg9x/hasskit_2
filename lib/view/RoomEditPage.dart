@@ -136,15 +136,17 @@ class _RoomEditPageState extends State<RoomEditPage> {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              moveLeft,
-              deleteButton,
-              saveButton,
-              addButton,
-              moveRight,
-            ],
+          FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                moveLeft,
+                deleteButton,
+                saveButton,
+                addButton,
+                moveRight,
+              ],
+            ),
           ),
           Expanded(child: Container()),
           Text("Select Background Color"),
