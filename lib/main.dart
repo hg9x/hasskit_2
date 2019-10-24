@@ -72,6 +72,9 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    gd.mediaQueryWidth = MediaQuery.of(context).size.width;
+//    gd.mediaQueryHeight = MediaQuery.of(context).size.height;
+
     if (showLoading) {
       return Container(
           color: Theme.of(context).backgroundColor,

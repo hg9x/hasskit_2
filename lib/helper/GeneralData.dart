@@ -47,6 +47,42 @@ class GeneralData with ChangeNotifier {
     return value;
   }
 
+  double _mediaQueryWidth = 411.42857142857144;
+  double get mediaQueryWidth => _mediaQueryWidth;
+  set mediaQueryWidth(double val) {
+//    log.d("mediaQueryWidth $val");
+    if (val == null) {
+      throw new ArgumentError();
+    }
+    if (_mediaQueryWidth != val) {
+      _mediaQueryWidth = val;
+      notifyListeners();
+    }
+  }
+
+  double _mediaQueryHeight = 0;
+  double get mediaQueryHeight => _mediaQueryHeight;
+  set mediaQueryHeight(double val) {
+//    log.d("mediaQueryHeight $val");
+    if (val == null) {
+      throw new ArgumentError();
+    }
+    if (_mediaQueryHeight != val) {
+      _mediaQueryHeight = val;
+      notifyListeners();
+    }
+  }
+
+  double textScaleFactor(BuildContext context) {
+//    I/flutter ( 2137): DEBUG mediaQueryWidth 411.42857142857144
+//    I/flutter ( 2137): DEBUG mediaQueryHeight 683.4285714285714
+//    gd.mediaQueryWidth = MediaQuery.of(context).size.width;
+//    gd.mediaQueryHeight = MediaQuery.of(context).size.height;
+    double retVal = mediaQueryWidth / 411.42857142857144;
+//    log.d("textScaleFactor $retVal");
+    return retVal;
+  }
+
   int _lastSelectedRoom = 0;
   int get lastSelectedRoom => _lastSelectedRoom;
   set lastSelectedRoom(int val) {
@@ -802,12 +838,13 @@ class GeneralData with ChangeNotifier {
                           children: <Widget>[
                             Text(
                               headerText,
-                              textScaleFactor: 1,
+                              textScaleFactor: gd.textScaleFactor(context),
                             ),
                             subText.length > 0
                                 ? Text(
                                     subText,
-                                    textScaleFactor: 1,
+                                    textScaleFactor:
+                                        gd.textScaleFactor(context),
                                   )
                                 : Container(),
                           ],
