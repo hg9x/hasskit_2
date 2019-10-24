@@ -726,7 +726,7 @@ class GeneralData with ChangeNotifier {
     if (toLeft) {
       roomList.removeAt(roomIndex);
       roomList.insert(roomIndex - 1, room);
-      pageController.jumpToPage(roomIndex - 1);
+      pageController.jumpToPage(roomIndex - 2);
 //      lastSelectedRoom = roomIndex - 1;
     } else {
       roomList.removeAt(roomIndex);

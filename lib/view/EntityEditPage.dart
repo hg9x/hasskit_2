@@ -46,13 +46,13 @@ class EntityEditPage extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(
-                "One Entity Can Show in ${gd.roomList[0].name} and ONE Another Room",
-                style: Theme.of(context).textTheme.body2,
-                textScaleFactor: 1,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+//              Text(
+//                "One Entity Can Show in ${gd.roomList[0].name} and ONE Another Room",
+//                style: Theme.of(context).textTheme.body2,
+//                textScaleFactor: 1,
+//                maxLines: 1,
+//                overflow: TextOverflow.ellipsis,
+//              ),
               Container(
                 height: 67,
                 child: ListView.builder(
