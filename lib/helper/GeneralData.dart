@@ -888,9 +888,22 @@ class GeneralData with ChangeNotifier {
       ),
     );
 
-    List<Entity> entitiesFiltered = gd.entities
-        .where((e) => lovelaceEntities.contains(e.entityId))
-        .toList();
+    //entitiesInRoomsExceptDefault
+    List<Entity> entitiesFiltered = [];
+    if (roomIndex != roomList.length - 1) {
+      entitiesFiltered = gd.entities
+          .where((e) =>
+              gd.roomList[roomIndex].entities.contains(e.entityId) &&
+              lovelaceEntities.contains(e.entityId))
+          .toList();
+    } else {
+      entitiesFiltered = gd.entities
+          .where((e) =>
+              !entitiesInRoomsExceptDefault.contains(e.entityId) &&
+              lovelaceEntities.contains(e.entityId))
+          .toList();
+    }
+
     entitiesFiltered.sort((a, b) => a.friendlyName.compareTo(b.friendlyName));
 
     var lightSwitches = entitiesFiltered
@@ -1077,6 +1090,52 @@ class GeneralData with ChangeNotifier {
     }
 
     entity.toggleState();
+    notifyListeners();
+  }
+
+  List<String> get entitiesInRoomsExceptDefault {
+    List<String> recVal = [];
+    for (int i = 0; i < roomList.length - 2; i++) {
+      recVal = recVal + roomList[i].entities;
+    }
+    return recVal;
+  }
+
+  void removeRoomEntity(String entityId) {
+    for (int i = 1; i < roomList.length; i++) {
+      var roomEntities = roomList[i].entities;
+      if (roomEntities.contains(entityId)) {
+        roomEntities.remove(entityId);
+      }
+    }
+  }
+
+  void showInRoom(String entityId, int roomIndex, String friendlyName,
+      BuildContext context) {
+    log.w("Show In Room entityId $entityId roomIndex $roomIndex");
+    if (roomIndex == 0) {
+      if (roomList[roomIndex].entities.contains(entityId)) {
+        roomList[roomIndex].entities.remove(entityId);
+        showSnackBar(
+            "Remove $friendlyName from ${roomList[roomIndex].name}", context);
+      } else {
+        roomList[roomIndex].entities.add(entityId);
+        showSnackBar(
+            "Show $friendlyName  in ${roomList[roomIndex].name}", context);
+      }
+      notifyListeners();
+    } else {
+      if (roomList[roomIndex].entities.contains(entityId)) {
+        roomList[roomIndex].entities.remove(entityId);
+        showSnackBar(
+            "Remove $friendlyName  from ${roomList[roomIndex].name}", context);
+      } else {
+        removeRoomEntity(entityId);
+        roomList[roomIndex].entities.add(entityId);
+        showSnackBar(
+            "Show $friendlyName  in ${roomList[roomIndex].name}", context);
+      }
+    }
     notifyListeners();
   }
 }

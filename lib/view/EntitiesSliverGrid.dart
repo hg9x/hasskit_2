@@ -47,6 +47,17 @@ class EntitiesSliverGrid extends StatelessWidget {
                 },
                 onLongPressCallback: () {
                   log.d("${entities[index].entityId} onLongPressCallback");
+                  showModalBottomSheet(
+                    context: context,
+                    elevation: 1,
+                    backgroundColor:
+                        Theme.of(context).primaryColorDark.withOpacity(0.8),
+                    isScrollControlled: true,
+                    useRootNavigator: true,
+                    builder: (BuildContext context) {
+                      return EntityEditPage(entityId: entities[index].entityId);
+                    },
+                  );
                 },
               );
             } else {

@@ -155,48 +155,43 @@ class _RoomEditPageState extends State<RoomEditPage> {
               textScaleFactor: 1,
             ),
             Container(
-              child: Container(
-                height: 58,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: gd.backgroundImage.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
+              height: 58,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: gd.backgroundImage.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
 //                    log.d(
 //                        "InkWell 1 ${gd.roomList[widget.roomIndex].imageIndex}");
-                        gd.setRoomBackgroundAndName(
-                            gd.roomList[widget.roomIndex],
-                            index,
-                            _controller.text.trim());
-                        log.d(
-                            "InkWell 2 ${gd.roomList[widget.roomIndex].imageIndex}");
-                        setState(() {});
-                      },
-                      child: Card(
-                        elevation: 1,
-                        margin: EdgeInsets.all(4),
-                        shape: RoundedRectangleBorder(
+                      gd.setRoomBackgroundAndName(gd.roomList[widget.roomIndex],
+                          index, _controller.text.trim());
+                      log.d(
+                          "InkWell 2 ${gd.roomList[widget.roomIndex].imageIndex}");
+                      setState(() {});
+                    },
+                    child: Card(
+                      elevation: 1,
+                      margin: EdgeInsets.all(4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(gd.backgroundImage[index]),
-                            ),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(gd.backgroundImage[index]),
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
-            Container(height: 50),
           ],
         ),
       ),
