@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 
 class RoomEditPage extends StatefulWidget {
   final int roomIndex;
@@ -112,9 +113,10 @@ class _RoomEditPageState extends State<RoomEditPage> {
         padding: EdgeInsets.only(left: 8, right: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: Theme.of(context).brightness == gd.themesData[0].brightness
-              ? Colors.grey
-              : Colors.grey,
+          color:
+              Theme.of(context).brightness == ThemeInfo.themesData[0].brightness
+                  ? Colors.grey
+                  : Colors.grey,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

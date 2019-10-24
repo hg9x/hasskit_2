@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/model/Entity.dart';
 
 class EntitySquare extends StatelessWidget {
@@ -17,6 +18,51 @@ class EntitySquare extends StatelessWidget {
   Widget build(BuildContext context) {
     Entity entity = gd.entities
         .firstWhere((e) => e.entityId == entityId, orElse: () => null);
+
+    Widget iconWidget;
+
+    if (entity.entityType == EntityType.climateFans &&
+        entity.hvacModes != null) {
+      iconWidget = iconWidget = AspectRatio(
+        aspectRatio: 1,
+        child: FittedBox(
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Icon(
+                entity.mdiIcon,
+                size: 100,
+                color: gd.climateModeToColor(entity.state),
+              ),
+              Column(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Text(
+                    "${entity.temperature}",
+                    style: ThemeInfo.textNameButtonActive
+                        .copyWith(color: Colors.white),
+                    textScaleFactor: 2,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      iconWidget = AspectRatio(
+        aspectRatio: 1,
+        child: FittedBox(
+          child: Icon(
+            entity.mdiIcon,
+            size: 100,
+            color: entity.isStateOn
+                ? ThemeInfo.colorIconActive
+                : ThemeInfo.colorIconInActive,
+          ),
+        ),
+      );
+    }
     return InkResponse(
       onTap: onTapCallback,
       onLongPress: onLongPressCallback,
@@ -29,8 +75,8 @@ class EntitySquare extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
                 color: entity.isStateOn
-                    ? Theme.of(context).cardColor.withOpacity(0.8)
-                    : Theme.of(context).cardColor.withOpacity(0.2),
+                    ? ThemeInfo.colorBackgroundActive
+                    : ThemeInfo.colorEntityBackground,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,22 +85,7 @@ class EntitySquare extends StatelessWidget {
                     flex: 2,
                     child: Row(
                       children: <Widget>[
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: FittedBox(
-                            child: Icon(
-                              entity.mdiIcon,
-                              size: 100,
-                              color: entity.isStateOn
-                                  ? Theme.of(context)
-                                      .accentColor
-                                      .withOpacity(0.8)
-                                  : Theme.of(context)
-                                      .accentColor
-                                      .withOpacity(0.2),
-                            ),
-                          ),
-                        ),
+                        iconWidget,
                         Expanded(
                           child: FittedBox(
                             alignment: Alignment.centerRight,
@@ -76,6 +107,9 @@ class EntitySquare extends StatelessWidget {
                       alignment: Alignment.bottomLeft,
                       child: Text(
                         "${entity.friendlyName}",
+                        style: entity.isStateOn
+                            ? ThemeInfo.textNameButtonActive
+                            : ThemeInfo.textNameButtonInActive,
                         maxLines: 2,
                         textScaleFactor: 1,
                         overflow: TextOverflow.ellipsis,
@@ -86,6 +120,9 @@ class EntitySquare extends StatelessWidget {
                     flex: 1,
                     child: Text(
                       "${gd.textToDisplay(entity.state)}",
+                      style: entity.isStateOn
+                          ? ThemeInfo.textStatusButtonActive
+                          : ThemeInfo.textStatusButtonInActive,
                       maxLines: 1,
                       textScaleFactor: 1,
                       overflow: TextOverflow.ellipsis,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:validators/validators.dart';
 import 'ServerSelectPanel.dart';
@@ -94,7 +95,7 @@ class _SettingPageState extends State<SettingPage> {
             end: Alignment.bottomCenter,
             colors: [
               Theme.of(context).primaryColorLight,
-              Theme.of(context).primaryColorDark.withOpacity(0.2)
+              Theme.of(context).cardColor.withOpacity(0.2)
             ]),
         color: Theme.of(context).primaryColorLight,
       ),
@@ -114,7 +115,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(
                 MaterialDesignIcons.getIconDataFromIconName(
                     "mdi:home-assistant"),
@@ -144,8 +145,7 @@ class _SettingPageState extends State<SettingPage> {
                                   ? IconButton(
                                       icon: Icon(
                                         Icons.cancel,
-                                        color: Theme.of(context)
-                                            .toggleableActiveColor,
+                                        color: ThemeInfo.colorIconActive,
                                       ),
                                       onPressed: () {
                                         _controller.clear();
@@ -173,6 +173,7 @@ class _SettingPageState extends State<SettingPage> {
                           ? Row(
                               children: <Widget>[
                                 Switch.adaptive(
+                                    activeColor: ThemeInfo.colorIconActive,
                                     value: gd.useSSL,
                                     onChanged: (val) {
                                       gd.useSSL = val;
@@ -198,9 +199,8 @@ class _SettingPageState extends State<SettingPage> {
                                           showModalBottomSheet(
                                               context: context,
                                               elevation: 1,
-                                              backgroundColor: Theme.of(context)
-                                                  .primaryColorDark
-                                                  .withOpacity(0.8),
+                                              backgroundColor:
+                                                  ThemeInfo.colorBottomSheet,
                                               isScrollControlled: true,
                                               useRootNavigator: true,
                                               builder: (context) =>
@@ -225,7 +225,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName(
                   "mdi:view-carousel")),
               'Room Setting',
@@ -254,7 +254,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName(
                   "mdi:account-circle")),
               'About HassKit',

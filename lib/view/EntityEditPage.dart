@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/view/EntityControl/EntityControlClimate.dart';
+import 'package:hasskit_2/view/EntityControl/EntityControlFan.dart';
 import 'package:hasskit_2/view/EntityControl/EntityControlGeneral.dart';
+
+import 'EntityControl/EntityControlLightSwitch.dart';
 
 class EntityEditPage extends StatelessWidget {
   final String entityId;
@@ -19,8 +23,17 @@ class EntityEditPage extends StatelessWidget {
     }
 
     Widget entityControl;
-    if (entity.hvacModes != null && entity.hvacModes.length > 0) {
+
+    if (entity.entityType == EntityType.climateFans &&
+        entity.hvacModes != null &&
+        entity.hvacModes.length > 0) {
       entityControl = EntityControlClimate(entity: entity);
+    } else if (entity.entityType == EntityType.climateFans &&
+        entity.speedList != null &&
+        entity.speedList.length > 0) {
+      entityControl = EntityControlFan(entity: entity);
+    } else if (entity.entityType == EntityType.lightSwitches) {
+      entityControl = EntityControlLightSwitch(entity: entity);
     } else {
       entityControl = EntityControlGeneral(entity: entity);
     }
@@ -28,7 +41,7 @@ class EntityEditPage extends StatelessWidget {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.only(top: 0),
-          color: Colors.white,
+          color: ThemeInfo.colorBottomSheet,
           child: Column(
             children: <Widget>[
               Container(

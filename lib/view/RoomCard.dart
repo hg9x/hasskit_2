@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/view/RoomEditPage.dart';
 
 class RoomCard extends StatelessWidget {
@@ -13,7 +14,7 @@ class RoomCard extends StatelessWidget {
         showModalBottomSheet(
           context: context,
           elevation: 1,
-          backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.8),
+          backgroundColor: ThemeInfo.colorBottomSheet,
           isScrollControlled: true,
           useRootNavigator: true,
           builder: (BuildContext context) {

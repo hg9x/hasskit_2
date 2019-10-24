@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/CameraThumbnail.dart';
 import 'package:hasskit_2/model/Entity.dart';
@@ -16,7 +17,6 @@ import 'package:hasskit_2/view/SliverAppBarDelegate.dart';
 import "package:http/http.dart" as http;
 import 'Logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
 
 import 'MaterialDesignIcons.dart';
 
@@ -310,71 +310,14 @@ class GeneralData with ChangeNotifier {
     notifyListeners();
   }
 
-  List<ThemeData> themesData = [
-    ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.amber,
-      accentColor: Colors.amber[900],
-      toggleableActiveColor: Colors.amber[900],
-      cardColor: Colors.white,
-    ),
-    ThemeData(
-      brightness: Brightness.dark,
-      primarySwatch: Colors.amber,
-      accentColor: Colors.amber[900],
-      toggleableActiveColor: Colors.amber[900],
-      cardColor: Colors.black,
-    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.grey,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.dark,
-//      primarySwatch: Colors.grey,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.red,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.yellow,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.green,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.teal,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.cyan,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.blue,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.indigo,
-//    ),
-//    ThemeData(
-//      brightness: Brightness.light,
-//      primarySwatch: Colors.purple,
-//    ),
-  ];
-
-  get currentTheme {
-    return themesData[themeIndex];
+  ThemeData get currentTheme {
+    return ThemeInfo.themesData[themeIndex];
   }
 
   int themeIndex = 0;
   themeChange() {
     themeIndex = themeIndex + 1;
-    if (themeIndex >= themesData.length) {
+    if (themeIndex >= ThemeInfo.themesData.length) {
       themeIndex = 0;
     }
     log.d("themeIndex $themeIndex");
@@ -939,8 +882,7 @@ class GeneralData with ChangeNotifier {
             showModalBottomSheet(
               context: context,
               elevation: 1,
-              backgroundColor:
-                  Theme.of(context).primaryColorDark.withOpacity(0.8),
+              backgroundColor: ThemeInfo.colorBottomSheet,
               isScrollControlled: false,
               useRootNavigator: true,
               builder: (BuildContext context) {
@@ -952,7 +894,7 @@ class GeneralData with ChangeNotifier {
       ),
       lightSwitches.length > 0
           ? gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName(
                   "mdi:toggle-switch")),
               'Light, Switchs...',
@@ -971,7 +913,7 @@ class GeneralData with ChangeNotifier {
           : emptySliver,
       climateFans.length > 0
           ? gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName(
                   "mdi:thermometer")),
               'Climates, Fans...',
@@ -990,7 +932,7 @@ class GeneralData with ChangeNotifier {
           : emptySliver,
       cameras.length > 0
           ? gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:cctv")),
               'Camera...',
               "",
@@ -1008,7 +950,7 @@ class GeneralData with ChangeNotifier {
           : emptySliver,
       mediaPlayers.length > 0
           ? gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:theater")),
               'Media Players...',
               "",
@@ -1026,7 +968,7 @@ class GeneralData with ChangeNotifier {
           : emptySliver,
       accessories.length > 0
           ? gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName(
                   "mdi:home-automation")),
               'Accessories...',
@@ -1045,7 +987,7 @@ class GeneralData with ChangeNotifier {
           : emptySliver,
       scriptAutomation.length > 0
           ? gd.makeHeaderIcon(
-              Theme.of(context).primaryColorDark.withOpacity(0.2),
+              Theme.of(context).cardColor.withOpacity(0.2),
               Icon(MaterialDesignIcons.getIconDataFromIconName(
                   "mdi:playlist-check")),
               'Automation, Script...',
@@ -1160,7 +1102,7 @@ class GeneralData with ChangeNotifier {
   Color climateModeToColor(String text) {
     text = text.toLowerCase();
     if (text.contains('off')) {
-      return Colors.black;
+      return Colors.black.withOpacity(0.5);
     }
     if (text.contains('heat')) {
       return Colors.red;
@@ -1168,6 +1110,6 @@ class GeneralData with ChangeNotifier {
     if (text.contains('cool')) {
       return Colors.green;
     }
-    return Colors.yellow;
+    return Colors.amber;
   }
 }

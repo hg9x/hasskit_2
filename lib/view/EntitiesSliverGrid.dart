@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/helper/Logger.dart';
 import 'package:hasskit_2/view/EntityEditPage.dart';
@@ -38,51 +39,44 @@ class EntitiesSliverGrid extends StatelessWidget {
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            if (entityType == EntityType.accessories) {
-              return EntitySquare(
-                entityId: entities[index].entityId,
-                onTapCallback: () {
-                  log.d("${entities[index].entityId} onTapCallback");
-                  gd.toggleStatus(entities[index]);
-                },
-                onLongPressCallback: () {
-                  log.d("${entities[index].entityId} onLongPressCallback");
+            return EntitySquare(
+              entityId: entities[index].entityId,
+              onTapCallback: () {
+                log.d("${entities[index].entityId} onTapCallback");
+                if (entities[index].entityType == EntityType.accessories ||
+                    entities[index].entityType == EntityType.cameras ||
+                    entities[index].deviceClass == 'garage' ||
+                    entities[index].deviceClass == 'door' ||
+                    entities[index].deviceClass == 'window' ||
+                    entities[index].entityId.contains('lock.')) {
                   showModalBottomSheet(
                     context: context,
                     elevation: 1,
-                    backgroundColor:
-                        Theme.of(context).primaryColorDark.withOpacity(0.8),
+                    backgroundColor: ThemeInfo.colorBottomSheet,
                     isScrollControlled: true,
                     useRootNavigator: true,
                     builder: (BuildContext context) {
                       return EntityEditPage(entityId: entities[index].entityId);
                     },
                   );
-                },
-              );
-            } else {
-              return EntitySquare(
-                entityId: entities[index].entityId,
-                onTapCallback: () {
-                  log.d("${entities[index].entityId} onTapCallback");
+                } else {
                   gd.toggleStatus(entities[index]);
-                },
-                onLongPressCallback: () {
-                  log.d("${entities[index].entityId} onLongPressCallback");
-                  showModalBottomSheet(
-                    context: context,
-                    elevation: 1,
-                    backgroundColor:
-                        Theme.of(context).primaryColorDark.withOpacity(0.8),
-                    isScrollControlled: true,
-                    useRootNavigator: true,
-                    builder: (BuildContext context) {
-                      return EntityEditPage(entityId: entities[index].entityId);
-                    },
-                  );
-                },
-              );
-            }
+                }
+              },
+              onLongPressCallback: () {
+                log.d("${entities[index].entityId} onLongPressCallback");
+                showModalBottomSheet(
+                  context: context,
+                  elevation: 1,
+                  backgroundColor: ThemeInfo.colorBottomSheet,
+                  isScrollControlled: true,
+                  useRootNavigator: true,
+                  builder: (BuildContext context) {
+                    return EntityEditPage(entityId: entities[index].entityId);
+                  },
+                );
+              },
+            );
           },
           childCount: entities.length,
         ),

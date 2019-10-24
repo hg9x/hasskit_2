@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/helper/WebSocket.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
@@ -24,7 +25,7 @@ class EntityControlClimate extends StatelessWidget {
 //            fontSize: 14,
 //            fontWeight: FontWeight.w600),
         bottomLabelText: entity.friendlyName,
-        mainLabelStyle: Theme.of(context).textTheme.title,
+        mainLabelStyle: Theme.of(context).textTheme.display4,
 //        mainLabelStyle: TextStyle(
 //            color: HexColor('#54826D'),
 //            fontSize: 30.0,
@@ -98,7 +99,7 @@ class EntityControlClimate extends StatelessWidget {
             Expanded(
               child: Text(
                 gd.textToDisplay(hvacMode),
-                style: Theme.of(context).textTheme.body1,
+                style: Theme.of(context).textTheme.title,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
               ),
@@ -127,7 +128,7 @@ class EntityControlClimate extends StatelessWidget {
             SizedBox(width: 6),
             Icon(
               MaterialDesignIcons.getIconDataFromIconName('mdi:fan'),
-              color: Theme.of(context).primaryColor,
+              color: ThemeInfo.colorBottomSheetReverse,
             ),
             SizedBox(width: 6),
             Expanded(
