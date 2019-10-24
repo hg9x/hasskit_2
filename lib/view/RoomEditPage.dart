@@ -149,7 +149,10 @@ class _RoomEditPageState extends State<RoomEditPage> {
             ),
           ),
           Expanded(child: Container()),
-          Text("Select Background Color"),
+          Text(
+            "Select Background Color",
+            textScaleFactor: 1,
+          ),
           Container(
             child: Container(
               height: 58,

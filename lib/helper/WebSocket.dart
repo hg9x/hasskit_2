@@ -47,6 +47,11 @@ class WebSocket {
   /// Initialization the WebSockets connection with the server
   /// ----------------------------------------------------------
   initCommunication() async {
+    if (gd.loginDataCurrent == null ||
+        gd.loginDataCurrent.url == null ||
+        gd.loginDataCurrent.url.length < 5) {
+      return;
+    }
     log.d(
         'initCommunication socketUrl ${gd.socketUrl} autoConnect ${gd.autoConnect} connectionStatus ${gd.connectionStatus}');
 

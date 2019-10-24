@@ -634,7 +634,6 @@ class GeneralData with ChangeNotifier {
     Room(name: "Kitchen", imageIndex: 1, entities: []),
     Room(name: "Bedroom", imageIndex: 2, entities: []),
     Room(name: "Default Room", imageIndex: 3, entities: []),
-    Room(name: "Add New", imageIndex: 5, entities: []),
   ];
 
   int get roomPageLength {
@@ -645,14 +644,14 @@ class GeneralData with ChangeNotifier {
   }
 
   String getRoomName(int roomIndex) {
-    if (roomList.length >= roomIndex && roomList[roomIndex].name != null) {
+    if (roomList.length > roomIndex && roomList[roomIndex].name != null) {
       return roomList[roomIndex].name;
     }
-    return roomList.last.name;
+    return "Home";
   }
 
   AssetImage getRoomImage(int roomIndex) {
-    if (roomList.length >= roomIndex &&
+    if (roomList.length > roomIndex &&
         roomList[roomIndex] != null &&
         roomList[roomIndex].imageIndex != null) {
       return AssetImage(backgroundImage[roomList[roomIndex].imageIndex]);
@@ -698,7 +697,7 @@ class GeneralData with ChangeNotifier {
 
   deleteRoom(int roomIndex) {
     log.w("deleteRoom roomIndex $roomIndex");
-    if (roomList.length >= roomIndex) {
+    if (roomList.length > roomIndex) {
       roomList.removeAt(roomIndex);
       notifyListeners();
     }
