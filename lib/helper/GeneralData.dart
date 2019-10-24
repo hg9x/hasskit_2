@@ -1068,9 +1068,29 @@ class GeneralData with ChangeNotifier {
         entity.entityType != EntityType.mediaPlayers) {
       return;
     }
-
+    runMultipleTimes();
     entity.toggleState();
     notifyListeners();
+  }
+
+  //https://stackoverflow.com/questions/17552757/is-there-any-way-to-cancel-a-dart-future
+  Timer _runJustOnceAtTheEnd;
+
+  void runMultipleTimes() {
+    _runJustOnceAtTheEnd?.cancel();
+    _runJustOnceAtTheEnd = null;
+
+    // do your processing
+//    print("runMultipleTimes!");
+
+    _runJustOnceAtTheEnd = Timer(Duration(seconds: 5), onceAtTheEndOfTheBatch);
+  }
+
+  void onceAtTheEndOfTheBatch() {
+    var outMsg = {"id": gd.socketId, "type": "get_states"};
+    webSocket.send(json.encode(outMsg));
+    gd.connectionStatus = "Sending get_states";
+    log.w("Sending get_states 5 seconds after the last send spam!");
   }
 
   List<String> get entitiesInRoomsExceptDefault {
