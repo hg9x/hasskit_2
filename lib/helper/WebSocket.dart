@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
@@ -142,8 +143,30 @@ class WebSocket {
         _channel.sink.add(message);
 //        log.d('WebSocket send: id $id type $type $message');
         gd.socketIdIncrement();
+
+        runMultipleTimes();
       }
     }
+  }
+
+  //https://stackoverflow.com/questions/17552757/is-there-any-way-to-cancel-a-dart-future
+  Timer _runJustOnceAtTheEnd;
+
+  void runMultipleTimes() {
+    _runJustOnceAtTheEnd?.cancel();
+    _runJustOnceAtTheEnd = null;
+
+    // do your processing
+//    print("runMultipleTimes!");
+
+    _runJustOnceAtTheEnd = Timer(Duration(seconds: 5), onceAtTheEndOfTheBatch);
+  }
+
+  void onceAtTheEndOfTheBatch() {
+    var outMsg = {"id": gd.socketId, "type": "get_states"};
+    send(json.encode(outMsg));
+    gd.connectionStatus = "Sending get_states";
+    log.w("Sending get_states 5 seconds after the last send spam!");
   }
 
   /// ---------------------------------------------------------
