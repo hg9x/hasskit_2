@@ -25,7 +25,7 @@ class EntityControlClimate extends StatelessWidget {
 //            fontSize: 14,
 //            fontWeight: FontWeight.w600),
         bottomLabelText: entity.friendlyName,
-        mainLabelStyle: Theme.of(context).textTheme.display4,
+        mainLabelStyle: Theme.of(context).textTheme.display3,
 //        mainLabelStyle: TextStyle(
 //            color: HexColor('#54826D'),
 //            fontSize: 30.0,
