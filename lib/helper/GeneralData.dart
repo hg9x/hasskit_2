@@ -856,7 +856,10 @@ class GeneralData with ChangeNotifier {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text(headerText),
+                            Text(
+                              headerText,
+                              textScaleFactor: 1,
+                            ),
                             subText.length > 0
                                 ? Text(
                                     subText,

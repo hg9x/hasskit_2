@@ -79,6 +79,7 @@ class ServerSelectPanel extends StatelessWidget {
                       Text(loginData.url,
                           style: Theme.of(context).textTheme.subhead,
                           maxLines: 2,
+                          textScaleFactor: 1,
                           overflow: TextOverflow.ellipsis),
                       Text(
                           gd.loginDataCurrent.url == loginData.url
