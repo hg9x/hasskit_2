@@ -173,7 +173,7 @@ class _HomeViewState extends State<HomeView> {
   timer5Callback() {}
 
   timer10Callback() {
-    if (gd.connectionStatus != "Connected") {
+    if (gd.connectionStatus != "Connected" && gd.autoConnect) {
       webSocket.initCommunication();
     }
   }
