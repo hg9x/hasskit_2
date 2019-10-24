@@ -55,44 +55,6 @@ class EntityRectangle extends StatelessWidget {
                 ),
               ],
             ),
-//            child: Row(
-//              children: <Widget>[
-//                AspectRatio(
-//                  aspectRatio: 1,
-//                  child: FittedBox(
-//                    child: Icon(
-//                      entity.mdiIcon,
-//                      size: 100,
-//                      color: entity.isStateOn
-//                          ? Theme.of(context).accentColor.withOpacity(0.8)
-//                          : Theme.of(context).accentColor.withOpacity(0.2),
-//                    ),
-//                  ),
-//                ),
-//                SizedBox(width: 8),
-//                Expanded(
-//                  child: Column(
-//                    crossAxisAlignment: CrossAxisAlignment.start,
-//                    mainAxisAlignment: MainAxisAlignment.center,
-//                    children: <Widget>[
-//                      Align(
-//                        alignment: Alignment.bottomLeft,
-//                        child: Text(
-//                          "${entity.friendlyName}",
-//                          maxLines: 1,
-//                          overflow: TextOverflow.ellipsis,
-//                        ),
-//                      ),
-//                      Text(
-//                        "${gd.textToDisplay(entity.state)}",
-//                        maxLines: 1,
-//                        overflow: TextOverflow.ellipsis,
-//                      ),
-//                    ],
-//                  ),
-//                )
-//              ],
-//            ),
           );
   }
 }

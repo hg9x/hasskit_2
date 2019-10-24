@@ -24,29 +24,29 @@ class _WebViewLoginPageState extends State<WebViewLoginPage> {
 //    initUrl = Uri.encodeComponent(initUrl);
 
     return Padding(
-      padding: EdgeInsets.only(top: 24),
+      padding: EdgeInsets.only(top: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(height: 50),
           gd.webViewLoading
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    SizedBox(height: 25),
                     CircularProgressIndicator(),
-                    SizedBox(height: 20),
+                    SizedBox(height: 25),
                     Text(
                       "Connecting to",
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 25),
                     Text(
                       "${gd.loginDataCurrent.url}",
                       style: Theme.of(context).textTheme.title,
                       textAlign: TextAlign.center,
                       maxLines: 10,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 25),
                     Text(
                       "Make sure the following info are correct",
                       textAlign: TextAlign.center,
@@ -55,7 +55,7 @@ class _WebViewLoginPageState extends State<WebViewLoginPage> {
                       "http / https / port number",
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 25),
                     RaisedButton(
                       onPressed: () {
                         Navigator.pop(context, "Cancel Web Login Connection");

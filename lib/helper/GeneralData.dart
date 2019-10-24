@@ -315,6 +315,7 @@ class GeneralData with ChangeNotifier {
       brightness: Brightness.light,
       primarySwatch: Colors.amber,
       accentColor: Colors.amber[900],
+      toggleableActiveColor: Colors.amber[900],
       cardColor: Colors.white,
     ),
     ThemeData(
@@ -927,7 +928,7 @@ class GeneralData with ChangeNotifier {
               backgroundColor:
                   Theme.of(context).primaryColorDark.withOpacity(0.8),
               isScrollControlled: false,
-              useRootNavigator: false,
+              useRootNavigator: true,
               builder: (BuildContext context) {
                 return RoomEditPage(roomIndex: roomIndex);
               },

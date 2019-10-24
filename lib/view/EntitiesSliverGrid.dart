@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/helper/Logger.dart';
+import 'package:hasskit_2/view/EntityEditPage.dart';
 import 'EntitySquare.dart';
 
 class EntitiesSliverGrid extends StatelessWidget {
@@ -57,6 +58,17 @@ class EntitiesSliverGrid extends StatelessWidget {
                 },
                 onLongPressCallback: () {
                   log.d("${entities[index].entityId} onLongPressCallback");
+                  showModalBottomSheet(
+                    context: context,
+                    elevation: 1,
+                    backgroundColor:
+                        Theme.of(context).primaryColorDark.withOpacity(0.8),
+                    isScrollControlled: true,
+                    useRootNavigator: true,
+                    builder: (BuildContext context) {
+                      return EntityEditPage(entityId: entities[index].entityId);
+                    },
+                  );
                 },
               );
             }
