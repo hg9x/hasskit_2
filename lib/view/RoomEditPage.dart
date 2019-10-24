@@ -122,7 +122,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
             decoration: InputDecoration(
               labelText: "Edit Room",
             ),
-            initialValue: "${gd.roomList[widget.roomIndex].name}",
+            initialValue: "${gd.getRoomName(widget.roomIndex)}",
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.title,
             maxLines: 1,
