@@ -18,7 +18,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    _controller.text = gd.roomList[widget.roomIndex].name;
+    _controller.text = gd.getRoomName(widget.roomIndex);
     //addButton
     var addButton = RaisedButton(
       onPressed: widget.roomIndex != 0
