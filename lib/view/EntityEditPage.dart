@@ -86,7 +86,7 @@ class EntityEditPage extends StatelessWidget {
                                 gd.roomList[index].name,
                                 style: Theme.of(context).textTheme.body2,
                                 textScaleFactor: 1,
-                                maxLines: 2,
+                                maxLines: 1,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
