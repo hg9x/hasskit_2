@@ -77,6 +77,7 @@ class EntitySquare extends StatelessWidget {
                       child: Text(
                         "${entity.friendlyName}",
                         maxLines: 2,
+                        textScaleFactor: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -86,6 +87,7 @@ class EntitySquare extends StatelessWidget {
                     child: Text(
                       "${gd.textToDisplay(entity.state)}",
                       maxLines: 1,
+                      textScaleFactor: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

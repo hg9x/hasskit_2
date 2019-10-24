@@ -49,6 +49,7 @@ class EntityRectangle extends StatelessWidget {
                   child: Text(
                     "${entity.friendlyName}",
                     maxLines: 2,
+                    textScaleFactor: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
