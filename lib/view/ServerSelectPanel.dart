@@ -86,6 +86,7 @@ class ServerSelectPanel extends StatelessWidget {
                               : "Last Access: ${loginData.timeSinceLastAccess}",
                           style: Theme.of(context).textTheme.body1,
                           maxLines: 5,
+                          textScaleFactor: 1,
                           overflow: TextOverflow.ellipsis),
                     ],
                   ),

@@ -857,7 +857,12 @@ class GeneralData with ChangeNotifier {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(headerText),
-                            subText.length > 0 ? Text(subText) : Container(),
+                            subText.length > 0
+                                ? Text(
+                                    subText,
+                                    textScaleFactor: 1,
+                                  )
+                                : Container(),
                           ],
                         ),
                       ],
