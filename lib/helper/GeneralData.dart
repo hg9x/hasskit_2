@@ -631,10 +631,11 @@ class GeneralData with ChangeNotifier {
   List<Room> roomList = [];
   List<Room> roomListDefault = [
     Room(name: "Home", imageIndex: 4, entities: []),
-    Room(name: "Living Room", imageIndex: 0, entities: []),
+    Room(name: "Living Room", imageIndex: 5, entities: []),
     Room(name: "Kitchen", imageIndex: 1, entities: []),
     Room(name: "Bedroom", imageIndex: 2, entities: []),
-    Room(name: "Default Room", imageIndex: 3, entities: []),
+    Room(name: "Bathroom", imageIndex: 3, entities: []),
+    Room(name: "Default Room", imageIndex: 0, entities: []),
   ];
 
   int get roomPageLength {
