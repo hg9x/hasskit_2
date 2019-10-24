@@ -5,7 +5,6 @@ import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:validators/validators.dart';
-import 'RoomCard.dart';
 import 'ServerSelectPanel.dart';
 import 'WebViewLoginPage.dart';
 
@@ -236,20 +235,21 @@ class _SettingPageState extends State<SettingPage> {
             itemExtent: 160,
             delegate: SliverChildListDelegate(
               [
-                Container(
-                  child: Container(
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: gd.roomList.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 100,
-                          child: RoomCard(roomIndex: index),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                Container(color: Colors.transparent),
+//                Container(
+//                  child: Container(
+//                    child: ListView.builder(
+//                      scrollDirection: Axis.horizontal,
+//                      itemCount: gd.roomList.length,
+//                      itemBuilder: (context, index) {
+//                        return Container(
+//                          width: 100,
+//                          child: RoomCard(roomIndex: index),
+//                        );
+//                      },
+//                    ),
+//                  ),
+//                ),
               ],
             ),
           ),
