@@ -146,9 +146,13 @@ class _RoomEditPageState extends State<RoomEditPage> {
                 _controller.text = val;
               },
               onEditingComplete: () {
+                gd.setRoomName(
+                    gd.roomList[widget.roomIndex], _controller.text.trim());
                 FocusScope.of(context).requestFocus(new FocusNode());
               },
               onFieldSubmitted: (val) {
+                gd.setRoomName(
+                    gd.roomList[widget.roomIndex], _controller.text.trim());
                 FocusScope.of(context).requestFocus(new FocusNode());
               },
             ),
