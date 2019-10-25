@@ -628,7 +628,7 @@ class GeneralData with ChangeNotifier {
     Room(name: "Default Room", imageIndex: 0, entities: []),
   ];
 
-  int get roomPageLength {
+  int get roomListLength {
     if (roomList.length - 1 < 0) {
       return 0;
     }
@@ -880,18 +880,40 @@ class GeneralData with ChangeNotifier {
     );
 
     //entitiesInRoomsExceptDefault
+//    List<Entity> entitiesFiltered = [];
+//    if (roomIndex != roomList.length - 1) {
+//      entitiesFiltered = gd.entities
+//          //&& lovelaceEntities.contains(e.entityId)
+//          .where((e) =>
+////              e.friendlyName != null &&
+////              e.friendlyName.length > 0 &&
+//              gd.roomList[roomIndex].entities.contains(e.entityId))
+//          .toList();
+//    } else {
+//      entitiesFiltered = gd.entities
+////          && lovelaceEntities.contains(e.entityId)
+//          .where((e) =>
+////              e.friendlyName != null &&
+////              e.friendlyName.length > 0 &&
+//              entitiesInRoomsExceptDefault.contains(e.entityId))
+//          .toList();
+//    }
+//
+////    entitiesFiltered.sort((a, b) => a.friendlyName.compareTo(b.friendlyName));
     List<Entity> entitiesFiltered = [];
     if (roomIndex != roomList.length - 1) {
       entitiesFiltered = gd.entities
           .where((e) =>
-              gd.roomList[roomIndex].entities.contains(e.entityId) &&
-              lovelaceEntities.contains(e.entityId))
+              e.friendlyName != null &&
+              e.friendlyName.length > 0 &&
+              gd.roomList[roomIndex].entities.contains(e.entityId))
           .toList();
     } else {
       entitiesFiltered = gd.entities
           .where((e) =>
-              !entitiesInRoomsExceptDefault.contains(e.entityId) &&
-              lovelaceEntities.contains(e.entityId))
+              e.friendlyName != null &&
+              e.friendlyName.length > 0 &&
+              !entitiesInRoomsExceptDefault.contains(e.entityId))
           .toList();
     }
 

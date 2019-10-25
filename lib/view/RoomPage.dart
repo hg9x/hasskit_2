@@ -5,7 +5,7 @@ import 'package:hasskit_2/helper/GeneralData.dart';
 
 class RoomsPage extends StatelessWidget {
   final PageController controller = PageController(
-      initialPage: gd.roomList.length - 1, keepPage: true, viewportFraction: 1);
+      initialPage: gd.roomListLength - 1, keepPage: true, viewportFraction: 1);
   @override
   Widget build(BuildContext context) {
     gd.pageController = controller;
@@ -18,7 +18,7 @@ class RoomsPage extends StatelessWidget {
         itemBuilder: (context, position) {
           return RoomPage(position: position + 1);
         },
-        itemCount: gd.roomPageLength);
+        itemCount: gd.roomListLength);
   }
 }
 
