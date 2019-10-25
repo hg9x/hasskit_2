@@ -109,7 +109,7 @@ class QuickGuide extends StatelessWidget {
                   color: ThemeInfo.colorBottomSheet.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8)),
               child: Text(
-                "Step 4:\n\nClick the device detail setting, you can chose to show the device on Home page and on one another page",
+                "Step 4:\n\nClick the device detail setting, you can chose to show the device on Home page and on ONE another page",
                 style: Theme.of(context).textTheme.body1,
                 textAlign: TextAlign.justify,
               ),
