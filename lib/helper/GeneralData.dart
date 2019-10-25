@@ -350,7 +350,7 @@ class GeneralData with ChangeNotifier {
     return ThemeInfo.themesData[themeIndex];
   }
 
-  int _themeIndex = 0;
+  int _themeIndex = 1;
   int get themeIndex => _themeIndex;
 
   set themeIndex(int value) {
@@ -938,6 +938,13 @@ class GeneralData with ChangeNotifier {
         .where((e) => e.entityType == EntityType.scriptAutomation)
         .toList();
 
+    var totalListLengh = lightSwitches.length +
+        climateFans.length +
+        cameras.length +
+        mediaPlayers.length +
+        accessories.length +
+        scriptAutomation.length;
+
     return [
       CupertinoSliverNavigationBar(
         leading: Image(
@@ -971,7 +978,7 @@ class GeneralData with ChangeNotifier {
                     color: ThemeInfo.colorBottomSheetReverse.withOpacity(0.5),
                     child: Center(
                       child: Text(
-                        "Click Entities To Setup Room Position",
+                        "Click Entities to Setup Room Position",
                         style: Theme.of(context).textTheme.title,
                         textScaleFactor: gd.textScaleFactor,
                         textAlign: TextAlign.center,
@@ -981,12 +988,33 @@ class GeneralData with ChangeNotifier {
                 ],
               ),
             )
-          : SliverFixedExtentList(
-              itemExtent: 0,
-              delegate: SliverChildListDelegate(
-                [Container()],
-              ),
-            ),
+          : totalListLengh < 1
+              ? SliverFixedExtentList(
+                  itemExtent: 60,
+                  delegate: SliverChildListDelegate(
+                    [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        color:
+                            ThemeInfo.colorBottomSheetReverse.withOpacity(0.5),
+                        child: Center(
+                          child: Text(
+                            "Add Device From ${gd.getRoomName(gd.roomListLength)} to This Room",
+                            style: Theme.of(context).textTheme.title,
+                            textScaleFactor: gd.textScaleFactor,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : SliverFixedExtentList(
+                  itemExtent: 0,
+                  delegate: SliverChildListDelegate(
+                    [Container()],
+                  ),
+                ),
       lightSwitches.length > 0
           ? gd.makeHeaderIcon(
               Theme.of(context).cardColor.withOpacity(0.2),

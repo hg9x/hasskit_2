@@ -231,7 +231,7 @@ class _SettingPageState extends State<SettingPage> {
               "",
               context),
           SliverFixedExtentList(
-            itemExtent: 60,
+            itemExtent: 58,
             delegate: SliverChildListDelegate(
               [
                 Container(
@@ -254,15 +254,13 @@ class _SettingPageState extends State<SettingPage> {
                                 children: <Widget>[
                                   Image.asset(
                                       "assets/images/icon_transparent.png"),
-                                  SizedBox(width: 8),
-                                  Expanded(child: Container()),
+                                  Spacer(),
                                   Text(
                                     "Dark Theme",
                                     style: TextStyle(color: Colors.white),
                                     textScaleFactor: gd.textScaleFactor,
                                   ),
-                                  SizedBox(width: 8),
-                                  Expanded(child: Container()),
+                                  Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: Theme.of(context).brightness ==
@@ -291,15 +289,13 @@ class _SettingPageState extends State<SettingPage> {
                                 children: <Widget>[
                                   Image.asset(
                                       "assets/images/icon_transparent.png"),
-                                  SizedBox(width: 8),
-                                  Expanded(child: Container()),
+                                  Spacer(),
                                   Text(
                                     "Light Theme",
                                     style: TextStyle(color: Colors.black),
                                     textScaleFactor: gd.textScaleFactor,
                                   ),
-                                  SizedBox(width: 8),
-                                  Expanded(child: Container()),
+                                  Spacer(),
                                   Icon(
                                     Icons.check_circle,
                                     color: Theme.of(context).brightness ==

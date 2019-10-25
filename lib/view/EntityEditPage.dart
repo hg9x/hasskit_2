@@ -86,7 +86,7 @@ class EntityEditPage extends StatelessWidget {
 //                overflow: TextOverflow.ellipsis,
 //              ),
               Container(
-                height: 67,
+                height: 70,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: gd.roomList.length - 1,
@@ -103,7 +103,7 @@ class EntityEditPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Container(
-                          width: 120,
+                          width: 100,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             image: DecorationImage(
