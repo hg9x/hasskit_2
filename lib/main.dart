@@ -75,7 +75,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    gd.mediaQueryWidth = MediaQuery.of(context).size.width;
 //    gd.mediaQueryHeight = MediaQuery.of(context).size.height;
 
     if (showLoading) {
@@ -83,6 +82,7 @@ class _HomeViewState extends State<HomeView> {
           color: Theme.of(context).backgroundColor,
           child: Center(child: CircularProgressIndicator()));
     } else {
+      gd.mediaQueryWidth = MediaQuery.of(context).size.width;
       return Scaffold(
         body: CupertinoTabScaffold(
           tabBar: CupertinoTabBar(
