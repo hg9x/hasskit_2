@@ -8,7 +8,7 @@ class QuickGuide extends StatelessWidget {
       delegate: SliverChildListDelegate(
         [
           Container(
-            padding: EdgeInsets.only(top: 20, left: 80, right: 80, bottom: 0),
+            padding: EdgeInsets.only(top: 20, left: 60, right: 60, bottom: 0),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -35,7 +35,7 @@ class QuickGuide extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 20, left: 80, right: 80, bottom: 0),
+            padding: EdgeInsets.only(top: 20, left: 60, right: 60, bottom: 0),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -55,14 +55,14 @@ class QuickGuide extends StatelessWidget {
                   color: ThemeInfo.colorBottomSheet.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8)),
               child: Text(
-                "Step 2:\n\nLogin with your Home Assistant Account and wait for a few seconds, HassKit will save login token for you. We don't need to login everytime starting app",
+                "Step 2:\n\nLogin with your Home Assistant Account and wait for a few seconds, HassKit will save login token for you. We don't need to login everytime start using this app",
                 style: Theme.of(context).textTheme.body1,
                 textAlign: TextAlign.justify,
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 20, left: 80, right: 80, bottom: 0),
+            padding: EdgeInsets.only(top: 20, left: 60, right: 60, bottom: 0),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -89,7 +89,7 @@ class QuickGuide extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 20, left: 80, right: 80, bottom: 0),
+            padding: EdgeInsets.only(top: 20, left: 60, right: 60, bottom: 0),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
