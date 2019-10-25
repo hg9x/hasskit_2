@@ -20,54 +20,68 @@ class _RoomEditPageState extends State<RoomEditPage> {
   Widget build(BuildContext context) {
     _controller.text = gd.getRoomName(widget.roomIndex);
     //addButton
-    var addButton = RaisedButton(
-      onPressed: widget.roomIndex != 0
-          ? () {
-              gd.addRoom();
-              Navigator.pop(context, "Added New Room");
+    var addButton = ButtonTheme(
+      minWidth: 0,
+      child: RaisedButton(
+        onPressed: widget.roomIndex != 0
+            ? () {
+                gd.addRoom();
+                Navigator.pop(context, "Added New Room");
 //        gd.showSnackBar("Add New Room", context);
-            }
-          : null,
-      child: Row(
-        children: <Widget>[
+              }
+            : null,
+        child: Row(
+          children: <Widget>[
 //          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:plus-box")),
-          Text("Add"),
-        ],
+            Text("Add"),
+          ],
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
       ),
-      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
     );
     //saveButton
-    var saveButton = RaisedButton(
-      onPressed: () {
-        gd.setRoomName(gd.roomList[widget.roomIndex], _controller.text.trim());
-        Navigator.pop(context, "Save Room");
+    var saveButton = ButtonTheme(
+      minWidth: 0,
+      child: RaisedButton(
+        onPressed: () {
+          gd.setRoomName(
+              gd.roomList[widget.roomIndex], _controller.text.trim());
+          Navigator.pop(context, "Save Room");
 //        gd.showSnackBar("Save Room", context);
-      },
-      child: Row(
-        children: <Widget>[
+        },
+        child: Row(
+          children: <Widget>[
 //          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:content-save")),
-          Text(" Save"),
-        ],
+            Text(" Save"),
+          ],
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
       ),
-      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
     );
     //deleteButton
-    var deleteButton = RaisedButton(
-      onPressed:
-          widget.roomIndex != 0 && widget.roomIndex != gd.roomList.length - 1
-              ? () {
-                  gd.deleteRoom(widget.roomIndex);
-                  Navigator.pop(context, "Delete Room");
+    var deleteButton = ButtonTheme(
+      minWidth: 0,
+      child: RaisedButton(
+        onPressed:
+            widget.roomIndex != 0 && widget.roomIndex != gd.roomList.length - 1
+                ? () {
+                    gd.deleteRoom(widget.roomIndex);
+                    Navigator.pop(context, "Delete Room");
 //        gd.showSnackBar("Delete Room", context);
-                }
-              : null,
-      child: Row(
-        children: <Widget>[
+                  }
+                : null,
+        child: Row(
+          children: <Widget>[
 //          Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:delete")),
-          Text("Delete"),
-        ],
+            Text(" Del"),
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(4),
+        ),
       ),
-      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4)),
     );
     //moveLeft
     var moveLeft = IconButton(

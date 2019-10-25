@@ -5,6 +5,7 @@ import 'package:hasskit_2/helper/GeneralData.dart';
 import 'package:hasskit_2/helper/MaterialDesignIcons.dart';
 import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/model/LoginData.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:validators/validators.dart';
 import 'ServerSelectPanel.dart';
 import 'WebViewLoginPage.dart';
@@ -322,16 +323,77 @@ class _SettingPageState extends State<SettingPage> {
               'About HassKit',
               "",
               context),
-          SliverFixedExtentList(
-            itemExtent: 1000.0,
+          SliverList(
             delegate: SliverChildListDelegate(
               [
-                Container(color: Colors.transparent),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: ThemeInfo.colorBottomSheet.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Text(
+                      "HassKis is a Touch Friendly - Zero Config to help user start using instantly Home Assistant."
+                      "\n\nHome Assistant is a one of the best platform for Home Automation with powerful features, world widest range of devices support and only require very simple/cheap hardware (Hello \$25 Raspberry Pi)."
+                      "\n\nHowever, Home Assistant is not easy to setup and require a few months to master. HassKit aim to ease the learning step and improve the quality of life for Home Assistant users by providing a stunning look and 10 seconds setup to start using the wonderful Home Automation platform."
+                      "\n\nOur App is free and open-source and under development. We need your help to improve the app feature in order to better serve you."
+                      "\n\nPlease find us on Discord. All contribution are welcomed",
+                      style: Theme.of(context).textTheme.body1,
+                      textAlign: TextAlign.justify,
+                      textScaleFactor: gd.textScaleFactor,
+                    ),
+                  ),
+                ),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.transparent,
+                    child: Column(
+                      children: <Widget>[
+                        RaisedButton(
+                          onPressed: _launchURL,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 40,
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/images/discord-512.png'),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "Join Us On Discord ",
+                                style: TextStyle(color: Colors.black),
+                                textScaleFactor: gd.textScaleFactor,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          "\nhttps://discord.gg/cqYr52P",
+                          style: Theme.of(context).textTheme.title,
+                          textScaleFactor: gd.textScaleFactor,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )),
+                Container(height: 150),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  _launchURL() async {
+    const url = 'https://discord.gg/cqYr52P';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

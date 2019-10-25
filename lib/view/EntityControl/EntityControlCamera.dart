@@ -10,9 +10,28 @@ class EntityControlCamera extends StatelessWidget {
   Widget build(BuildContext context) {
     return RotatedBox(
       quarterTurns: 1,
-      child: Image(
-        image: gd.getCameraThumbnail(entityId),
-        fit: BoxFit.cover,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Image(
+            image: gd.getCameraThumbnail(entityId),
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+            top: 10,
+            right: 10,
+            child: IconButton(
+              icon: Icon(
+                Icons.cancel,
+                color: Colors.white70,
+                size: 32,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

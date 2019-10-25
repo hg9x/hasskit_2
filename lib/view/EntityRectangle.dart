@@ -39,44 +39,39 @@ class _EntityRectangleState extends State<EntityRectangle> {
     return InkResponse(
       onTap: widget.onTapCallback,
       onLongPress: widget.onLongPressCallback,
-      child: entity == null
-          ? Container(
-              child: Text("${widget.entityId} ???"),
-            )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  Image(
-                    image: gd.getCameraThumbnail(widget.entityId),
-                    fit: BoxFit.cover,
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      color: Colors.white30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            entity.friendlyName,
-                            style: ThemeInfo.textNameButtonActive,
-                            textScaleFactor: gd.textScaleFactor,
-                          ),
-                          Text(
-                            "${(DateTime.now().difference(gd.cameraThumbnails[widget.entityId].receivedDateTime)).inSeconds}",
-                            style: ThemeInfo.textNameButtonActive,
-                            textScaleFactor: gd.textScaleFactor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: ThemeInfo.colorBottomSheet,
+            image: DecorationImage(
+              image: gd.getCameraThumbnail(widget.entityId),
+              fit: BoxFit.cover,
             ),
+          ),
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            padding: EdgeInsets.all(8),
+            color: ThemeInfo.colorBackgroundActive,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  entity.friendlyName,
+                  style: ThemeInfo.textNameButtonActive,
+                  textScaleFactor: gd.textScaleFactor,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Last update: ${(DateTime.now().difference(gd.cameraThumbnails[widget.entityId].receivedDateTime)).inSeconds}s",
+                  style: ThemeInfo.textNameButtonActive,
+                  textScaleFactor: gd.textScaleFactor,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

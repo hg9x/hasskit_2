@@ -53,7 +53,7 @@ class ThemeInfo {
     }
   }
 
-  static const Color colorBackgroundActive = Color.fromRGBO(255, 255, 255, 1);
+  static const Color colorBackgroundActive = Color.fromRGBO(255, 255, 255, 0.8);
 
   static Color get colorEntityBackground {
     if (gd.currentTheme.brightness == Brightness.light) {

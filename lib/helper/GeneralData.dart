@@ -12,6 +12,7 @@ import 'package:hasskit_2/model/Entity.dart';
 import 'package:hasskit_2/model/LoginData.dart';
 import 'package:hasskit_2/model/Room.dart';
 import 'package:hasskit_2/view/EntitiesSliverGrid.dart';
+import 'package:hasskit_2/view/QuickGuide.dart';
 import 'package:hasskit_2/view/RoomEditPage.dart';
 import 'package:hasskit_2/view/SliverAppBarDelegate.dart';
 import "package:http/http.dart" as http;
@@ -246,7 +247,7 @@ class GeneralData with ChangeNotifier {
       }
     }
 
-    log.d("lovelaceEntities.length ${lovelaceEntities.length} ");
+//    log.d("lovelaceEntities.length ${lovelaceEntities.length} ");
 
     int i = 1;
     for (var entity in lovelaceEntities) {
@@ -1085,26 +1086,7 @@ class GeneralData with ChangeNotifier {
               ),
             )
           : totalListLengh < 1
-              ? SliverFixedExtentList(
-                  itemExtent: 60,
-                  delegate: SliverChildListDelegate(
-                    [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        color:
-                            ThemeInfo.colorBottomSheetReverse.withOpacity(0.5),
-                        child: Center(
-                          child: Text(
-                            "Add Device From ${gd.getRoomName(gd.roomListLength)} to This Room",
-                            style: Theme.of(context).textTheme.title,
-                            textScaleFactor: gd.textScaleFactor,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
+              ? QuickGuide()
               : SliverFixedExtentList(
                   itemExtent: 0,
                   delegate: SliverChildListDelegate(
@@ -1183,8 +1165,8 @@ class GeneralData with ChangeNotifier {
               entities: entitiesFiltered
                   .where((e) => e.entityType == EntityType.mediaPlayers)
                   .toList(),
-              crossAxisCount: 1,
-              childAspectRatio: 8 / 5,
+              crossAxisCount: 3,
+              childAspectRatio: 8 / 8,
               entityType: EntityType.mediaPlayers,
               roomIndex: roomIndex,
             )

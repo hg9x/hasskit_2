@@ -48,21 +48,36 @@ class EntitiesSliverGrid extends StatelessWidget {
                     onTapCallback: () {
                       log.d(
                           "${entities[index].entityId} EntityRectangle onTapCallback");
-                      showModalBottomSheet(
-                        context: context,
-                        elevation: 1,
-                        backgroundColor: ThemeInfo.colorBottomSheet,
-                        isScrollControlled: true,
-                        useRootNavigator: true,
-                        builder: (BuildContext context) {
-                          return EntityControlCamera(
-                              entityId: entities[index].entityId);
-                        },
-                      );
+                      if (roomIndex == gd.roomList.length - 1) {
+                        showModalBottomSheet(
+                          context: context,
+                          elevation: 1,
+                          backgroundColor: ThemeInfo.colorBottomSheet,
+                          isScrollControlled: true,
+                          useRootNavigator: true,
+                          builder: (BuildContext context) {
+                            return EntityEditPage(
+                                entityId: entities[index].entityId);
+                          },
+                        );
+                      } else {
+                        showModalBottomSheet(
+                          context: context,
+                          elevation: 1,
+                          backgroundColor: ThemeInfo.colorBottomSheet,
+                          isScrollControlled: true,
+                          useRootNavigator: true,
+                          builder: (BuildContext context) {
+                            return EntityControlCamera(
+                                entityId: entities[index].entityId);
+                          },
+                        );
+                      }
                     },
                     onLongPressCallback: () {
                       log.d(
                           "${entities[index].entityId} EntityRectangle onLongPressCallback");
+
                       showModalBottomSheet(
                         context: context,
                         elevation: 1,
