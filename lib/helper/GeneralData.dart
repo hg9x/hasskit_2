@@ -330,20 +330,116 @@ class GeneralData with ChangeNotifier {
     return entityId;
   }
 
-  Map<int, String> cameraThumbnailsId = {};
-  Map<String, DateTime> cameraRequestTime = {};
   Map<String, CameraThumbnail> cameraThumbnails = {};
-  List<String> cameraActives = [];
+  Map<String, DateTime> activeCameraxs = {};
+  Map<int, String> cameraThumbnailsId = {};
+
+  ImageProvider getCameraThumbnail(String cameraId) {
+    if (cameraThumbnails[cameraId] == null) {
+      //= Image(image: AssetImage("'assets/images/loader.gif'"))
+      CameraThumbnail cameraThumbnail = CameraThumbnail(
+        entityId: cameraId,
+        receivedDateTime: DateTime.now().subtract(Duration(days: 1000)),
+        image: AssetImage(
+          "assets/images/loader.gif",
+        ),
+      );
+      cameraThumbnails[cameraId] = cameraThumbnail;
+    }
+
+    return cameraThumbnails[cameraId].image;
+  }
+
+  void requestCameraImage(String entityId, {bool force = false}) {
+    if (activeCameraxs[entityId] != null) {
+      var diff = activeCameraxs[entityId].difference(DateTime.now()).inSeconds;
+      if (diff > 0) {
+//        log.d("requestCameraImage $entityId diff $diff");
+        return;
+      }
+    }
+    if (cameraThumbnails[entityId] == null ||
+        cameraThumbnails[entityId]
+            .receivedDateTime
+            .isBefore(DateTime.now().subtract(Duration(seconds: 10)))) {
+      var outMsg = {
+        "id": gd.socketId,
+        "type": "camera_thumbnail",
+        "entity_id": entityId,
+      };
+      webSocket.send(jsonEncode(outMsg));
+      activeCameraxs[entityId] = DateTime.now().add(Duration(seconds: 10));
+    }
+  }
 
   void camerasThumbnailUpdate(String entityId, String content) {
+//    log.d("camerasThumbnailUpdate $entityId");
     CameraThumbnail cameraThumbnail = CameraThumbnail(
       entityId: entityId,
       receivedDateTime: DateTime.now(),
-      content: base64Decode(content),
+      image: MemoryImage(base64Decode(content)),
     );
 
     cameraThumbnails[entityId] = cameraThumbnail;
     notifyListeners();
+  }
+
+  String timePassed(int previousEpoch) {
+    var totalDiff =
+        DateTime.now().toUtc().millisecondsSinceEpoch - previousEpoch;
+    var duration = Duration(milliseconds: totalDiff);
+    var format =
+        "${duration.inDays}:${duration.inHours.remainder(24)}:${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}";
+    var spit = format.split(":");
+    var recVal = "";
+    bool lessThanASecond = true;
+
+    var day = int.parse(spit[0]);
+    var hour = int.parse(spit[1]);
+    var minute = int.parse(spit[2]);
+    var second = int.parse(spit[3]);
+
+    if (day > 365) {
+      return "...";
+    }
+    if (day > 0) {
+      String s = " day, ";
+      if (day > 1) {
+        s = " days, ";
+      }
+      recVal = recVal + day.toString() + s;
+      lessThanASecond = false;
+    }
+    if (hour > 0 || !lessThanASecond) {
+      String s = " hour, ";
+      if (hour > 1) {
+        s = " hours, ";
+      }
+      recVal = recVal + hour.toString() + s;
+      lessThanASecond = false;
+    }
+    if (minute > 0 || !lessThanASecond) {
+      String s = " minute, ";
+      if (minute > 1) {
+        s = " minutes, ";
+      }
+      recVal = recVal + minute.toString() + s;
+      lessThanASecond = false;
+    }
+    if (second > 0 || !lessThanASecond) {
+      String s = " second";
+      if (second > 1) {
+        s = " second ago";
+      }
+      recVal = recVal + minute.toString() + s;
+      lessThanASecond = false;
+    }
+
+    if (lessThanASecond) {
+      recVal = "less than a second";
+    }
+
+    return recVal;
   }
 
   ThemeData get currentTheme {

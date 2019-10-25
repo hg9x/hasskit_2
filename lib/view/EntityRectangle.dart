@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hasskit_2/helper/GeneralData.dart';
+import 'package:hasskit_2/helper/ThemeInfo.dart';
 import 'package:hasskit_2/model/Entity.dart';
 
-class EntityRectangle extends StatelessWidget {
+class EntityRectangle extends StatefulWidget {
   final String entityId;
   final Function onTapCallback;
   final Function onLongPressCallback;
@@ -14,47 +15,68 @@ class EntityRectangle extends StatelessWidget {
       @required this.onLongPressCallback});
 
   @override
+  _EntityRectangleState createState() => _EntityRectangleState();
+}
+
+class _EntityRectangleState extends State<EntityRectangle> {
+  @override
+  void dispose() {
+    if (gd.activeCameraxs.containsKey(widget.entityId)) {
+      gd.activeCameraxs.remove(widget.entityId);
+//      log.d("gd.activeCameras.remove ${widget.entityId}");
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Entity entity = gd.entities
-        .firstWhere((e) => e.entityId == entityId, orElse: () => null);
-    return entity == null
-        ? Container(
-            child: Text("$entityId ???"),
-          )
-        : Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              color: entity.isStateOn
-                  ? Theme.of(context).cardColor.withOpacity(0.8)
-                  : Theme.of(context).cardColor.withOpacity(0.2),
-            ),
-            child: Row(
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      entity.mdiIcon,
-                      size: 30,
-                      color: entity.isStateOn
-                          ? Theme.of(context).accentColor.withOpacity(0.8)
-                          : Theme.of(context).accentColor.withOpacity(0.2),
-                    ),
-                    Text(gd.textToDisplay(entity.state)),
-                  ],
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "${entity.friendlyName}",
-                    maxLines: 2,
-                    textScaleFactor: gd.textScaleFactor,
-                    overflow: TextOverflow.ellipsis,
+        .firstWhere((e) => e.entityId == widget.entityId, orElse: () => null);
+    if (!gd.activeCameraxs.containsKey(widget.entityId)) {
+      gd.activeCameraxs[widget.entityId] = DateTime.now();
+    }
+
+    return InkResponse(
+      onTap: widget.onTapCallback,
+      onLongPress: widget.onLongPressCallback,
+      child: entity == null
+          ? Container(
+              child: Text("${widget.entityId} ???"),
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  Image(
+                    image: gd.getCameraThumbnail(widget.entityId),
+                    fit: BoxFit.cover,
                   ),
-                ),
-              ],
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      color: Colors.white30,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            entity.friendlyName,
+                            style: ThemeInfo.textNameButtonActive,
+                            textScaleFactor: gd.textScaleFactor,
+                          ),
+                          Text(
+                            "${(DateTime.now().difference(gd.cameraThumbnails[widget.entityId].receivedDateTime)).inSeconds}",
+                            style: ThemeInfo.textNameButtonActive,
+                            textScaleFactor: gd.textScaleFactor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
+    );
   }
 }

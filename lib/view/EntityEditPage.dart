@@ -34,6 +34,11 @@ class EntityEditPage extends StatelessWidget {
       entityControl = EntityControlFan(entity: entity);
     } else if (entity.entityType == EntityType.lightSwitches) {
       entityControl = EntityControlLightSwitch(entity: entity);
+    } else if (entity.entityType == EntityType.cameras) {
+      entityControl = Image(
+        image: gd.getCameraThumbnail(entityId),
+        fit: BoxFit.cover,
+      );
     } else {
       entityControl = EntityControlGeneral(entity: entity);
     }
@@ -59,19 +64,11 @@ class EntityEditPage extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
-              Expanded(
-                child: Container(
-//                  color: Colors.red,
-                    ),
-              ),
+              Spacer(),
               Container(
                 child: entityControl,
               ),
-              Expanded(
-                child: Container(
-//                  color: Colors.red,
-                    ),
-              ),
+              Spacer(),
               Text(
                 "Show In Room",
                 style: Theme.of(context).textTheme.title,

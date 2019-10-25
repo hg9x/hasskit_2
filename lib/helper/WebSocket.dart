@@ -101,9 +101,9 @@ class WebSocket {
         gd.longTokenId = 0;
         gd.getStatesId = 0;
         gd.loveLaceConfigId = 0;
-        gd.cameraThumbnailsId.clear();
-        gd.cameraRequestTime.clear();
-        gd.cameraActives.clear();
+//        gd.cameraThumbnailsId.clear();
+//        gd.cameraRequestTime.clear();
+//        gd.cameraActives.clear();
       }
     }
   }
@@ -285,11 +285,9 @@ class WebSocket {
             log.d('Processing Get States');
             gd.getStates(decode['result']);
           }
-          //Processing cameraThumbnailsId
+//          Processing cameraThumbnailsId
           else if (gd.cameraThumbnailsId.containsKey(id)) {
             var content = decode['result']['content'];
-//            Logger.d(
-//                'cameraThumbnailsId $id ${providerData.cameraThumbnailsId[id]} content $content');
             gd.camerasThumbnailUpdate(gd.cameraThumbnailsId[id], content);
           } else {
 //            Logger.d('providerData.socketIdServices $id == null $decode');

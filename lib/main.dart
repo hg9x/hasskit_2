@@ -51,6 +51,7 @@ class _HomeViewState extends State<HomeView> {
   int pageNumber = 2;
   bool showLoading = true;
 
+  Timer timer0;
   Timer timer1;
   Timer timer5;
   Timer timer10;
@@ -59,6 +60,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     mainInitState();
+    timer0 = Timer.periodic(
+        Duration(milliseconds: 200), (Timer t) => timer200Callback());
     timer1 =
         Timer.periodic(Duration(seconds: 1), (Timer t) => timer1Callback());
     timer5 =
@@ -170,9 +173,13 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
-  timer1Callback() {
-//    updateCameraThumbnails();
+  timer200Callback() {
+    for (String activeCamera in gd.activeCameraxs.keys) {
+      gd.requestCameraImage(activeCamera);
+    }
   }
+
+  timer1Callback() {}
 
   timer5Callback() {}
 

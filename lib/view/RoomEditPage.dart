@@ -7,7 +7,6 @@ import 'package:hasskit_2/helper/ThemeInfo.dart';
 
 class RoomEditPage extends StatefulWidget {
   final int roomIndex;
-
   const RoomEditPage({@required this.roomIndex});
 
   @override
@@ -73,7 +72,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
     //moveLeft
     var moveLeft = IconButton(
       icon: Icon(
-        MaterialDesignIcons.getIconDataFromIconName("mdi:chevron-left-circle"),
+        MaterialDesignIcons.getIconDataFromIconName("mdi:arrow-collapse-left"),
         size: 32,
         color: widget.roomIndex > 1 && widget.roomIndex < gd.roomList.length - 1
             ? null
@@ -91,7 +90,7 @@ class _RoomEditPageState extends State<RoomEditPage> {
     //moveRight
     var moveRight = IconButton(
       icon: Icon(
-        MaterialDesignIcons.getIconDataFromIconName("mdi:chevron-right-circle"),
+        MaterialDesignIcons.getIconDataFromIconName("mdi:arrow-collapse-right"),
         size: 32,
         color:
             widget.roomIndex < gd.roomList.length - 2 && widget.roomIndex != 0
@@ -139,17 +138,19 @@ class _RoomEditPageState extends State<RoomEditPage> {
                 FocusScope.of(context).requestFocus(new FocusNode());
               },
             ),
-            FittedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  moveLeft,
-                  deleteButton,
-                  saveButton,
-                  addButton,
-                  moveRight,
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                moveLeft,
+                Spacer(),
+                deleteButton,
+                Spacer(),
+                saveButton,
+                Spacer(),
+                addButton,
+                Spacer(),
+                moveRight,
+              ],
             ),
             Expanded(child: Container()),
             Text(

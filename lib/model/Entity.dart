@@ -63,6 +63,9 @@ class Entity {
   });
 
   factory Entity.fromJson(Map<String, dynamic> json) {
+    if (json['entity_id'] == null) {
+      return null;
+    }
     return Entity(
       entityId: json['entity_id'],
       deviceClass: json['attributes']['device_class'],
