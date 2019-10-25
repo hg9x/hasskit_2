@@ -46,7 +46,7 @@ class EntityControlFan extends StatelessWidget {
           child: Text(
             gd.textToDisplay(buttonText).toUpperCase(),
             style: ThemeInfo.textNameButtonActive,
-            textScaleFactor: gd.textScaleFactor(context),
+            textScaleFactor: gd.textScaleFactor,
           ),
           onPressed: () {
             print('button $buttonText pressed');

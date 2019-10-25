@@ -82,7 +82,7 @@ class ServerSelectPanel extends StatelessWidget {
                       Text(loginData.url,
                           style: Theme.of(context).textTheme.subhead,
                           maxLines: 2,
-                          textScaleFactor: gd.textScaleFactor(context),
+                          textScaleFactor: gd.textScaleFactor,
                           overflow: TextOverflow.ellipsis),
                       Text(
                           gd.loginDataCurrent.url == loginData.url
@@ -90,7 +90,7 @@ class ServerSelectPanel extends StatelessWidget {
                               : "Last Access: ${loginData.timeSinceLastAccess}",
                           style: Theme.of(context).textTheme.body1,
                           maxLines: 5,
-                          textScaleFactor: gd.textScaleFactor(context),
+                          textScaleFactor: gd.textScaleFactor,
                           overflow: TextOverflow.ellipsis),
                     ],
                   ),

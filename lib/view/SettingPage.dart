@@ -259,8 +259,7 @@ class _SettingPageState extends State<SettingPage> {
                                   Text(
                                     "Dark Theme",
                                     style: TextStyle(color: Colors.white),
-                                    textScaleFactor:
-                                        gd.textScaleFactor(context),
+                                    textScaleFactor: gd.textScaleFactor,
                                   ),
                                   SizedBox(width: 8),
                                   Expanded(child: Container()),
@@ -297,8 +296,7 @@ class _SettingPageState extends State<SettingPage> {
                                   Text(
                                     "Light Theme",
                                     style: TextStyle(color: Colors.black),
-                                    textScaleFactor:
-                                        gd.textScaleFactor(context),
+                                    textScaleFactor: gd.textScaleFactor,
                                   ),
                                   SizedBox(width: 8),
                                   Expanded(child: Container()),

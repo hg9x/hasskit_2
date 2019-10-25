@@ -54,7 +54,7 @@ class EntityEditPage extends StatelessWidget {
               Text(
                 entity.friendlyName,
                 style: Theme.of(context).textTheme.display1,
-                textScaleFactor: gd.textScaleFactor(context),
+                textScaleFactor: gd.textScaleFactor,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -74,14 +74,14 @@ class EntityEditPage extends StatelessWidget {
               Text(
                 "Show In Room",
                 style: Theme.of(context).textTheme.title,
-                textScaleFactor: gd.textScaleFactor(context),
+                textScaleFactor: gd.textScaleFactor,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
 //              Text(
 //                "One Entity Can Show in ${gd.roomList[0].name} and ONE Another Room",
 //                style: Theme.of(context).textTheme.body2,
-//                textScaleFactor: gd.textScaleFactor(context),
+//                textScaleFactor: gd.textScaleFactor,
 //                maxLines: 1,
 //                overflow: TextOverflow.ellipsis,
 //              ),
@@ -117,7 +117,7 @@ class EntityEditPage extends StatelessWidget {
                               Text(
                                 gd.roomList[index].name,
                                 style: Theme.of(context).textTheme.body2,
-                                textScaleFactor: gd.textScaleFactor(context),
+                                textScaleFactor: gd.textScaleFactor,
                                 maxLines: 1,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,

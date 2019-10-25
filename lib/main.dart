@@ -86,8 +86,8 @@ class _HomeViewState extends State<HomeView> {
             currentIndex: 2,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                    MaterialDesignIcons.getIconDataFromIconName("mdi:star")),
+                icon: Icon(MaterialDesignIcons.getIconDataFromIconName(
+                    "mdi:home-automation")),
                 title: Text(gd.getRoomName(0)),
               ),
               BottomNavigationBarItem(

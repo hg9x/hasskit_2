@@ -73,7 +73,7 @@ class GeneralData with ChangeNotifier {
     }
   }
 
-  double textScaleFactor(BuildContext context) {
+  double get textScaleFactor {
 //    I/flutter ( 2137): DEBUG mediaQueryWidth 411.42857142857144
 //    I/flutter ( 2137): DEBUG mediaQueryHeight 683.4285714285714
 //    gd.mediaQueryWidth = MediaQuery.of(context).size.width;
@@ -849,13 +849,12 @@ class GeneralData with ChangeNotifier {
                           children: <Widget>[
                             Text(
                               headerText,
-                              textScaleFactor: gd.textScaleFactor(context),
+                              textScaleFactor: gd.textScaleFactor,
                             ),
                             subText.length > 0
                                 ? Text(
                                     subText,
-                                    textScaleFactor:
-                                        gd.textScaleFactor(context),
+                                    textScaleFactor: gd.textScaleFactor,
                                   )
                                 : Container(),
                           ],
@@ -946,12 +945,16 @@ class GeneralData with ChangeNotifier {
               delegate: SliverChildListDelegate(
                 [
                   Container(
+                    padding: EdgeInsets.all(8),
                     color: ThemeInfo.colorBottomSheetReverse.withOpacity(0.5),
                     child: Center(
-                        child: Text(
-                      "Click Entities To Setup Room Position",
-                      style: Theme.of(context).textTheme.title,
-                    )),
+                      child: Text(
+                        "Click Entities To Setup Room Position",
+                        style: Theme.of(context).textTheme.title,
+                        textScaleFactor: gd.textScaleFactor,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   )
                 ],
               ),

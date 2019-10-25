@@ -41,7 +41,7 @@ class EntitySquare extends StatelessWidget {
                     "${entity.temperature}",
                     style: ThemeInfo.textNameButtonActive
                         .copyWith(color: Colors.white),
-                    textScaleFactor: gd.textScaleFactor(context) * 2,
+                    textScaleFactor: gd.textScaleFactor * 2,
                   ),
                 ],
               ),
@@ -111,7 +111,7 @@ class EntitySquare extends StatelessWidget {
                             ? ThemeInfo.textNameButtonActive
                             : ThemeInfo.textNameButtonInActive,
                         maxLines: 2,
-                        textScaleFactor: gd.textScaleFactor(context),
+                        textScaleFactor: gd.textScaleFactor,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -124,7 +124,7 @@ class EntitySquare extends StatelessWidget {
                           ? ThemeInfo.textStatusButtonActive
                           : ThemeInfo.textStatusButtonInActive,
                       maxLines: 1,
-                      textScaleFactor: gd.textScaleFactor(context),
+                      textScaleFactor: gd.textScaleFactor,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
