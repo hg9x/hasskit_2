@@ -40,7 +40,7 @@ class EntityEditPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.only(top: 0),
+          padding: EdgeInsets.only(left: 8, right: 8),
           color: ThemeInfo.colorBottomSheet,
           child: Column(
             children: <Widget>[
@@ -55,8 +55,9 @@ class EntityEditPage extends StatelessWidget {
                 entity.friendlyName,
                 style: Theme.of(context).textTheme.display1,
                 textScaleFactor: gd.textScaleFactor,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
               Expanded(
                 child: Container(
