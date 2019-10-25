@@ -166,7 +166,7 @@ class _HomeViewState extends State<HomeView> {
     log.w("mainInitState START await loginDataInstance.loadLoginData");
     await gd.loadLoginData();
     log.w("mainInitState END await loginDataInstance.loadLoginData");
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: 500));
 
     showLoading = false;
     log.w("showLoading $showLoading");

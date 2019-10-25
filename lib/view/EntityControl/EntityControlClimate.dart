@@ -16,8 +16,8 @@ class EntityControlClimate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int hvacModeIndex = 0;
-    int fanModeIndex = 0;
+    int hvacModeIndex = entity.hvacModeIndex;
+    int fanModeIndex = entity.fanModeIndex;
     var info04 = InfoProperties(
         bottomLabelStyle: Theme.of(context).textTheme.title,
 //        bottomLabelStyle: TextStyle(
