@@ -241,6 +241,7 @@ class WebSocket {
         break;
       case 'auth/long_lived_access_token':
         {
+          log.w('auth/long_lived_access_token');
           outMsg = {"id": gd.socketId, "type": "get_states"};
           send(json.encode(outMsg));
           gd.connectionStatus = "Sending get_states";
@@ -250,7 +251,6 @@ class WebSocket {
         {
           var success = decode['success'];
           if (!success) {
-            log.d('result not success');
             break;
           }
           var id = decode['id'];

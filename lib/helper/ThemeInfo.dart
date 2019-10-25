@@ -8,11 +8,13 @@ class ThemeInfo {
       brightness: Brightness.light,
       primarySwatch: Colors.amber,
       accentColor: Colors.amber[900],
+      toggleableActiveColor: colorIconActive,
     ),
     ThemeData(
       brightness: Brightness.dark,
       primarySwatch: Colors.amber,
       accentColor: Colors.amber[900],
+      toggleableActiveColor: colorIconActive,
     ),
   ];
 

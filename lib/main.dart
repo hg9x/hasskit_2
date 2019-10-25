@@ -58,6 +58,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
+    mainInitState();
     timer1 =
         Timer.periodic(Duration(seconds: 1), (Timer t) => timer1Callback());
     timer5 =
@@ -66,7 +67,6 @@ class _HomeViewState extends State<HomeView> {
         Timer.periodic(Duration(seconds: 10), (Timer t) => timer10Callback());
     timer30 =
         Timer.periodic(Duration(seconds: 30), (Timer t) => timer30Callback());
-    mainInitState();
     super.initState();
   }
 
@@ -83,7 +83,7 @@ class _HomeViewState extends State<HomeView> {
       return Scaffold(
         body: CupertinoTabScaffold(
           tabBar: CupertinoTabBar(
-            currentIndex: 0,
+            currentIndex: 2,
             items: [
               BottomNavigationBarItem(
                 icon: Icon(
@@ -164,6 +164,7 @@ class _HomeViewState extends State<HomeView> {
     await gd.loadLoginData();
     log.w("mainInitState END await loginDataInstance.loadLoginData");
     await Future.delayed(const Duration(milliseconds: 1000));
+
     showLoading = false;
     log.w("showLoading $showLoading");
     setState(() {});

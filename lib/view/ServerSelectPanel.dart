@@ -18,7 +18,9 @@ class ServerSelectPanel extends StatelessWidget {
         onTap: () {
 //          gd.showSnackBar('Delete', context);
           gd.loginDataListDelete(loginData);
+          gd.autoConnect = false;
           if (gd.loginDataCurrent.url == loginData.url) {
+            gd.loginDataCurrent.url = "";
             webSocket.reset();
           }
         });
@@ -31,6 +33,7 @@ class ServerSelectPanel extends StatelessWidget {
               "mdi:server-network-off"),
           onTap: () {
             gd.showSnackBar('Disconnect from ${loginData.url}', context);
+            gd.autoConnect = false;
             webSocket.reset();
           });
       secondaryWidgets = [disconnectWidget, deleteWidget];

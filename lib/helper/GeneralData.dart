@@ -350,7 +350,18 @@ class GeneralData with ChangeNotifier {
     return ThemeInfo.themesData[themeIndex];
   }
 
-  int themeIndex = 0;
+  int _themeIndex = 0;
+  int get themeIndex => _themeIndex;
+
+  set themeIndex(int value) {
+    {
+      if (_themeIndex != value) {
+        _themeIndex = value;
+        notifyListeners();
+      }
+    }
+  }
+
   themeChange() {
     themeIndex = themeIndex + 1;
     if (themeIndex >= ThemeInfo.themesData.length) {
@@ -929,6 +940,28 @@ class GeneralData with ChangeNotifier {
           },
         ),
       ),
+      roomIndex == gd.roomList.length - 1
+          ? SliverFixedExtentList(
+              itemExtent: 60,
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    color: ThemeInfo.colorBottomSheetReverse.withOpacity(0.5),
+                    child: Center(
+                        child: Text(
+                      "Click Entities To Setup Room Position",
+                      style: Theme.of(context).textTheme.title,
+                    )),
+                  )
+                ],
+              ),
+            )
+          : SliverFixedExtentList(
+              itemExtent: 0,
+              delegate: SliverChildListDelegate(
+                [Container()],
+              ),
+            ),
       lightSwitches.length > 0
           ? gd.makeHeaderIcon(
               Theme.of(context).cardColor.withOpacity(0.2),
@@ -946,6 +979,7 @@ class GeneralData with ChangeNotifier {
               crossAxisCount: 3,
               childAspectRatio: 1,
               entityType: EntityType.lightSwitches,
+              roomIndex: roomIndex,
             )
           : emptySliver,
       climateFans.length > 0
@@ -965,6 +999,7 @@ class GeneralData with ChangeNotifier {
               crossAxisCount: 3,
               childAspectRatio: 1,
               entityType: EntityType.climateFans,
+              roomIndex: roomIndex,
             )
           : emptySliver,
       cameras.length > 0
@@ -983,6 +1018,7 @@ class GeneralData with ChangeNotifier {
               crossAxisCount: 1,
               childAspectRatio: 8 / 5,
               entityType: EntityType.cameras,
+              roomIndex: roomIndex,
             )
           : emptySliver,
       mediaPlayers.length > 0
@@ -1001,6 +1037,7 @@ class GeneralData with ChangeNotifier {
               crossAxisCount: 1,
               childAspectRatio: 8 / 5,
               entityType: EntityType.mediaPlayers,
+              roomIndex: roomIndex,
             )
           : emptySliver,
       accessories.length > 0
@@ -1020,6 +1057,7 @@ class GeneralData with ChangeNotifier {
               crossAxisCount: 3,
               childAspectRatio: 8 / 8,
               entityType: EntityType.accessories,
+              roomIndex: roomIndex,
             )
           : emptySliver,
       scriptAutomation.length > 0
@@ -1039,6 +1077,7 @@ class GeneralData with ChangeNotifier {
               crossAxisCount: 3,
               childAspectRatio: 8 / 8,
               entityType: EntityType.accessories,
+              roomIndex: roomIndex,
             )
           : emptySliver,
       SliverFixedExtentList(
@@ -1136,6 +1175,7 @@ class GeneralData with ChangeNotifier {
             "Show $friendlyName  in ${roomList[roomIndex].name}", context);
       }
     }
+    roomListSave();
     notifyListeners();
   }
 

@@ -87,7 +87,7 @@ class _SettingPageState extends State<SettingPage> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(gd.backgroundImage[1]),
+          image: AssetImage(gd.backgroundImage[2]),
           fit: BoxFit.cover,
         ),
         gradient: LinearGradient(
@@ -107,12 +107,12 @@ class _SettingPageState extends State<SettingPage> {
                   'assets/images/icon_transparent_border_transparent.png'),
             ),
             largeTitle: Text(title),
-            trailing: IconButton(
-              icon: Icon(Icons.palette),
-              onPressed: () {
-                gd.themeChange();
-              },
-            ),
+//            trailing: IconButton(
+//              icon: Icon(Icons.palette),
+//              onPressed: () {
+//                gd.themeChange();
+//              },
+//            ),
           ),
           gd.makeHeaderIcon(
               Theme.of(context).cardColor.withOpacity(0.2),
@@ -226,30 +226,98 @@ class _SettingPageState extends State<SettingPage> {
           ),
           gd.makeHeaderIcon(
               Theme.of(context).cardColor.withOpacity(0.2),
-              Icon(MaterialDesignIcons.getIconDataFromIconName(
-                  "mdi:view-carousel")),
-              'Room Setting',
+              Icon(MaterialDesignIcons.getIconDataFromIconName("mdi:palette")),
+              'Theme Color',
               "",
               context),
           SliverFixedExtentList(
-            itemExtent: 160,
+            itemExtent: 60,
             delegate: SliverChildListDelegate(
               [
-                Container(color: Colors.transparent),
-//                Container(
-//                  child: Container(
-//                    child: ListView.builder(
-//                      scrollDirection: Axis.horizontal,
-//                      itemCount: gd.roomList.length,
-//                      itemBuilder: (context, index) {
-//                        return Container(
-//                          width: 100,
-//                          child: RoomCard(roomIndex: index),
-//                        );
-//                      },
-//                    ),
-//                  ),
-//                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            gd.themeIndex = 1;
+                          },
+                          child: Card(
+                            elevation: 1,
+                            color:
+                                Color.fromRGBO(28, 28, 28, 1).withOpacity(0.5),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Image.asset(
+                                      "assets/images/icon_transparent.png"),
+                                  SizedBox(width: 8),
+                                  Expanded(child: Container()),
+                                  Text(
+                                    "Dark Theme",
+                                    style: TextStyle(color: Colors.white),
+                                    textScaleFactor:
+                                        gd.textScaleFactor(context),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(child: Container()),
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.amber
+                                        : Colors.transparent,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            gd.themeIndex = 0;
+                          },
+                          child: Card(
+                            elevation: 1,
+                            color: Color.fromRGBO(255, 255, 255, 1)
+                                .withOpacity(0.5),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Image.asset(
+                                      "assets/images/icon_transparent.png"),
+                                  SizedBox(width: 8),
+                                  Expanded(child: Container()),
+                                  Text(
+                                    "Light Theme",
+                                    style: TextStyle(color: Colors.black),
+                                    textScaleFactor:
+                                        gd.textScaleFactor(context),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(child: Container()),
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.amber
+                                        : Colors.transparent,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

@@ -11,12 +11,13 @@ class EntitiesSliverGrid extends StatelessWidget {
   final int crossAxisCount;
   final double childAspectRatio;
   final EntityType entityType;
-
+  final int roomIndex;
   const EntitiesSliverGrid(
       {@required this.entities,
       @required this.childAspectRatio,
       @required this.crossAxisCount,
-      @required this.entityType});
+      @required this.entityType,
+      @required this.roomIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,8 @@ class EntitiesSliverGrid extends StatelessWidget {
               entityId: entities[index].entityId,
               onTapCallback: () {
                 log.d("${entities[index].entityId} onTapCallback");
-                if (entities[index].entityType == EntityType.accessories ||
+                if (roomIndex == gd.roomList.length - 1 ||
+                    entities[index].entityType == EntityType.accessories ||
                     entities[index].entityType == EntityType.cameras ||
                     entities[index].deviceClass == 'garage' ||
                     entities[index].deviceClass == 'door' ||
